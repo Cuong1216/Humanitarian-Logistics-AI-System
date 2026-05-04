@@ -7,3 +7,51 @@
   
 ---
 ## How our system works 🛠
+
+### Project tree 🌲
+'''bash
+KeyEmotion_through_SocialMedia/
+├── docs/
+│   ├── OOP_Report_UML.pdf
+│   └── AI_Report_Model_Search.pdf
+│
+├── java_core/
+│   ├── pom.xml
+│   └── src/main/java/com/project/
+│       ├── Main.java
+│       │
+│       ├── datacollection/
+│       │   ├── model/
+│       │   │   └── SocialMediaPost.java
+│       │   ├── platform/
+│       │   │   ├── Platform.java
+│       │   │   ├── FacebookScraper.java
+│       │   │   └── XScraper.java
+│       │   └── PlatformFactory.java
+│       │
+│       ├── ai_client/
+│       │   ├── AiRestClient.java
+│       │   └── AiResponseDto.java
+│       │
+│       └── logistics/
+│           ├── entities/
+│           │   ├── Location.java
+│           │   ├── Vehicle.java
+│           │   └── ReliefCenter.java
+│           │
+│           └── search/
+│               └── AStarRouteFinder.java
+│
+└── python_ai_engine/
+    ├── requirements.txt
+    ├── main.py
+    │
+    ├── nlp_processor/
+    │   ├── text_cleaner.py
+    │   └── entity_extractor.py
+    │
+    └── model/
+        ├── train.py
+        ├── classifier.py
+        └── trained_model.pkl
+'''

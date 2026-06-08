@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.disaster.gui.AppController"
+            stylesheets="@../css/style.css">
+
+    <!-- ── HEADER ── -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12">
+            <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
+            <Label text="🆘" style="-fx-font-size:24px;"/>
+            <VBox spacing="2">
+                <Label text="Disaster Relief System" styleClass="header-title"/>
+                <Label text="Real-time Social Media Analysis &amp; Logistics" styleClass="header-subtitle"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- ── MAIN CONTENT: TabPane ── -->
+    <center>
+        <TabPane styleClass="main-tab-pane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ══════════════════════════════════════════
+                 TAB 1: DATA COLLECTION
+            ══════════════════════════════════════════ -->
+            <Tab text="📡  Data Collection">
+                <SplitPane orientation="HORIZONTAL" dividerPositions="0.35">
+
+                    <!-- LEFT: Controls -->
+                    <VBox styleClass="panel" spacing="14">
+                        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+
+                        <Label text="Search Parameters" styleClass="section-title"/>
+                        <Separator/>
+
+                        <Label text="Keyword" styleClass="field-label"/>
+                        <TextField fx:id="keywordField" promptText="e.g. flood, earthquake…"
+                                   styleClass="text-field-styled"/>
+
+                        <Label text="Date Range" styleClass="field-label"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <DatePicker fx:id="startDatePicker" promptText="Start date" HBox.hgrow="ALWAYS"/>
+                            <Label text="→"/>
+                            <DatePicker fx:id="endDatePicker"   promptText="End date"   HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <Label text="Platforms" styleClass="field-label"/>
+                        <HBox spacing="16">
+                            <CheckBox fx:id="facebookCheck" text="Facebook"  selected="true"/>
+                            <CheckBox fx:id="twitterCheck"  text="Twitter"   selected="true"/>
+                        </HBox>
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <Button text="🔍  Fetch Posts" onAction="#onFetchPosts"
+                                styleClass="btn-primary" maxWidth="Infinity"/>
+
+                        <Label fx:id="statusLabel" text="Ready." styleClass="status-label"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <!-- RIGHT: Posts Table -->
+                    <VBox styleClass="panel" spacing="10">
+                        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+                        <Label text="Collected Posts" styleClass="section-title"/>
+                        <Separator/>
+                        <TableView fx:id="postsTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPostId"    text="ID"        prefWidth="90"/>
+                                <TableColumn fx:id="colContent"   text="Content"   prefWidth="380"/>
+                                <TableColumn fx:id="colTimestamp" text="Timestamp" prefWidth="180"/>
+                            </columns>
+                            <placeholder><Label text="No posts fetched yet."/></placeholder>
+                        </TableView>
+                    </VBox>
+
+                </SplitPane>
+            </Tab>
+
+            <!-- ══════════════════════════════════════════
+                 TAB 2: ANALYSIS
+            ══════════════════════════════════════════ -->
+            <Tab text="🧠  Analysis">
+                <SplitPane orientation="HORIZONTAL" dividerPositions="0.28">
+
+                    <!-- LEFT: Analyzer selection -->
+                    <VBox styleClass="panel" spacing="14">
+                        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+
+                        <Label text="Select Analyzers" styleClass="section-title"/>
+                        <Separator/>
+
+                        <VBox spacing="10">
+                            <CheckBox fx:id="sentimentCheck" text="Sentiment Over Time"
+                                      selected="true"   styleClass="analyzer-check"/>
+                            <Label text="Tracks emotional tone across time."
+                                   styleClass="hint-label" wrapText="true"/>
+
+                            <CheckBox fx:id="damageCheck" text="Damage Categorizer"
+                                      selected="true"   styleClass="analyzer-check"/>
+                            <Label text="Classifies posts by damage type."
+                                   styleClass="hint-label" wrapText="true"/>
+
+                            <CheckBox fx:id="reliefCheck" text="Relief Sentiment"
+                                      selected="false"  styleClass="analyzer-check"/>
+                            <Label text="Identifies demanded relief items."
+                                   styleClass="hint-label" wrapText="true"/>
+                        </VBox>
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <Button text="▶  Run Analysis" onAction="#onRunAnalysis"
+                                styleClass="btn-primary" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- RIGHT: Results -->
+                    <ScrollPane fitToWidth="true" styleClass="results-scroll">
+                        <VBox fx:id="resultsBox" styleClass="results-box" spacing="4">
+                            <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+                            <Label text="Analysis results will appear here."
+                                   styleClass="hint-label"/>
+                        </VBox>
+                    </ScrollPane>
+
+                </SplitPane>
+            </Tab>
+
+            <!-- ══════════════════════════════════════════
+                 TAB 3: LOGISTICS
+            ══════════════════════════════════════════ -->
+            <Tab text="🚛  Logistics">
+                <VBox spacing="16">
+                    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+                    <!-- Route Finder -->
+                    <TitledPane text="A* Route Finder" expanded="true"
+                                styleClass="titled-pane-styled">
+                        <VBox spacing="10">
+                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label text="Start:" minWidth="60" styleClass="field-label"/>
+                                <TextField fx:id="startLocField"
+                                           promptText="e.g. Support Center A"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label text="Destination:" minWidth="60" styleClass="field-label"/>
+                                <TextField fx:id="destLocField"
+                                           promptText="e.g. Disaster Zone B"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                            <Button text="📍  Find Route" onAction="#onFindRoute"
+                                    styleClass="btn-secondary"/>
+                            <TextArea fx:id="routeOutput" editable="false"
+                                      prefRowCount="5" styleClass="route-output"
+                                      promptText="Route will appear here…"/>
+                        </VBox>
+                    </TitledPane>
+
+                    <!-- Vehicle Fleet -->
+                    <TitledPane text="Vehicle Fleet" expanded="true"
+                                styleClass="titled-pane-styled" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="vehicleTable">
+                            <columns>
+                                <TableColumn fx:id="colVehicleId" text="Vehicle ID"    prefWidth="150"/>
+                                <TableColumn fx:id="colCapacity"  text="Capacity (kg)" prefWidth="150"/>
+                                <TableColumn fx:id="colStatus"    text="Status"        prefWidth="150"/>
+                            </columns>
+                        </TableView>
+                    </TitledPane>
+
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- ── FOOTER ── -->
+    <bottom>
+        <HBox styleClass="footer" alignment="CENTER_RIGHT" spacing="12">
+            <padding><Insets top="8" right="20" bottom="8" left="20"/></padding>
+            <Label text="Disaster Relief System v1.0  •  Powered by AI Analysis"
+                   styleClass="footer-label"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

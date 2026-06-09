@@ -171,5 +171,3 @@ public class FacebookScraper implements Platform {
             System.err.println("Lỗi parse thời gian FB: " + timeText);
         }
         return now;
-    }
-}

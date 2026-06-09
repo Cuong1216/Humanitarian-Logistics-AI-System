@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package main.java.com.project.datacollection.platform;
 
 import main.java.com.project.datacollection.model.SocialMediaPost;

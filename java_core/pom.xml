@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+-<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.projects</groupId>
+  <artifactId>keyemotion-java-core</artifactId>
+  <version>1.0</version>
+    -<build>
+      <sourceDirectory>src</sourceDirectory>
+    </build>
+  </project>

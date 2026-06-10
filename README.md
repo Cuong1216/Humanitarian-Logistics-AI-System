@@ -11,45 +11,46 @@
 ### Project tree 🌲
 ```bash
 KeyEmotion_through_SocialMedia/
-├── LICENSE
-├── README.md
-├── docs
-│   ├── AI_Report_Model_Search.pdf
-│   └── OOP_Report_UML.pdf
-├── java_core
-│   ├── pom.xml
-│   └── src
-│       └── main
-│           └── java
-│               └── com
-│                   └── project
-│                       ├── Main.java
-│                       ├── ai_client
-│                       │   ├── AiResponseDto.java
-│                       │   └── AiRestClient.java
-│                       ├── datacollection
-│                       │   ├── PlatformFactory.java
-│                       │   ├── model
-│                       │   │   └── SocialMediaPost.java
-│                       │   └── platform
-│                       │       ├── FacebookScraper.java
-│                       │       ├── Platform.java
-│                       │       └── XScraper.java
-│                       └── logistics
-│                           ├── entities
-│                           │   ├── Location.java
-│                           │   ├── ReliefCenter.java
-│                           │   └── Vehicle.java
-│                           └── search
-│                               └── AStarRouteFinder.java
-└── python_ai_engine
+├── docs/
+│   ├── OOP_Report_UML.pdf
+│   └── AI_Report_Model_Search.pdf
+│
+├── java_core/
+│   ├── pom.xml
+│   └── src/main/java/com/project/
+│       ├── Main.java
+│       │
+│       ├── datacollection/
+│       │   ├── model/
+│       │   │   └── SocialMediaPost.java
+│       │   ├── platform/
+│       │   │   ├── Platform.java
+│       │   │   ├── FacebookScraper.java
+│       │   │   └── XScraper.java
+│       │   └── PlatformFactory.java
+│       │
+│       ├── ai_client/
+│       │   ├── AiRestClient.java
+│       │   └── AiResponseDto.java
+│       │
+│       └── logistics/
+│           ├── entities/
+│           │   ├── Location.java
+│           │   ├── Vehicle.java
+│           │   └── ReliefCenter.java
+│           │
+│           └── search/
+│               └── AStarRouteFinder.java
+│
+└── python_ai_engine/
+    ├── requirements.txt
     ├── main.py
-    ├── model
-    │   ├── classifier.py
-    │   ├── train.py
-    │   └── trained_model.pkl
-    ├── nlp_processor
-    │   ├── entity_extractor.py
-    │   └── text_cleaner.py
-    └── requirements.txt
+    ├── schemas.py
+    │
+    ├── services/
+    │   ├── nlp_service.py
+    │   ├── sentiment_service.py
+    │   └── categorization_service.py
+    │
+    └── models/
 ```

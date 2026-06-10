@@ -1,0 +1,24 @@
+{ 
+  "keyword": "bão Yagi",
+  "posts": [
+  {
+    "id": "post-yagi-001",
+    "platform": "facebook",
+    "author": "nguoi_dan_dia_phuong",
+    "text": "Thôn A xã Bình Minh bị ngập nặng sau bão Yagi. Nhiều hộ dân đang mắc kẹt, thiếu lương thực, nước sạch và thuốc men khẩn cấp.",
+    "location_hint": "thôn A xã Bình Minh",
+    "reactions": {
+      "sad": 120,
+      "angry": 32,
+      "care": 75,
+      "like": 20
+    },
+    "comments": [
+      "Cứu với, đường vào thôn bị nước cuốn hỏng rồi.",
+      "Cần xe cứu trợ chở nước sạch và thuốc.",
+      "Khoảng 300 người đang cần hỗ trợ."
+    ],
+    "shares": 88
+  }
+ ] 
+}

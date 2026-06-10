@@ -1,6 +1,6 @@
 package main.java.com.project.datacollection.platform;
 
-import main.java.com.project.datacollection.model.SocialMediaPost;
+import com.project.datacollection.model.SocialMediaPost;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,16 +13,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public class FacebookScraper implements Platform {
 
     @Override
-    public List<SocialMediaPost> fetchPost(String keyword, Date startDate, Date endDate) {
+    public List<SocialMediaPost> scrapePosts(String keyword) {
         List<SocialMediaPost> posts = new ArrayList<>();
         
         // Thiết lập WebDriverManager để tự động tải ChromeDriver
@@ -68,21 +66,6 @@ public class FacebookScraper implements Platform {
                     String content = "";
                     String author = "Unknown";
                     
-                    LocalDateTime postTime = LocalDateTime.now();
-
-                    // Tìm thẻ chứa timestamp để parse
-                    List<WebElement> timeElements = element.findElements(By.cssSelector("span > span > a[href*='/posts/'], span > span > a[href*='/videos/']"));
-                    if (!timeElements.isEmpty()) {
-                        postTime = parseFacebookTimestamp(timeElements.get(0).getText());
-                    }
-
-                    LocalDateTime startLdt = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                    LocalDateTime endLdt = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-                    if (postTime == null || postTime.isBefore(startLdt) || postTime.isAfter(endLdt)) {
-                        continue; // Bỏ qua nếu nằm ngoài khoảng thời gian
-                    }
-
                     // Lấy nội dung bài viết
                     List<WebElement> contentElements = element.findElements(By.cssSelector("div[data-ad-comet-preview='message']"));
                     if (!contentElements.isEmpty()) {
@@ -100,7 +83,7 @@ public class FacebookScraper implements Platform {
                             UUID.randomUUID().toString(),
                             content,
                             author,
-                            postTime,
+                            LocalDateTime.now(), // Thời gian lấy dữ liệu (cần parse time thực tế nếu có)
                             getPlatformName()
                         );
                         posts.add(post);
@@ -123,6 +106,31 @@ public class FacebookScraper implements Platform {
     public String getPlatformName() {
         return "Facebook";
     }
+
+    private void loginToFacebook(WebDriver driver, String email, String password) {
+        try {
+            driver.get("https://www.facebook.com/");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            
+            // Tìm và điền email
+            WebElement emailInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
+            emailInput.sendKeys(email);
+            
+            // Tìm và điền mật khẩu
+            WebElement passwordInput = driver.findElement(By.id("pass"));
+            passwordInput.sendKeys(password);
+            
+            // Bấm nút đăng nhập
+            WebElement loginButton = driver.findElement(By.name("login"));
+            loginButton.click();
+            
+            // Đợi chuyển hướng sau đăng nhập
+            Thread.sleep(5000); 
+        } catch (Exception e) {
+            System.err.println("Lỗi đăng nhập Facebook: " + e.getMessage());
+        }
+    }
+
 
     private void loginToFacebook(WebDriver driver, String email, String password) {
         try {
@@ -171,3 +179,5 @@ public class FacebookScraper implements Platform {
             System.err.println("Lỗi parse thời gian FB: " + timeText);
         }
         return now;
+  }
+}

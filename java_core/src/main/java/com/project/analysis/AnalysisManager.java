@@ -1,44 +1,28 @@
-package com.project.analysis;
+package main.java.com.project.analysis;
 
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnalysisManager {
-    private List<TaskAnalyzer> analyzers;
-
-    public AnalysisManager() {
-        this.analyzers = new ArrayList<>();
-    }
+    private List<TaskAnalyzer> analyzers = new ArrayList<>();
 
     public void addAnalyzer(TaskAnalyzer analyzer) {
-        this.analyzers.add(analyzer);
+        analyzers.add(analyzer);
     }
 
     public void removeAnalyzer(TaskAnalyzer analyzer) {
-        this.analyzers.remove(analyzer);
+        analyzers.remove(analyzer);
     }
 
-    public void removeAllAnalyzers() {
-        this.analyzers.clear();
-    }
-
-    public AnalysisResult processText(String text) {
-        AnalysisResult result = new AnalysisResult(text);
-        for (TaskAnalyzer analyzer : analyzers) {
-            analyzer.analyze(text, result);
-        }
-        return result;
-    }
-
-    public List<AnalysisResult> processTexts(List<String> texts) {
+    public List<AnalysisResult> runAll(List<SocialMediaPost> posts, IAiClient aiClient) {
         List<AnalysisResult> results = new ArrayList<>();
-        for (String text : texts) {
-            results.add(processText(text));
+        for (TaskAnalyzer analyzer : analyzers) {
+            results.add(analyzer.analyze(posts, aiClient));
         }
         return results;
     }
 
-    public List<AnalysisResult> runAll(List<String> texts) {
-        return processTexts(texts);
-    }
+    public List<TaskAnalyzer> getAnalyzers() { return analyzers; }
 }

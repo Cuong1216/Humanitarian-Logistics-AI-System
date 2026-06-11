@@ -1,11 +1,9 @@
-package com.project.analysis;
+package main.java.com.project.analysis;
 
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.List;
 
 public interface TaskAnalyzer {
-    void analyze(String text, AnalysisResult result);
-
-    default AnalysisResult analyze(List<SocialMediaPost> posts, AiClient aiClient) {
-        return null;
-    }
+    AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient);
 }

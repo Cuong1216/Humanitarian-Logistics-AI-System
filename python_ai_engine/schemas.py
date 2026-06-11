@@ -108,8 +108,29 @@ class BatchAnalysisResult(BaseModel):
     top_locations: list[str]
 
 
+
+class AreaPriorityResult(BaseModel):
+    location: str
+    priority_rank: int
+    post_count: int
+    emergency_posts: int
+    severity_score: float = Field(..., ge=0, le=1)
+    urgency: UrgencyLevel
+    categories: list[NeedCategory]
+    recommended_action: str
+    post_ids: list[str]
+
+
+class AreaPriorityResponse(BaseModel):
+    areas: list[AreaPriorityResult]
+    total_areas: int
+    highest_priority_location: str | None
+    analyzed_posts: int
+    results: list[AnalysisResult]
 class HealthResponse(BaseModel):
     status: str
     gemini_enabled: bool
     model: str
+
+
 

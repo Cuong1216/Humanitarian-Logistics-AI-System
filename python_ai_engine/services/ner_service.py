@@ -1,4 +1,4 @@
-import re
+﻿import re
 
 from schemas import NeedCategory
 
@@ -122,25 +122,25 @@ class NerService:
 
     LOCATION_PATTERNS = [
         re.compile(
-            r"\b(?:xã|xa|thôn|thon|làng|lang|huyện|huyen|tỉnh|tinh|phường|phuong|quận|quan|tp\.?|thành phố|thanh pho)\s+[\wÀ-ỹ-]+(?:\s+[\wÀ-ỹ-]+)*",
-            flags=re.IGNORECASE,
-        ),
-        re.compile(
-            r"\b[\wÀ-ỹ-]+(?:\s+[\wÀ-ỹ-]+)*\s+(?:xã|xa|thôn|thon|làng|lang|huyện|huyen|tỉnh|tinh|phường|phuong|quận|quan)\b",
+            r"(?=(\b(?:xã|xa|thôn|thon|làng|lang|huyện|huyen|tỉnh|tinh|phường|phuong|quận|quan|tp\.?|thành phố|thanh pho)\s+[\wÀ-ỹ-]+(?:\s+[\wÀ-ỹ-]+){0,6}))",
             flags=re.IGNORECASE,
         ),
     ]
 
     def extract_locations(self, text: str, location_hint: str | None = None) -> list[str]:
         locations: list[str] = []
-        if location_hint:
-            locations.append(location_hint)
 
         for pattern in self.LOCATION_PATTERNS:
             locations.extend(pattern.findall(text))
 
-        cleaned = [self._clean_location(location) for location in locations]
-        return self._dedupe_locations(cleaned)
+        cleaned = self._dedupe_locations([self._clean_location(location) for location in locations])
+
+        if location_hint:
+            hint = self._clean_location(location_hint)
+            if hint and not any(hint.lower() == location.lower() or hint.lower() in location.lower() for location in cleaned):
+                cleaned.append(hint)
+
+        return cleaned
 
     def extract_needs(self, text: str) -> list[NeedCategory]:
         lowered = text.lower()
@@ -153,7 +153,7 @@ class NerService:
     def _clean_location(self, location: str) -> str:
         location = location.strip(" .,;:")
         location = re.split(
-            r"\s+(?:bị|bi|đang|dang|cần|can|thiếu|thieu|ngập|ngap|sập|sap|hư|hu|mất|mat)\b",
+            r"\s+(?:và|va|đều|deu|nhưng|nhung|bị|bi|đang|dang|đã|da|vẫn|van|tiếp tục|tiep tuc|cần|can|thiếu|thieu|ngập|ngap|sập|sap|hư|hu|mất|mat|mưa|mua|lũ|lu|bão|bao|có|co)\b",
             location,
             maxsplit=1,
             flags=re.IGNORECASE,
@@ -162,9 +162,14 @@ class NerService:
 
     def _dedupe_locations(self, locations: list[str]) -> list[str]:
         result: list[str] = []
-        for location in sorted((item for item in locations if item), key=len, reverse=True):
+        for location in (item for item in locations if item):
             lowered = location.lower()
             if any(lowered == kept.lower() or lowered in kept.lower() for kept in result):
                 continue
+            result = [kept for kept in result if kept.lower() not in lowered]
             result.append(location)
         return result
+
+
+
+

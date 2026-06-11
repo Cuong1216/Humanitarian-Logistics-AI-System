@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import re
 from collections import Counter
@@ -19,6 +19,7 @@ from schemas import (
     SocialMediaPost,
     UrgencyLevel,
 )
+from services.knn_severity_service import KnnSeverityService
 from services.ner_service import NerService
 from services.text_cleaning_service import TextCleaningService
 
@@ -111,6 +112,7 @@ class NlpService:
         self.use_mock = os.getenv("USE_MOCK_AI", "false").lower() == "true"
         self.cleaner = TextCleaningService()
         self.ner = NerService()
+        self.knn = KnnSeverityService(k=3)
         self._client = None
 
         if self.api_key and not self.use_mock:
@@ -266,7 +268,10 @@ Bình luận đã làm sạch:
             (trigger_hits / 8) + reaction_pressure + (0.15 if need_categories else 0),
         )
         is_emergency = base_negative >= 0.35 and trigger_hits > 0
-        urgency = self._urgency_from_score(base_negative, need_categories, combined_text, trigger_hits)
+        rule_urgency = self._urgency_from_score(base_negative, need_categories, combined_text, trigger_hits)
+        knn_result = self.knn.predict(post, trigger_hits, need_categories, base_negative)
+        knn_urgency = self._enum_or_default(UrgencyLevel, knn_result["predicted_urgency"], UrgencyLevel.LOW)
+        urgency = self._max_urgency(rule_urgency, knn_urgency)
         dominant = self._dominant_emotion(combined_text, base_negative)
         emotion_scores = self._mock_emotion_scores(dominant, base_negative)
 
@@ -291,6 +296,7 @@ Bình luận đã làm sạch:
                 "cleaned_text": post.text,
                 "trigger_hits": trigger_hits,
                 "reaction_pressure": reaction_pressure,
+                "knn_severity": knn_result,
                 "extraction_mode": "regex_fallback",
             },
         )
@@ -306,6 +312,9 @@ Bình luận đã làm sạch:
             categories.remove(NeedCategory.UNKNOWN)
 
         final_urgency = result.humanitarian_signal.urgency
+        knn_result = self.knn.predict(post, trigger_hits, categories, result.negative_score)
+        knn_urgency = self._enum_or_default(UrgencyLevel, knn_result["predicted_urgency"], UrgencyLevel.LOW)
+        final_urgency = self._max_urgency(final_urgency, knn_urgency)
         is_emergency = result.humanitarian_signal.is_emergency
         if result.negative_score >= 0.5 and trigger_hits > 0:
             is_emergency = True
@@ -329,6 +338,7 @@ Bình luận đã làm sạch:
         )
         result.raw["cleaned_text"] = post.text
         result.raw["trigger_hits"] = trigger_hits
+        result.raw["knn_severity"] = knn_result
         result.raw["extraction_mode"] = "gemini_plus_regex_fallback"
         return result
 
@@ -369,6 +379,14 @@ Bình luận đã làm sạch:
             return UrgencyLevel.MEDIUM
         return UrgencyLevel.LOW
 
+    def _max_urgency(self, first: UrgencyLevel, second: UrgencyLevel) -> UrgencyLevel:
+        order = {
+            UrgencyLevel.LOW: 0,
+            UrgencyLevel.MEDIUM: 1,
+            UrgencyLevel.HIGH: 2,
+            UrgencyLevel.CRITICAL: 3,
+        }
+        return first if order[first] >= order[second] else second
     def _dominant_emotion(self, text: str, negative_score: float) -> EmotionLabel:
         for emotion, hints in VIETNAMESE_EMOTION_HINTS.items():
             if any(token in text for token in hints):
@@ -451,3 +469,5 @@ def top_locations(results: list[AnalysisResult]) -> list[str]:
     for result in results:
         counter.update(result.humanitarian_signal.locations)
     return [location for location, _ in counter.most_common(5)]
+
+

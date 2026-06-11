@@ -1,0 +1,38 @@
+﻿{
+  "posts": [
+    {
+      "id": "post-area-001",
+      "platform": "facebook",
+      "text": "Thôn A xã Bình Minh bị ngập nặng sau bão Yagi. Nhiều hộ dân đang mắc kẹt, thiếu lương thực, nước sạch và thuốc men khẩn cấp.",
+      "keyword": "bão Yagi",
+      "location_hint": "thôn A xã Bình Minh",
+      "reactions": {"sad": 120, "angry": 32, "care": 75, "like": 20},
+      "comments": [
+        "Cứu với, đường vào thôn bị nước cuốn hỏng rồi.",
+        "Cần xe cứu trợ chở nước sạch và thuốc.",
+        "Khoảng 300 người đang cần hỗ trợ."
+      ],
+      "shares": 88
+    },
+    {
+      "id": "post-area-002",
+      "platform": "facebook",
+      "text": "Xã Bình Minh tiếp tục thiếu nước sạch, nhiều người già cần thuốc và hỗ trợ y tế.",
+      "keyword": "bão Yagi",
+      "location_hint": "xã Bình Minh",
+      "reactions": {"sad": 90, "angry": 18, "care": 60, "like": 12},
+      "comments": ["Cần nước sạch gấp.", "Có người bị thương cần bác sĩ."],
+      "shares": 54
+    },
+    {
+      "id": "post-area-003",
+      "platform": "x",
+      "text": "Xã An Lạc mưa lớn nhưng nước đã rút, người dân cần thêm lương thực dự phòng.",
+      "keyword": "bão Yagi",
+      "location_hint": "xã An Lạc",
+      "reactions": {"sad": 25, "angry": 3, "care": 10, "like": 30},
+      "comments": ["Đường đã đi lại được."],
+      "shares": 12
+    }
+  ]
+}

@@ -48,7 +48,7 @@ class SocialMediaPost(BaseModel):
     reactions: dict[str, int] = Field(default_factory=dict)
     comments: list[str] = Field(default_factory=list)
     shares: int = 0
-    url: HttpUrl | None = None
+    url: str | None = None
     created_at: str | None = None
 
 

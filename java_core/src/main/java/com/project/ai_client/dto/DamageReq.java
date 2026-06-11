@@ -1,7 +1,7 @@
 package main.java.com.project.ai_client.dto;
-public class SentimentReq {
+public class DamageReq {
     private String text;
-    public SentimentReq(String text) { this.text = text; }
+    public DamageReq(String text) { this.text = text; }
     // Getters & Setters
 }
 

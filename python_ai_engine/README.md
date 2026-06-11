@@ -130,7 +130,7 @@ https://aistudio.google.com/app/apikey
 5. Copy API key và dán vào file `.env`:
 
 ```env
-GEMINI_API_KEY=dan_key_cua_m_vao_day
+GEMINI_API_KEY=your_gemini_api_key_here
 USE_MOCK_AI=false
 ```
 

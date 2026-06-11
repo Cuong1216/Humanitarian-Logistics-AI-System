@@ -73,6 +73,18 @@ Bật môi trường ảo:
 .\.venv\Scripts\activate
 ```
 
+Nếu PowerShell báo lỗi `running scripts is disabled on this system`, chạy lệnh sau rồi bật lại môi trường ảo:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+Hoặc có thể chạy server trực tiếp bằng Python trong `.venv` mà không cần activate:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
 Nếu thành công, terminal sẽ có `(.venv)` ở đầu dòng.
 
 ### 3. Cài thư viện

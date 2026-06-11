@@ -1,4 +1,4 @@
-package com.disaster.logistics.entities;
+package main.java.com.project.logistics.entities;
 
 import java.util.ArrayList;
 import java.util.List;

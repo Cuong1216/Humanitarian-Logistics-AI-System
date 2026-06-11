@@ -1,8 +1,9 @@
-package com.disaster.logistics.utils;
+package main.java.com.project.logistics.utils;
 
-import com.disaster.logistics.entities.Location;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.java.com.project.logistics.entities.Location;
 
 public class RouteFinder {
 

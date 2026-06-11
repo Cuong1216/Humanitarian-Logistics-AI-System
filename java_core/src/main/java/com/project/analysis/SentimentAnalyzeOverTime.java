@@ -1,23 +1,42 @@
-package com.disaster.analysis;
+package main.java.com.project.analysis;
 
-import com.disaster.ai_client.AiClient;
-import com.disaster.datacollection.model.SocialMediaPost;
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.ai_client.dto.AnalyzeReq;
+import main.java.com.project.ai_client.dto.AnalyzeRes;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.*;
 
 public class SentimentAnalyzeOverTime implements TaskAnalyzer {
 
     @Override
-    public AnalysisResult analyze(List<SocialMediaPost> posts, AiClient aiClient) {
+    public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
         AnalysisResult result = new AnalysisResult("SentimentOverTime");
-        // Mock: assign random sentiment scores per post
-        Map<String, Double> sentimentMap = new LinkedHashMap<>();
-        String[] sentiments = {"Panic", "Fear", "Neutral", "Hope", "Relief"};
-        Random rand = new Random();
+        
+        Map<String, Double> negativeScoreMap = new LinkedHashMap<>();
+        Map<String, String> emotionMap = new LinkedHashMap<>();
+        
         for (SocialMediaPost post : posts) {
-            sentimentMap.put(post.getId(), rand.nextDouble() * 2 - 1); // -1.0 to 1.0
+            if (aiClient != null) {
+                try {
+                    AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
+                        post.getId() != null ? post.getId() : UUID.randomUUID().toString(),
+                        "facebook", "unknown", post.getContent(), "", "", 
+                        new HashMap<>(), new ArrayList<>(), 0
+                    );
+                    AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
+                    
+                    if (res != null) {
+                        negativeScoreMap.put(post.getId(), res.getNegativeScore());
+                        emotionMap.put(post.getId(), res.getDominantEmotion());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        result.put("sentimentTimeline", sentimentMap);
-        result.setSummary("Sentiment analyzed over " + posts.size() + " posts.");
+        result.put("negativeScoreTimeline", negativeScoreMap);
+        result.put("dominantEmotions", emotionMap);
+        result.setSummary("Sentiment & Negative Score analyzed over " + posts.size() + " posts using AI Engine.");
         return result;
     }
 }

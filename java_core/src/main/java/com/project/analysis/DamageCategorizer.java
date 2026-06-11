@@ -1,36 +1,53 @@
-package com.disaster.analysis;
+package main.java.com.project.analysis;
 
-import com.disaster.ai_client.AiClient;
-import com.disaster.datacollection.model.SocialMediaPost;
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.ai_client.dto.AnalyzeReq;
+import main.java.com.project.ai_client.dto.AnalyzeRes;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.*;
 
 public class DamageCategorizer implements TaskAnalyzer {
-    private List<String> damageCategories;
+    private List<String> urgencyLevels;
 
     public DamageCategorizer() {
-        this.damageCategories = Arrays.asList(
-            "Flood", "Building Collapse", "Road Damage", "Power Outage", "Fire"
-        );
+        this.urgencyLevels = Arrays.asList("low", "medium", "high", "critical");
     }
 
-    public List<String> getDamageCategories() { return damageCategories; }
-    public void setDamageCategories(List<String> damageCategories) {
-        this.damageCategories = damageCategories;
+    public List<String> getUrgencyLevels() { return urgencyLevels; }
+    public void setUrgencyLevels(List<String> urgencyLevels) {
+        this.urgencyLevels = urgencyLevels;
     }
 
     @Override
-    public AnalysisResult analyze(List<SocialMediaPost> posts, AiClient aiClient) {
-        AnalysisResult result = new AnalysisResult("DamageCategorizer");
-        Map<String, Integer> categoryCount = new LinkedHashMap<>();
-        for (String cat : damageCategories) categoryCount.put(cat, 0);
+    public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
+        AnalysisResult result = new AnalysisResult("UrgencyCategorizer");
+        Map<String, Integer> urgencyCount = new LinkedHashMap<>();
+        for (String lvl : urgencyLevels) urgencyCount.put(lvl, 0);
 
-        Random rand = new Random();
         for (SocialMediaPost post : posts) {
-            String cat = damageCategories.get(rand.nextInt(damageCategories.size()));
-            categoryCount.put(cat, categoryCount.get(cat) + 1);
+            if (aiClient != null) {
+                try {
+                    AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
+                        post.getId() != null ? post.getId() : UUID.randomUUID().toString(),
+                        "facebook", "unknown", post.getContent(), "", "", 
+                        new HashMap<>(), new ArrayList<>(), 0
+                    );
+                    AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
+                    
+                    if (res != null && res.getHumanitarianSignal() != null) {
+                        String urgency = res.getHumanitarianSignal().getUrgency();
+                        if (urgency != null && urgencyCount.containsKey(urgency.toLowerCase())) {
+                            String key = urgency.toLowerCase();
+                            urgencyCount.put(key, urgencyCount.get(key) + 1);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        result.put("categoryCount", categoryCount);
-        result.setSummary("Categorized " + posts.size() + " posts into " + damageCategories.size() + " damage types.");
+        result.put("urgencyCount", urgencyCount);
+        result.setSummary("Categorized urgency of " + posts.size() + " posts using AI Engine.");
         return result;
     }
 }

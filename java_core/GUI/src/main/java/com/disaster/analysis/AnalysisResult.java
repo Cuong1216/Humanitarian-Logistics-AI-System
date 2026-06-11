@@ -1,4 +1,4 @@
-package main.java.com.project.analysis;
+package com.disaster.analysis;
 
 import java.util.HashMap;
 import java.util.Map;

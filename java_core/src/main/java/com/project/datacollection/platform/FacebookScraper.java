@@ -1,6 +1,6 @@
 package main.java.com.project.datacollection.platform;
 
-import main.java.com.project.datacollection.model.SocialMediaPost;
+import com.project.datacollection.model.SocialMediaPost;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -130,4 +130,54 @@ public class FacebookScraper implements Platform {
             System.err.println("Lỗi đăng nhập Facebook: " + e.getMessage());
         }
     }
+
+
+    private void loginToFacebook(WebDriver driver, String email, String password) {
+        try {
+            driver.get("https://www.facebook.com/");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            
+            // Tìm và điền email
+            WebElement emailInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));
+            emailInput.sendKeys(email);
+            
+            // Tìm và điền mật khẩu
+            WebElement passwordInput = driver.findElement(By.id("pass"));
+            passwordInput.sendKeys(password);
+            
+            // Bấm nút đăng nhập
+            WebElement loginButton = driver.findElement(By.name("login"));
+            loginButton.click();
+            
+            // Đợi chuyển hướng sau đăng nhập
+            Thread.sleep(5000); 
+        } catch (Exception e) {
+            System.err.println("Lỗi đăng nhập Facebook: " + e.getMessage());
+        }
+    }
+
+    private LocalDateTime parseFacebookTimestamp(String timeText) {
+        if (timeText == null || timeText.trim().isEmpty()) return LocalDateTime.now();
+        String lower = timeText.toLowerCase().trim();
+        LocalDateTime now = LocalDateTime.now();
+        try {
+            if (lower.contains("vừa xong") || lower.contains("just now")) {
+                return now;
+            } else if (lower.matches(".*\\d+\\s*(phút|m).*")) {
+                long min = Long.parseLong(lower.replaceAll("\\D", ""));
+                return now.minusMinutes(min);
+            } else if (lower.matches(".*\\d+\\s*(giờ|h).*")) {
+                long h = Long.parseLong(lower.replaceAll("\\D", ""));
+                return now.minusHours(h);
+            } else if (lower.matches(".*\\d+\\s*(ngày|d).*")) {
+                long d = Long.parseLong(lower.replaceAll("\\D", ""));
+                return now.minusDays(d);
+            } else if (lower.contains("hôm qua") || lower.contains("yesterday")) {
+                return now.minusDays(1);
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi parse thời gian FB: " + timeText);
+        }
+        return now;
+  }
 }

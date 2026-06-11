@@ -1,4 +1,4 @@
-# KeyEmotion Python AI Engine
+﻿# KeyEmotion Python AI Engine
 
 Đây là bộ não AI của dự án `KeyEmotion_through_SocialMedia`.
 Python chạy như một API server local bằng FastAPI để phần Java gửi dữ liệu bài đăng mạng xã hội sang và nhận kết quả JSON.
@@ -218,3 +218,136 @@ Response mẫu:
 }
 ```
 
+
+## Thuật toán AI/ML local: KNN Severity Classifier
+
+Ngoài việc gọi Gemini API để hỗ trợ phân tích ngôn ngữ tự nhiên, Python AI Engine còn triển khai một mô hình ML local dùng thuật toán K-Nearest Neighbors (KNN) để phân loại mức độ nghiêm trọng của bài đăng.
+
+Luồng xử lý:
+
+```text
+Post text
+ -> Text cleaning
+ -> Extract numeric features
+ -> KNN classifier dự đoán severity
+ -> Gemini bổ sung phân tích nếu có API key
+ -> Rule-based logic merge kết quả
+ -> JSON trả về Java
+```
+
+KNN dự đoán một trong bốn mức:
+
+```text
+low / medium / high / critical
+```
+
+Feature vector dùng cho KNN gồm các đặc trưng số dễ giải thích:
+
+```text
+[
+  số trigger words đã chuẩn hóa,
+  có nhu cầu cứu hộ hay không,
+  có nhu cầu y tế hay không,
+  có nhu cầu lương thực hay không,
+  có nhu cầu nước sạch hay không,
+  có vấn đề vận chuyển hay không,
+  số lượng comment đã chuẩn hóa,
+  số reaction sad/care đã chuẩn hóa,
+  số reaction angry đã chuẩn hóa,
+  số share đã chuẩn hóa,
+  ước lượng số người bị ảnh hưởng đã chuẩn hóa,
+  negative_score
+]
+```
+
+Mô hình dùng tập dữ liệu mock đã gán nhãn trong `services/knn_severity_service.py`. Khi có bài đăng mới, hệ thống tính khoảng cách Euclidean giữa feature vector của bài mới và các mẫu huấn luyện, lấy `k = 3` láng giềng gần nhất để vote ra mức nghiêm trọng.
+
+Kết quả KNN được lưu trong response tại:
+
+```text
+raw.knn_severity
+```
+
+Ví dụ:
+
+```json
+"knn_severity": {
+  "algorithm": "KNN",
+  "k": 3,
+  "predicted_urgency": "critical",
+  "confidence": 0.789,
+  "nearest_neighbors": [
+    {"distance": 0.52, "label": "critical"},
+    {"distance": 0.875, "label": "critical"},
+    {"distance": 1.223, "label": "high"}
+  ]
+}
+```
+
+Trong hệ thống, mức khẩn cấp cuối cùng được lấy bằng cách so sánh giữa rule-based urgency và KNN urgency, sau đó chọn mức nghiêm trọng cao hơn để tránh bỏ sót các bài đăng nguy hiểm.
+
+## Xếp hạng khu vực ưu tiên cứu trợ
+
+Để khớp với mục tiêu Humanitarian Logistics, hệ thống có thêm bước tổng hợp theo khu vực. Sau khi KNN đánh giá mức độ nghiêm trọng của từng bài đăng, API sẽ gom các bài theo địa điểm và tính điểm ưu tiên cho từng khu vực.
+
+Luồng xử lý:
+
+```text
+Nhiều bài post
+ -> KNN chấm severity từng post
+ -> gom nhóm theo location
+ -> tính severity_score cho từng khu vực
+ -> sắp xếp khu vực theo priority_rank
+ -> đề xuất khu vực cần hỗ trợ trước
+```
+
+Endpoint dùng để xếp hạng khu vực:
+
+```text
+POST /analyze/areas
+POST /analyze/keyword/areas
+```
+
+Trong đó:
+
+- `/analyze/areas`: phân tích tất cả post được gửi lên.
+- `/analyze/keyword/areas`: lọc post theo keyword trước, sau đó mới gom khu vực.
+
+Request mẫu cho `/analyze/areas` nằm trong:
+
+```text
+sample_area_request.json
+```
+
+Response trả về danh sách khu vực đã được xếp hạng:
+
+```json
+{
+  "areas": [
+    {
+      "location": "thôn A xã Bình Minh",
+      "priority_rank": 1,
+      "post_count": 1,
+      "emergency_posts": 1,
+      "severity_score": 0.93,
+      "urgency": "critical",
+      "categories": ["food", "water", "medical", "rescue", "transport"],
+      "recommended_action": "Ưu tiên cao nhất: điều phối cứu trợ...",
+      "post_ids": ["post-area-001"]
+    }
+  ],
+  "highest_priority_location": "thôn A xã Bình Minh",
+  "analyzed_posts": 3
+}
+```
+
+Cách tính `severity_score` kết hợp nhiều tín hiệu:
+
+```text
+severity_score = điểm urgency rule-based
+               + negative_score
+               + điểm urgency do KNN dự đoán
+               + confidence của KNN
+```
+
+Sau đó hệ thống tính điểm tổng hợp cho từng khu vực dựa trên điểm trung bình, điểm cao nhất và tỷ lệ bài emergency trong khu vực đó. Khu vực có `severity_score` cao nhất sẽ có `priority_rank = 1` và được đề xuất hỗ trợ trước.

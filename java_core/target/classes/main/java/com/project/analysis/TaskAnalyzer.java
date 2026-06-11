@@ -1,9 +1,9 @@
-package com.disaster.analysis;
+package main.java.com.project.analysis;
 
-import com.disaster.ai_client.AiClient;
-import com.disaster.datacollection.model.SocialMediaPost;
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.List;
 
 public interface TaskAnalyzer {
-    AnalysisResult analyze(List<SocialMediaPost> posts, AiClient aiClient);
+    AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient);
 }

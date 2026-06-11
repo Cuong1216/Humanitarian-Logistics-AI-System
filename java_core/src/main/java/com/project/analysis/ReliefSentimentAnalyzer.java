@@ -1,7 +1,7 @@
-package com.disaster.analysis;
+package main.java.com.project.analysis;
 
-import com.disaster.ai_client.AiClient;
-import com.disaster.datacollection.model.SocialMediaPost;
+import main.java.com.project.ai_client.AiClient;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.*;
 
 public class ReliefSentimentAnalyzer implements TaskAnalyzer {
@@ -15,7 +15,7 @@ public class ReliefSentimentAnalyzer implements TaskAnalyzer {
     public void setSupportItem(List<String> supportItem) { this.supportItem = supportItem; }
 
     @Override
-    public AnalysisResult analyze(List<SocialMediaPost> posts, AiClient aiClient) {
+    public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
         AnalysisResult result = new AnalysisResult("ReliefSentimentAnalyzer");
         Map<String, Integer> itemDemand = new LinkedHashMap<>();
         for (String item : supportItem) itemDemand.put(item, 0);

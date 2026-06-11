@@ -1,6 +1,6 @@
-package com.project.datacollection.platform;
+package main.java.com.project.datacollection.platform;
 
-import com.project.datacollection.model.SocialMediaPost;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;

@@ -1,4 +1,4 @@
-package com.project.datacollection.model;
+package main.java.com.project.datacollection.model;
 
 import java.time.LocalDateTime;
 

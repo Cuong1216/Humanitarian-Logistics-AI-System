@@ -1,7 +1,7 @@
-package com.disaster.analysis;
+package main.java.com.project.analysis;
 
-import com.disaster.ai_client.AiClient;
-import com.disaster.datacollection.model.SocialMediaPost;
+import main.java.com.project.ai_client.IAiClient;
+import main.java.com.project.datacollection.model.SocialMediaPost;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class AnalysisManager {
         analyzers.remove(analyzer);
     }
 
-    public List<AnalysisResult> runAll(List<SocialMediaPost> posts, AiClient aiClient) {
+    public List<AnalysisResult> runAll(List<SocialMediaPost> posts, IAiClient aiClient) {
         List<AnalysisResult> results = new ArrayList<>();
         for (TaskAnalyzer analyzer : analyzers) {
             results.add(analyzer.analyze(posts, aiClient));

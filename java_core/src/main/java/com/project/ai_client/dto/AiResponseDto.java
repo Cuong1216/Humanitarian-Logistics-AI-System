@@ -1,4 +1,4 @@
-package main.java.com.project.ai_client.dto;
+package com.project.ai_client.dto;
 
 // 1. DTO cho Bài toán Phân tích Cảm xúc
 

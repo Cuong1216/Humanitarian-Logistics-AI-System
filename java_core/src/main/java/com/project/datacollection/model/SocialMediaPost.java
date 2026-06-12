@@ -9,6 +9,8 @@ public class SocialMediaPost {
     private String platform;
     private int likeCount;
     private int shareCount;
+    private java.util.List<String> comments = new java.util.ArrayList<>();
+    private java.util.Map<String, Integer> reactions = new java.util.HashMap<>();
 
     public SocialMediaPost() {}
 
@@ -76,6 +78,28 @@ public class SocialMediaPost {
         this.shareCount = shareCount;
     }
 
+    public java.util.List<String> getComments() {
+        if (comments == null) {
+            comments = new java.util.ArrayList<>();
+        }
+        return comments;
+    }
+
+    public void setComments(java.util.List<String> comments) {
+        this.comments = comments;
+    }
+
+    public java.util.Map<String, Integer> getReactions() {
+        if (reactions == null) {
+            reactions = new java.util.HashMap<>();
+        }
+        return reactions;
+    }
+
+    public void setReactions(java.util.Map<String, Integer> reactions) {
+        this.reactions = reactions;
+    }
+
     @Override
     public String toString() {
         return "SocialMediaPost{" +
@@ -83,6 +107,9 @@ public class SocialMediaPost {
                 ", platform='" + platform + '\'' +
                 ", author='" + author + '\'' +
                 ", content='" + content + '\'' +
+                ", likes=" + likeCount +
+                ", shares=" + shareCount +
+                ", commentsCount=" + (comments != null ? comments.size() : 0) +
                 '}';
     }
 }

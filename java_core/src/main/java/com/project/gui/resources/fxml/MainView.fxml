@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.disaster.gui.AppController"
+            fx:controller="com.project.gui.controller.AppController"
             stylesheets="@../css/style.css">
 
     <!-- ── HEADER ── -->
@@ -52,13 +52,30 @@
                         <Label text="Platforms" styleClass="field-label"/>
                         <HBox spacing="16">
                             <CheckBox fx:id="facebookCheck" text="Facebook"  selected="true"/>
-                            <CheckBox fx:id="twitterCheck"  text="Twitter"   selected="true"/>
+                            <CheckBox fx:id="twitterCheck"  text="Twitter"   selected="false"/>
+                        </HBox>
+
+                        <Label text="Target Facebook Pages/Links" styleClass="field-label"/>
+                        <ListView fx:id="pagesListView" prefHeight="110" styleClass="text-field-styled"/>
+                        <HBox spacing="6" alignment="CENTER_LEFT">
+                            <TextField fx:id="newPageField" promptText="Enter page name or link..." HBox.hgrow="ALWAYS" styleClass="text-field-styled"/>
+                            <Button text="＋ Add" onAction="#onAddPage" styleClass="btn-secondary" style="-fx-padding: 6 10 6 10;"/>
+                            <Button text="🗑 Remove" onAction="#onRemovePage" styleClass="btn-secondary" style="-fx-padding: 6 10 6 10; -fx-background-color: #7f8c8d;"/>
                         </HBox>
 
                         <Region VBox.vgrow="ALWAYS"/>
 
-                        <Button text="🔍  Fetch Posts" onAction="#onFetchPosts"
-                                styleClass="btn-primary" maxWidth="Infinity"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="fetchButton" text="🔍  Fetch Posts" onAction="#onFetchPosts"
+                                    styleClass="btn-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="cancelButton" text="✕ Cancel" onAction="#onCancelScraping"
+                                    styleClass="btn-secondary" style="-fx-background-color: #c0392b; -fx-padding: 9 18 9 18;" visible="false" managed="false"/>
+                        </HBox>
+
+                        <HBox fx:id="loadingBox" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+                            <ProgressIndicator prefWidth="20" prefHeight="20"/>
+                            <Label text="Scraping live Facebook posts..." style="-fx-text-fill: -color-primary; -fx-font-weight: bold;"/>
+                        </HBox>
 
                         <Label fx:id="statusLabel" text="Ready." styleClass="status-label"
                                wrapText="true"/>
@@ -114,7 +131,7 @@
 
                         <Region VBox.vgrow="ALWAYS"/>
 
-                        <Button text="▶  Run Analysis" onAction="#onRunAnalysis"
+                        <Button fx:id="runAnalysisButton" text="▶  Run Analysis" onAction="#onRunAnalysis"
                                 styleClass="btn-primary" maxWidth="Infinity"/>
                     </VBox>
 

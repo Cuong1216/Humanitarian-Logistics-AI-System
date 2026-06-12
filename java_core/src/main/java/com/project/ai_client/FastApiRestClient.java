@@ -1,4 +1,4 @@
-package main.java.com.project.ai_client;
+package com.project.ai_client;
 
 import com.google.gson.Gson;
 import java.net.URI;

@@ -1,4 +1,4 @@
-package com.disaster;
+package com.project.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +11,11 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("/com/disaster/gui/fxml/MainView.fxml")
+            getClass().getResource("/com/project/gui/resources/fxml/MainView.fxml")
         );
         Scene scene = new Scene(loader.load(), 1280, 800);
         scene.getStylesheets().add(
-            getClass().getResource("/com/disaster/gui/css/style.css").toExternalForm()
+            getClass().getResource("/com/project/gui/resources/css/style.css").toExternalForm()
         );
         primaryStage.setTitle("Disaster Relief System");
         primaryStage.setScene(scene);
@@ -25,6 +25,7 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
+        System.setProperty("jdk.gtk.version", "2");
         launch(args);
     }
 }

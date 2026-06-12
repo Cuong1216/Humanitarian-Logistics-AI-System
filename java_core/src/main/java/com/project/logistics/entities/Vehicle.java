@@ -1,4 +1,4 @@
-package main.java.com.project.logistics.entities;
+package com.project.logistics.entities;
 
 public class Vehicle {
     private String vehicleId;

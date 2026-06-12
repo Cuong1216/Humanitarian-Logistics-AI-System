@@ -6,6 +6,8 @@
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/datacollection/model/SocialMediaPost.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/datacollection/platform/PlatformSetting.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/DamageCategorizer.java
+/home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/analyzers/SentimentAnalyzeOverTime.java
+/home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/test/CrawlerTest.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/datacollection/platform/XScraper.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/gui/MainApp.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/dto/SentimentReq.java
@@ -19,11 +21,12 @@
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/gui/controller/AppController.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/SentimentAnalyzeOverTime.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/logistics/entities/Vehicle.java
+/home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/analyzers/ReliefSentimentAnalyzer.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/FastApiRestClient.java
-/home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/test/APIcallTest.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/dto/AnalyzeReq.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/IAiClient.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/AnalysisManager.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/dto/SentimentRes.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/datacollection/platform/FacebookScraper.java
 /home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/ai_client/dto/DamageRes.java
+/home/muffin/Projects/KeyEmotion_through_SocialMedia/java_core/src/main/java/com/project/analysis/analyzers/DamageCategorizer.java

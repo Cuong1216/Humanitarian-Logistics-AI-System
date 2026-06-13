@@ -16,7 +16,7 @@ public class Main {
             scene.getStylesheets().add(
                 getClass().getResource("/com/project/gui/resources/css/style.css").toExternalForm()
             );
-            primaryStage.setTitle("Disaster Relief System");
+            primaryStage.setTitle("Hệ thống Phân tích Mạng xã hội & Điều phối Cứu trợ Thiên tai");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1000);
             primaryStage.setMinHeight(700);

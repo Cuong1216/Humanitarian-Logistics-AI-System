@@ -25,11 +25,12 @@ public class ReliefSentimentAnalyzer implements TaskAnalyzer {
         for (SocialMediaPost post : posts) {
             if (aiClient != null) {
                 try {
+                    String preprocessedText = WordPreprocessor.preprocess(post.getContent());
                     AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
                         post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
                         post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
                         post.getAuthor() != null ? post.getAuthor() : "unknown",
-                        post.getContent(),
+                        preprocessedText,
                         "",
                         "",
                         post.getReactions(),

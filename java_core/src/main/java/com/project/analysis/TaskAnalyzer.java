@@ -8,7 +8,4 @@ public interface TaskAnalyzer {
     default AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
         return null;
     }
-
-    default void analyze(String text, AnalysisResult result) {
-    }
 }

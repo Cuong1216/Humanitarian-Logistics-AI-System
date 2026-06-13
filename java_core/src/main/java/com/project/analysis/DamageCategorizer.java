@@ -1,59 +1,195 @@
 package com.project.analysis;
 
 import com.project.ai_client.IAiClient;
-import com.project.ai_client.dto.AnalyzeReq;
-import com.project.ai_client.dto.AnalyzeRes;
 import com.project.datacollection.model.SocialMediaPost;
 import java.util.*;
 
 public class DamageCategorizer implements TaskAnalyzer {
-    private List<String> urgencyLevels;
+    private List<String> damageCategories;
 
     public DamageCategorizer() {
-        this.urgencyLevels = Arrays.asList("low", "medium", "high", "critical");
+        this.damageCategories = Arrays.asList(
+            "Người bị ảnh hưởng",
+            "Gián đoạn các hoạt động kinh tế sản xuất",
+            "Nhà cửa hoặc tòa nhà bị hư hỏng",
+            "Tài sản cá nhân bị mất",
+            "Cơ sở hạ tầng bị hư hỏng",
+            "Nông nghiệp & Vật nuôi bị thiệt hại"
+        );
     }
 
-    public List<String> getUrgencyLevels() { return urgencyLevels; }
-    public void setUrgencyLevels(List<String> urgencyLevels) {
-        this.urgencyLevels = urgencyLevels;
+    public List<String> getDamageCategories() {
+        return damageCategories;
+    }
+
+    public static class ClassificationResult {
+        public String category;
+        public String evidence;
+
+        public ClassificationResult(String category, String evidence) {
+            this.category = category;
+            this.evidence = evidence;
+        }
+    }
+
+    public ClassificationResult classifyPost(String content) {
+        if (content == null || content.trim().isEmpty()) {
+            return new ClassificationResult("Khác (Tin tức chung / Chưa phân loại)", "Không có nội dung");
+        }
+
+        String lowerText = content.toLowerCase();
+
+        // 1. Keywords for Human Impact
+        List<String> humanKeywords = Arrays.asList(
+            "chết", "thiệt mạng", "mất tích", "thi thể", "xác", "quan tài", "bị thương", 
+            "cấp cứu", "thương vong", "chấn thương", "người bị nạn", "tính mạng", "đuối nước", 
+            "cuốn trôi mất", "tìm xác", "hóa vàng", "tang thương", "nạn nhân"
+        );
+
+        // 2. Keywords for Economic/Production Disruption
+        List<String> economicKeywords = Arrays.asList(
+            "mất điện", "cúp điện", "mất nước", "mất mạng", "mất sóng", "ngừng hoạt động", 
+            "đóng cửa", "đình trệ", "nghỉ làm", "gián đoạn", "không bán hàng", "tăng giá", 
+            "thiếu lương thực", "đắt đỏ", "cạn kiệt", "chợ đóng cửa", "cửa hàng ngừng", 
+            "giá tăng", "thực phẩm khan hiếm"
+        );
+
+        // 3. Keywords for Damaged Houses/Buildings
+        List<String> houseKeywords = Arrays.asList(
+            "sập nhà", "tốc mái", "mái tôn", "đổ tường", "bay mái", "bay nóc", "nhà đổ", 
+            "nứt nhà", "ngập nóc", "ngập mái", "sập trần", "sập tường", "bay mái tôn", 
+            "hỏng mái", "nhà sập", "sập tiệm", "tòa nhà đổ", "nhà bay"
+        );
+
+        // 4. Keywords for Lost Personal Property
+        List<String> propertyKeywords = Arrays.asList(
+            "hỏng xe", "ngập xe", "trôi xe", "chìm xuồng", "trôi đồ", "ướt hết", "ti vi", 
+            "tủ lạnh", "máy giặt", "xe máy", "ô tô", "mất đồ", "hỏng tài sản", "trôi mất xe", 
+            "hỏng đồ đạc", "đồ dùng gia đình", "ướt sạch đồ"
+        );
+
+        // 5. Keywords for Damaged Infrastructure
+        List<String> infraKeywords = Arrays.asList(
+            "sạt lở", "sập cầu", "sập đường", "đập tràn", "đê", "đê điều", "đường ngập", 
+            "gãy cây", "cây đổ", "cột điện", "sụt lún", "cầu gãy", "cô lập", "chia cắt", 
+            "quốc lộ", "cầu sập", "sạt lở núi", "vỡ đê", "cột điện đổ", "tắc đường"
+        );
+
+        // 6. Keywords for Agricultural/Livestock Damage
+        List<String> agriKeywords = Arrays.asList(
+            "ngập lúa", "mất mùa", "chết gà", "chết lợn", "chết bò", "rau màu", "ao cá", 
+            "vườn tược", "trôi ao", "hoa màu", "cây ăn quả", "lúa ngập", "đàn lợn", "đàn gà", 
+            "gia súc", "gia cầm", "phù sa bồi lấp", "hỏng lúa", "trôi ao cá", "trang trại",
+            "chết vịt", "chết gia súc", "thiệt hại lúa", "nông nghiệp"
+        );
+
+        // Match counts and matching words lists
+        int humanMatches = 0; List<String> matchedHuman = new ArrayList<>();
+        int economicMatches = 0; List<String> matchedEconomic = new ArrayList<>();
+        int houseMatches = 0; List<String> matchedHouse = new ArrayList<>();
+        int propertyMatches = 0; List<String> matchedProperty = new ArrayList<>();
+        int infraMatches = 0; List<String> matchedInfra = new ArrayList<>();
+        int agriMatches = 0; List<String> matchedAgri = new ArrayList<>();
+
+        for (String kw : humanKeywords) {
+            if (lowerText.contains(kw)) {
+                humanMatches++;
+                matchedHuman.add(kw);
+            }
+        }
+        for (String kw : economicKeywords) {
+            if (lowerText.contains(kw)) {
+                economicMatches++;
+                matchedEconomic.add(kw);
+            }
+        }
+        for (String kw : houseKeywords) {
+            if (lowerText.contains(kw)) {
+                houseMatches++;
+                matchedHouse.add(kw);
+            }
+        }
+        for (String kw : propertyKeywords) {
+            if (lowerText.contains(kw)) {
+                propertyMatches++;
+                matchedProperty.add(kw);
+            }
+        }
+        for (String kw : infraKeywords) {
+            if (lowerText.contains(kw)) {
+                infraMatches++;
+                matchedInfra.add(kw);
+            }
+        }
+        for (String kw : agriKeywords) {
+            if (lowerText.contains(kw)) {
+                agriMatches++;
+                matchedAgri.add(kw);
+            }
+        }
+
+        // Determine category with max matches
+        int max = 0;
+        String selectedCategory = "Khác (Tin tức chung / Chưa phân loại)";
+        String selectedEvidence = "Không phát hiện từ khóa đặc trưng";
+
+        if (humanMatches > max) {
+            max = humanMatches;
+            selectedCategory = "Người bị ảnh hưởng";
+            selectedEvidence = String.join(", ", matchedHuman);
+        }
+        if (houseMatches > max) {
+            max = houseMatches;
+            selectedCategory = "Nhà cửa hoặc tòa nhà bị hư hỏng";
+            selectedEvidence = String.join(", ", matchedHouse);
+        }
+        if (infraMatches > max) {
+            max = infraMatches;
+            selectedCategory = "Cơ sở hạ tầng bị hư hỏng";
+            selectedEvidence = String.join(", ", matchedInfra);
+        }
+        if (agriMatches > max) {
+            max = agriMatches;
+            selectedCategory = "Nông nghiệp & Vật nuôi bị thiệt hại";
+            selectedEvidence = String.join(", ", matchedAgri);
+        }
+        if (economicMatches > max) {
+            max = economicMatches;
+            selectedCategory = "Gián đoạn các hoạt động kinh tế sản xuất";
+            selectedEvidence = String.join(", ", matchedEconomic);
+        }
+        if (propertyMatches > max) {
+            max = propertyMatches;
+            selectedCategory = "Tài sản cá nhân bị mất";
+            selectedEvidence = String.join(", ", matchedProperty);
+        }
+
+        return new ClassificationResult(selectedCategory, selectedEvidence);
     }
 
     @Override
     public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
-        AnalysisResult result = new AnalysisResult("UrgencyCategorizer");
-        Map<String, Integer> urgencyCount = new LinkedHashMap<>();
-        for (String lvl : urgencyLevels) urgencyCount.put(lvl, 0);
+        AnalysisResult result = new AnalysisResult("DamageCategorizer");
+        Map<String, Integer> damageCounts = new LinkedHashMap<>();
+        for (String cat : damageCategories) {
+            damageCounts.put(cat, 0);
+        }
+        damageCounts.put("Khác (Tin tức chung / Chưa phân loại)", 0);
+
+        Map<String, String> postCategories = new HashMap<>();
+        Map<String, String> postEvidence = new HashMap<>();
 
         for (SocialMediaPost post : posts) {
-            if (aiClient != null) {
-                try {
-                    AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
-                        post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
-                        post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
-                        post.getAuthor() != null ? post.getAuthor() : "unknown",
-                        post.getContent(),
-                        "",
-                        "",
-                        post.getReactions(),
-                        post.getComments(),
-                        post.getShareCount()
-                    );
-                    AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
-                    
-                    if (res != null && res.getHumanitarianSignal() != null) {
-                        String urgency = res.getHumanitarianSignal().getUrgency();
-                        if (urgency != null && urgencyCount.containsKey(urgency.toLowerCase())) {
-                            String key = urgency.toLowerCase();
-                            urgencyCount.put(key, urgencyCount.get(key) + 1);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            ClassificationResult classRes = classifyPost(post.getContent());
+            damageCounts.put(classRes.category, damageCounts.getOrDefault(classRes.category, 0) + 1);
+            postCategories.put(post.getId(), classRes.category);
+            postEvidence.put(post.getId(), classRes.evidence);
         }
-        result.put("urgencyCount", urgencyCount);
-        result.setSummary("Categorized urgency of " + posts.size() + " posts using AI Engine.");
+
+        result.put("damageCounts", damageCounts);
+        result.put("postCategories", postCategories);
+        result.put("postEvidence", postEvidence);
+        result.setSummary("Đã phân loại danh mục thiệt hại cho " + posts.size() + " bài viết.");
         return result;
     }
 }

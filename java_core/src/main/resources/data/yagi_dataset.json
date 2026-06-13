@@ -1,0 +1,623 @@
+[
+  {
+    "id": "yagi-fb-001",
+    "platform": "facebook",
+    "author": "Trung tâm KTTV Quốc gia",
+    "content": "⚠️ CẢNH BÁO KHẨN CẤP: Áp thấp nhiệt đới ngoài khơi có khả năng mạnh lên thành bão số 3 (bão Yagi). Dự kiến hướng vào Vịnh Bắc Bộ cuối tuần này. Yêu cầu các tàu thuyền tìm nơi trú ẩn an toàn gấp, bà con chủ động gia cố nhà cửa chống bão. Xem thêm tại https://kttv.gov.vn #BaoSo3",
+    "timestamp": "2024-09-04T08:30:00Z",
+    "likeCount": 1200,
+    "shareCount": 340,
+    "reactions": {"like": 1200, "care": 450, "sad": 10},
+    "comments": [
+      "Bão này mạnh quá, mong mọi người cẩn thận.",
+      "Hải Phòng bắt đầu có gió rít rồi bà con ơi.",
+      "Hy vọng bão đổi hướng giảm cấp."
+    ]
+  },
+  {
+    "id": "yagi-fb-002",
+    "platform": "facebook",
+    "author": "Ban chỉ đạo Phòng chống thiên tai",
+    "content": "Bão số 3 (Yagi) đã mạnh lên thành siêu bão cấp 16, giật trên cấp 17. Đêm nay bão sẽ trực tiếp ảnh hưởng đến các tỉnh Quảng Ninh, Hải Phòng, Nam Định. Gió giật cực kỳ mạnh, mưa như trút nước. Khuyến cáo người dân tuyệt đối không ra đường sau 20h tối nay để đảm bảo an toàn tính mạng.",
+    "timestamp": "2024-09-06T14:00:00Z",
+    "likeCount": 4500,
+    "shareCount": 2100,
+    "reactions": {"sad": 1200, "care": 800, "angry": 12, "like": 2500},
+    "comments": [
+      "Khủng khiếp quá, cấp 16 thì nhà cửa chống sao nổi.",
+      "Cầu mong mọi người bình an qua đêm nay.",
+      "Sợ quá, gió bắt đầu hú rít ngoài cửa rồi."
+    ]
+  },
+  {
+    "id": "yagi-x-003",
+    "platform": "x",
+    "author": "vietnam_news_agency",
+    "content": "Landslide reported in Luc Yen, Yen Bai province after heavy rains from #YagiStorm. Road blocked, rescue teams are on their way. Please avoid highway 70. @VNA_English #BaoSo3",
+    "timestamp": "2024-09-08T10:15:00Z",
+    "likeCount": 450,
+    "shareCount": 120,
+    "reactions": {"like": 450, "retweet": 120},
+    "comments": [
+      "Luc Yen is flooded heavily right now.",
+      "Hope everyone stays safe in Yen Bai."
+    ]
+  },
+  {
+    "id": "yagi-tiktok-004",
+    "platform": "tiktok",
+    "author": "review_tay_bac",
+    "content": "Lũ quét cuốn trôi cầu tạm tại xã Bản Phố, huyện Bắc Hà, Lào Cai 😭 Cả bản đang bị cô lập hoàn toàn rồi mọi người ơi. Lương thực dự trữ chỉ còn hết ngày mai thôi, nước dâng cao ngập hết ruộng lúa rồi. Mong chính quyền cứu hộ tiếp tế lương thực và nước sạch gấp ạ! #CuuTroLuLut #BaoSo3 #YagiStorm #LaoCai",
+    "timestamp": "2024-09-08T14:20:00Z",
+    "likeCount": 15000,
+    "shareCount": 3400,
+    "reactions": {"like": 15000, "share": 3400},
+    "comments": [
+      "Thương quá Bản Phố ơi, cầu mong nước mau rút.",
+      "Có đoàn cứu trợ nào gần Bắc Hà liên hệ chính quyền bản đi ạ.",
+      "Cần tiếp tế mì tôm nước suối đóng chai gấp!"
+    ]
+  },
+  {
+    "id": "yagi-yt-005",
+    "platform": "youtube",
+    "author": "VTV24_Official",
+    "content": "Bản tin tối 07/09/2024: Siêu bão Yagi đổ bộ Quảng Ninh, Hải Phòng gây thiệt hại nặng nề. Hàng loạt cây đổ, nhà tốc mái. Xem trực tiếp tình hình tại đây. #VTV24 #BaoSo3 #YagiStorm",
+    "timestamp": "2024-09-07T19:00:00Z",
+    "likeCount": 8500,
+    "shareCount": 600,
+    "reactions": {"like": 8500, "dislike": 20},
+    "comments": [
+      "Kinh khủng quá, gió thổi bay cả mái tôn trước nhà tôi.",
+      "Quảng Ninh mất điện toàn bộ rồi.",
+      "Cầu mong không có thiệt hại lớn về người."
+    ]
+  },
+  {
+    "id": "yagi-fb-006",
+    "platform": "facebook",
+    "author": "Thông tin Hải Phòng",
+    "content": "Khẩn cấp từ Quảng Ninh và Hải Phòng! Bão Yagi đổ bộ tàn phá khủng khiếp. Hàng loạt cột điện, cây cổ thụ bị quật đổ, mái tôn bay khắp nơi. Hệ thống điện, mạng viễn thông mất hoàn toàn. Nhiều gia đình bị kẹt trong nhà đổ nát cần lực lượng cứu hộ hỗ trợ khẩn cấp!",
+    "timestamp": "2024-09-07T11:15:00Z",
+    "likeCount": 6500,
+    "shareCount": 3200,
+    "reactions": {"sad": 4500, "care": 2100, "angry": 250},
+    "comments": [
+      "Hải Phòng mất điện mạng toàn thành phố rồi, không liên lạc được với người thân.",
+      "Tôn bay rầm rầm sợ lắm, cứu hộ ơi!",
+      "Thương quá Quảng Ninh ơi, bão quét qua nát hết rồi."
+    ]
+  },
+  {
+    "id": "yagi-fb-007",
+    "platform": "facebook",
+    "author": "Yên Bái News",
+    "content": "Lũ quét và sạt lở đất đá kinh hoàng quét qua Bắc Hà và Sa Pa (Lào Cai). Nhiều đoạn đường quốc lộ bị đứt gãy hoàn toàn. Huyện Lục Yên (Yên Bái) cũng đang bị ngập sâu cô lập, bà con phải trèo lên nóc nhà tránh lũ. Đang rất cần lương thực, bạt dựng lều và áo phao tiếp tế khẩn cấp.",
+    "timestamp": "2024-09-08T07:30:00Z",
+    "likeCount": 9200,
+    "shareCount": 5100,
+    "reactions": {"sad": 6200, "care": 3400, "like": 50},
+    "comments": [
+      "Cần tiếp tế gấp cho Lục Yên, nước dâng ngập hết rồi.",
+      "Cầu mong sạt lở dừng lại, thương đồng bào vùng cao quá.",
+      "Gia đình tôi ở Lào Cai mất liên lạc cả ngày nay."
+    ]
+  },
+  {
+    "id": "yagi-fb-008",
+    "platform": "facebook",
+    "author": "Ngo_Van_Binh",
+    "content": "Nhà em ở Thường Xuân, Thanh Hóa đang bị nước lũ tràn vào nhà ngập nửa mét rồi ạ. Điện mất từ trưa, sạc dự phòng sắp hết pin. Cần xuồng cứu hộ đưa mẹ em lớn tuổi và trẻ nhỏ di dời gấp. Ai ở gần giúp gia đình em với ạ! SOS cứu hộ khẩn cấp!!! #CuuTroLuLut #ThanhHoa #SOS",
+    "timestamp": "2024-09-08T22:10:00Z",
+    "likeCount": 85,
+    "shareCount": 42,
+    "reactions": {"like": 85, "sad": 340, "care": 110},
+    "comments": [
+      "Đã chia sẻ bài viết mong cứu hộ tiếp cận sớm.",
+      "Thường Xuân nước đang lên nhanh lắm, cẩn thận nha bạn.",
+      "Mong gia đình bình an thoát lũ."
+    ]
+  },
+  {
+    "id": "yagi-tiktok-009",
+    "platform": "tiktok",
+    "author": "taybac_today",
+    "content": "Đoàn tình nguyện Sen Xanh đã tập kết 500 thùng mì tôm, 200 thùng nước lọc đóng chai và thuốc men cơ bản tới bà con vùng ngập lụt xã Hải Lăng, Quảng Trị. Cảm ơn sự đồng hành ủng hộ từ các nhà hảo tâm khắp cả nước! ❤️ #CuuTroLuLut #TinhDongBao",
+    "timestamp": "2024-09-12T16:45:00Z",
+    "likeCount": 9500,
+    "shareCount": 1500,
+    "reactions": {"like": 3200, "love": 1400, "care": 900},
+    "comments": [
+      "Tuyệt vời quá, cảm ơn đoàn nhiều ạ.",
+      "Hải Lăng đang ngập sâu, nhận được tiếp tế thật quý giá."
+    ]
+  },
+  {
+    "id": "yagi-x-010",
+    "platform": "x",
+    "author": "storm_tracker_seasia",
+    "content": "Super Typhoon #Yagi has caused widespread destruction across northern Vietnam. Quang Ninh, Hai Phong worst hit. International aid organizations urged to send relief supplies immediately. #BaoSo3 #HumanitarianAid",
+    "timestamp": "2024-09-09T06:00:00Z",
+    "likeCount": 2300,
+    "shareCount": 890,
+    "reactions": {"like": 2300, "retweet": 890},
+    "comments": [
+      "Sending thoughts to Vietnam",
+      "Red Cross needs to step in fast",
+      "Devastating images coming out of the region"
+    ]
+  },
+  {
+    "id": "yagi-fb-011",
+    "platform": "facebook",
+    "author": "Hội Chữ Thập Đỏ VN",
+    "content": "Mưa lớn sau bão Yagi gây ngập lụt nghiêm trọng tại huyện Chương Mỹ, Hà Nội. Hơn 300 hộ dân ngập sâu, nước sạch sinh hoạt thiếu thốn. Cần huy động lực lượng tiếp tế nước đóng chai và lương khô cho bà con.",
+    "timestamp": "2024-09-15T09:20:00Z",
+    "likeCount": 450,
+    "shareCount": 60,
+    "reactions": {"like": 250, "sad": 150, "care": 50},
+    "comments": [
+      "Chương Mỹ năm nào cũng ngập",
+      "Khổ thân bà con",
+      "Có đoàn nào hỗ trợ nước sạch chưa"
+    ]
+  },
+  {
+    "id": "yagi-yt-012",
+    "platform": "youtube",
+    "author": "TruyenHinhQuocHoi",
+    "content": "Quốc hội thảo luận về công tác khắc phục hậu quả siêu bão Yagi. Tổng thiệt hại ước tính trên 40.000 tỷ đồng. Chính phủ dự kiến xuất quỹ dự phòng hỗ trợ các tỉnh chịu ảnh hưởng nặng nhất.",
+    "timestamp": "2024-09-20T14:00:00Z",
+    "likeCount": 3200,
+    "shareCount": 280,
+    "reactions": {"like": 2800, "sad": 350, "care": 50},
+    "comments": [
+      "Thiệt hại quá lớn, mong Nhà nước hỗ trợ bà con sớm.",
+      "40.000 tỷ đồng là con số khổng lồ.",
+      "Cần tái thiết cơ sở hạ tầng vùng bão."
+    ]
+  },
+  {
+    "id": "yagi-fb-013",
+    "platform": "facebook",
+    "author": "Người Dân Xứ Thanh",
+    "content": "Cảm ơn các nhà hảo tâm và chính quyền địa phương đã kịp thời vận chuyển 200 thùng mì tôm và nước sạch đến cho bà con vùng lũ lụt Thường Xuân, Thanh Hóa hôm nay. Tình hình đang dần ổn định trở lại.",
+    "timestamp": "2024-09-18T11:30:00Z",
+    "likeCount": 730,
+    "shareCount": 90,
+    "reactions": {"like": 450, "care": 280, "sad": 5},
+    "comments": [
+      "Tuyệt vời quá, cảm ơn đoàn cứu trợ.",
+      "Ấm lòng tình đồng bào miền Trung lúc hoạn nạn."
+    ]
+  },
+  {
+    "id": "yagi-fb-014",
+    "platform": "facebook",
+    "author": "VTV24 Thời Sự",
+    "content": "Mưa lớn kéo dài do ảnh hưởng hoàn lưu trước bão bắt đầu gây ngập cục bộ tại một số vùng trũng thấp ở Hải Phòng, Quảng Ninh. Các hồ chứa nước thủy điện đang tiến hành xả lũ điều tiết để chuẩn bị đón lũ lớn.",
+    "timestamp": "2024-08-28T18:30:00Z",
+    "likeCount": 350,
+    "shareCount": 75,
+    "reactions": {"like": 350, "wow": 45, "sad": 80},
+    "comments": [
+      "Xả lũ thủy điện nhớ thông báo sớm cho dân di dời tài sản nhé.",
+      "Mới cuối tháng 8 mà đã mưa lụt khắp nơi rồi."
+    ]
+  },
+  {
+    "id": "yagi-tiktok-015",
+    "platform": "tiktok",
+    "author": "mientrung_trongtoi",
+    "content": "Cát Bà, Hải Phòng tan hoang sau siêu bão Yagi. Nhà dân tốc mái hàng loạt, du lịch đảo thiệt hại nặng nề. Cần hỗ trợ bạt che mưa và vật liệu xây dựng sửa chữa nhà cửa gấp! #CatBa #HaiPhong #BaoYagi",
+    "timestamp": "2024-09-10T08:45:00Z",
+    "likeCount": 11500,
+    "shareCount": 2800,
+    "reactions": {"like": 8000, "sad": 3000, "care": 500},
+    "comments": [
+      "Cát Bà xinh đẹp giờ tan hoang rồi 😭",
+      "Cần bạt che mưa gấp cho bà con",
+      "Thiệt hại du lịch rất lớn, mong sớm khôi phục"
+    ]
+  },
+    {
+      "id": "yagi-001",
+      "platform": "facebook",
+      "author": "Người Hải Phòng",
+      "content": "Cả xóm đang hối hả chằng chống mái tôn, xúc cát vào bao tải để chèn cửa. Bão Yagi nghe dự báo mạnh lắm, mọi người ở vùng ven biển cẩn thận nhé!",
+      "timestamp": "2024-09-05T14:20:00",
+      "shareCount": 150,
+      "reactions": { "like": 540, "care": 320, "sad": 15 },
+      "comments": [ "Đồ Sơn sóng bắt đầu to rồi.", "Chúc Hải Phòng bình an." ]
+    },
+    {
+      "id": "yagi-002",
+      "platform": "tiktok",
+      "author": "review_ha_long",
+      "content": "Siêu thị cháy hàng mì tôm và nước suối rồi bà con ơi. Mình ra muộn chỉ vớt vát được mấy gói bánh gạo. Mọi người trữ đồ ăn nhanh chưa? #BaoYagi #HaLong",
+      "timestamp": "2024-09-05T18:45:00",
+      "shareCount": 200,
+      "reactions": { "like": 12000, "haha": 450, "care": 800 },
+      "comments": [ "Chỗ em còn đầy mì, bác cần qua em chia cho.", "Tâm lý đám đông thôi, dự trữ 2-3 ngày là đủ." ]
+    },
+    {
+      "id": "yagi-003",
+      "platform": "facebook",
+      "author": "Tin Tức Quảng Ninh",
+      "content": "UBND tỉnh Quảng Ninh phát lệnh cấm biển từ 11h trưa nay. Tất cả tàu thuyền du lịch trên vịnh Hạ Long đã được đưa về nơi neo đậu an toàn.",
+      "timestamp": "2024-09-06T10:00:00",
+      "shareCount": 340,
+      "reactions": { "like": 1200, "care": 600 },
+      "comments": [ "Quyết đoán quá, an toàn là trên hết.", "Bão cấp 16 thì tàu nào chịu nổi." ]
+    },
+    {
+      "id": "yagi-004",
+      "platform": "x",
+      "author": "weather_vn",
+      "content": "Typhoon Yagi has intensified into a Super Typhoon. Landfall expected around Hai Phong - Quang Ninh. Maximum sustained winds hitting level 16. Seek shelter immediately. #Yagi",
+      "timestamp": "2024-09-06T15:30:00",
+      "shareCount": 890,
+      "reactions": { "like": 450, "retweet": 890 },
+      "comments": [ "Pray for Northern Vietnam." ]
+    },
+    {
+      "id": "yagi-005",
+      "platform": "facebook",
+      "author": "Hà Nội 24/7",
+      "content": "Trời Hà Nội lúc này đen kịt như 6h tối dù mới 3h chiều. Gió bắt đầu rít từng hồi. Ai đang đi đường thì tranh thủ về nhà sớm nhé!",
+      "timestamp": "2024-09-06T15:10:00",
+      "shareCount": 2100,
+      "reactions": { "like": 4500, "care": 2100, "wow": 800 },
+      "comments": [ "Cty cho nghỉ sớm từ 2h chiều rồi.", "Sợ quá mây đen vần vũ." ]
+    },
+    {
+      "id": "yagi-006",
+      "platform": "facebook",
+      "author": "Tôi Thích Hải Phòng",
+      "content": "Bão đổ bộ rồi! Gió giật kinh hoàng, nhà rung bần bật. Hiện tại toàn bộ quận Ngô Quyền đã mất điện, sóng điện thoại cũng chập chờn. Xin trời phật phù hộ!",
+      "timestamp": "2024-09-07T12:45:00",
+      "shareCount": 3500,
+      "reactions": { "sad": 8500, "care": 4200 },
+      "comments": [ "Giữ chặt cửa vào bạn ơi.", "Hải An cũng mất điện đen thui rồi." ]
+    },
+    {
+      "id": "yagi-007",
+      "platform": "tiktok",
+      "author": "minh_quan_qn",
+      "content": "Quay lén qua khe cửa. Tôn bay lợp trời, biển quảng cáo rụng lả tả. Khủng khiếp quá sức tưởng tượng! 🌪️ #BaoYagi #QuangNinh",
+      "timestamp": "2024-09-07T13:20:00",
+      "shareCount": 15000,
+      "reactions": { "like": 56000, "wow": 12000, "sad": 5000 },
+      "comments": [ "Nghe tiếng gió rít mà lạnh người.", "Đừng ra gần cửa kính nhé nguy hiểm lắm." ]
+    },
+    {
+      "id": "yagi-008",
+      "platform": "facebook",
+      "author": "Nguyễn Mai Anh",
+      "content": "💖 TIN TÍCH CỰC GIỮA TÂM BÃO: Nhà mình là nhà ống kiên cố lại xây cao, chiều nay gió to quá mái tôn mấy nhà cấp 4 hàng xóm bị lật bay hết. Bố mình gọi hết 4 hộ qua đây trú. Giờ 15 người đang quây quần nấu nồi cháo gà bếp ga mini, điện thoại sạc chung cục sạc dự phòng. Bão ngoài kia gào rít mà trong nhà thấy ấm áp lạ thường!",
+      "timestamp": "2024-09-07T14:30:00",
+      "shareCount": 850,
+      "reactions": { "love": 12000, "care": 3000, "like": 1500 },
+      "comments": [ "Tuyệt vời quá em ơi, tình làng nghĩa xóm là đây.", "Chúc gia đình bình an, đọc status mà thấy nhẹ lòng." ]
+    },
+    {
+      "id": "yagi-009",
+      "platform": "facebook",
+      "author": "Giao Thông Hà Nội",
+      "content": "Hàng trăm cây xà cừ cổ thụ trên đường Phan Đình Phùng, Hoàng Diệu đã bật gốc. Tránh tuyệt đối đi lại trên các tuyến phố có nhiều cây lớn lúc này!",
+      "timestamp": "2024-09-07T16:00:00",
+      "shareCount": 4200,
+      "reactions": { "sad": 9800, "care": 2500 },
+      "comments": [ "Tiếc hàng cây cổ thụ quá.", "Nát bét hết thủ đô rồi bão ơi." ]
+    },
+    {
+      "id": "yagi-010",
+      "platform": "x",
+      "author": "vtv_news",
+      "content": "Wind from Typhoon Yagi shattered multiple glass windows in high-rise apartments in Hanoi. Residents are moving to corridors and lower floors. #Vietnam #TyphoonYagi",
+      "timestamp": "2024-09-07T17:15:00",
+      "shareCount": 670,
+      "reactions": { "wow": 400, "sad": 300 },
+      "comments": [ "Living in high floors must be terrifying right now." ]
+    },
+    {
+      "id": "yagi-011",
+      "platform": "facebook",
+      "author": "Cứu Hộ 112",
+      "content": "🚨 Đang điều động xe cưa cây giải cứu một xe cấp cứu bị cây đè chặn đường đi viện trên đường Trần Phú. Các anh em đang dầm mình trong gió giật cấp 12 để cắt thân cây. Cố lên!",
+      "timestamp": "2024-09-07T19:30:00",
+      "shareCount": 1800,
+      "reactions": { "love": 5400, "care": 3200 },
+      "comments": [ "Thương các chiến sĩ quá.", "Cầu mong xe cấp cứu kịp thời gian." ]
+    },
+    {
+      "id": "yagi-012",
+      "platform": "tiktok",
+      "author": "thai_nguyen_tv",
+      "content": "Bão tan nhưng lũ bắt đầu về! Nước sông Cầu dâng cao kỷ lục, các khu vực rốn lũ Thái Nguyên nước đã lên ngang ngực. Bà con chạy lụt trong đêm 😭. #LutThaiNguyen #BaoYagi",
+      "timestamp": "2024-09-08T22:00:00",
+      "shareCount": 8900,
+      "reactions": { "sad": 21000, "care": 4500 },
+      "comments": [ "Mới thấy cúp điện xíu mà nước dâng nhanh quá.", "Thái Nguyên cố lên!" ]
+    },
+    {
+      "id": "yagi-013",
+      "platform": "facebook",
+      "author": "Lê Văn Hùng (Cứu hộ)",
+      "content": "SOS YÊN BÁI!!! Đường Nguyễn Thái Học ngập sâu hơn 2 mét, lực lượng cứu hộ đang thiếu xuồng hơi trầm trọng do dòng nước chảy quá xiết. Ai có thuyền máy quanh khu vực này chi viện cho chúng tôi với! Hotline: 091x.xxx.xxx",
+      "timestamp": "2024-09-09T08:15:00",
+      "shareCount": 15000,
+      "reactions": { "sad": 6700, "care": 8900 },
+      "comments": [ "Đã share, mong có đoàn đến hỗ trợ.", "CLB Xe bán tải Hà Nội đang kéo 5 xuồng lên Yên Bái rồi, chờ anh em nhé!" ]
+    },
+    {
+      "id": "yagi-014",
+      "platform": "facebook",
+      "author": "Báo Tuổi Trẻ",
+      "content": "SỐC: Cầu Phong Châu (Phú Thọ) bắc qua sông Hồng vừa bị sập nhịp giữa do nước lũ chảy xiết. Có nhiều phương tiện đang lưu thông rơi xuống sông. Lực lượng chức năng đang khẩn trương cứu nạn.",
+      "timestamp": "2024-09-09T10:30:00",
+      "shareCount": 45000,
+      "reactions": { "sad": 56000, "wow": 12000 },
+      "comments": [ "Trời ơi tin sốc quá.", "Cầu mong không có thiệt hại về người.", "Nước dâng cao quá tải móng cầu rồi." ]
+    },
+    {
+      "id": "yagi-015",
+      "platform": "tiktok",
+      "author": "tram_cuu_ho_dong_vat",
+      "content": "Đêm qua nước lên nhanh, mải chạy đồ đạc quên mất đàn chó. Sáng nay chèo xuồng về thì thấy các ẻm ngoan ngoãn leo hết lên nóc tủ lạnh chờ chủ. Thương ơi là thương! Đã đưa các bé lên bờ an toàn 🐶❤️",
+      "timestamp": "2024-09-10T09:00:00",
+      "shareCount": 2300,
+      "reactions": { "love": 45000, "care": 8000 },
+      "comments": [ "Thông minh quá mấy đứa ơi.", "Giữa bão lũ xem clip này thấy ấm áp." ]
+    },
+    {
+      "id": "yagi-016",
+      "platform": "facebook",
+      "author": "UBND Quận Hoàn Kiếm",
+      "content": "CẢNH BÁO LŨ SÔNG HỒNG: Mực nước đã vượt báo động 2 và tiếp tục dâng cao. Yêu cầu toàn bộ dân cư phường Phúc Tân, Chương Dương Độ chủ động di dời người già, trẻ em và tài sản có giá trị lên vị trí an toàn trước 18h hôm nay.",
+      "timestamp": "2024-09-10T14:00:00",
+      "shareCount": 6700,
+      "reactions": { "care": 5400, "sad": 1200 },
+      "comments": [ "Gần 20 năm mới thấy nước lớn thế này.", "Hà Nội bắt đầu ngấm đòn lũ rồi." ]
+    },
+    {
+      "id": "yagi-017",
+      "platform": "facebook",
+      "author": "Hội Yêu Đời Kể Cả Khi Ngập",
+      "content": "😂 Ở nhà buồn quá, nước ngập lút ngõ không đi chợ được, cả xóm quyết định vác bếp than lên sân thượng nướng thịt ăn chung! Gió mát, nướng thịt xèo xèo, bỗng dưng thấy chạy lụt cũng... vui phết. Lạc quan lên bà con ơi, nước rồi cũng rút thôi! 🍖🍻",
+      "timestamp": "2024-09-10T19:00:00",
+      "shareCount": 4500,
+      "reactions": { "haha": 25000, "love": 8000 },
+      "comments": [ "Đúng chất tinh thần Việt Nam, trong khổ vẫn tìm thấy niềm vui.", "Xin địa chỉ chèo xuồng qua xin miếng thịt nướng nào kkk." ]
+    },
+    {
+      "id": "yagi-018",
+      "platform": "facebook",
+      "author": "Tin Tức Lào Cai",
+      "content": "THẢM KHỐC TẠI LÀNG NỦ, BẢO YÊN! Trận lũ quét lúc rạng sáng đã vùi lấp toàn bộ thôn với hàng chục hộ dân. Công tác cứu hộ đang gặp muôn vàn khó khăn vì đất đá sạt lở chia cắt mọi ngả đường.",
+      "timestamp": "2024-09-10T11:00:00",
+      "shareCount": 34000,
+      "reactions": { "sad": 89000, "care": 12000 },
+      "comments": [ "Đau xót quá Lào Cai ơi.", "Xem video mà rơi nước mắt.", "Mong có phép màu cho bà con Làng Nủ." ]
+    },
+    {
+      "id": "yagi-019",
+      "platform": "facebook",
+      "author": "Trần Thị Mai (Người dân)",
+      "content": "Khu chung cư Linh Đàm cắt nước 3 ngày nay rồi. Nhà vệ sinh hôi rình, quần áo chất đống, nước lọc dự trữ chỉ còn đủ để uống, không dám đánh răng rửa mặt. Có xe bồn nào cấp nước sạch qua khu vực này không ạ? SOS!!",
+      "timestamp": "2024-09-11T08:30:00",
+      "shareCount": 560,
+      "reactions": { "sad": 1200, "care": 400 },
+      "comments": [ "Qua chung cư bên cạnh xách tạm đi bạn ơi.", "Hà Nội mà như thời kỳ đồ đá, khổ thật." ]
+    },
+    {
+      "id": "yagi-020",
+      "platform": "tiktok",
+      "author": "bo_doi_cu_ho",
+      "content": "Hàng chục ca nô của Lữ đoàn công binh đã tiến vào vùng rốn lũ Yên Bái. Áo phao đỏ rực cả một khúc sông. Bà con yên tâm, chúng tôi sẽ đưa mọi người ra ngoài an toàn! 🫡🇻🇳 #QuanDoiNhanDan #CuuHoLuLut",
+      "timestamp": "2024-09-11T13:00:00",
+      "shareCount": 18000,
+      "reactions": { "love": 120000, "like": 45000 },
+      "comments": [ "Nhìn các anh là thấy bình yên.", "Đội ơn các chiến sĩ quân đội." ]
+    },
+    {
+      "id": "yagi-021",
+      "platform": "facebook",
+      "author": "Nhóm Tình Nguyện Sen Xanh",
+      "content": "GÓC KÊU CỨU: Một cụ bà 80 tuổi bị kẹt trên nóc nhà cấp 4 tại xã Chiên Sơn, Sơn Dương, Tuyên Quang. Nước đang lên mấp mé mép mái nhà. Đoàn chúng mình không có xuồng cao su, ai ở gần có phương tiện ra cứu cụ với ạ! Tọa độ GPS...",
+      "timestamp": "2024-09-11T15:45:00",
+      "shareCount": 12000,
+      "reactions": { "care": 4500, "sad": 3000 },
+      "comments": [ "Đội cứu hộ Tuyên Quang đã tiếp nhận thông tin, đang phi xuồng vào.", "Cụ già yếu trên đó lạnh lắm, cứu hộ nhanh lên ạ." ]
+    },
+    {
+      "id": "yagi-022",
+      "platform": "facebook",
+      "author": "Góc Sinh Viên",
+      "content": "Phòng trọ Phùng Khoang ngập nửa mét. 4 thằng sinh viên nằm trên giường tầng ăn gói mì tôm sống cuối cùng chia nhau. Đứa nào có cơm cho xin một bữa với, đói quá lả rồi 😭",
+      "timestamp": "2024-09-11T19:00:00",
+      "shareCount": 450,
+      "reactions": { "haha": 1200, "sad": 800 },
+      "comments": [ "Lội ra đầu ngõ quán tạp hóa vẫn bán bánh mì đó em.", "Inbox stk chị gửi cho ít tiền mua đồ ăn." ]
+    },
+    {
+      "id": "yagi-023",
+      "platform": "x",
+      "author": "saigon_daily",
+      "content": "Over 10,000 life jackets and tons of dry food have been collected in Ho Chi Minh City today to be sent to the flooded Northern provinces. The Southern region stands with the North! ❤️🇻🇳 #YagiRelief",
+      "timestamp": "2024-09-12T09:00:00",
+      "shareCount": 1200,
+      "reactions": { "like": 3500, "retweet": 1200 },
+      "comments": [ "Southern people are always so generous.", "Thank you Saigon!" ]
+    },
+    {
+      "id": "yagi-024",
+      "platform": "tiktok",
+      "author": "bep_an_0_dong",
+      "content": "Đỏ lửa xuyên đêm nấu 5000 suất cơm gà kho gừng nóng hổi gửi lên cho bà con vùng sạt lở Lào Cai. Hơn 50 tình nguyện viên thái thịt, nhặt rau không nghỉ tay. Cố lên đồng bào mình ơi! 🍱❤️",
+      "timestamp": "2024-09-12T11:20:00",
+      "shareCount": 8900,
+      "reactions": { "love": 78000, "care": 15000 },
+      "comments": [ "Cơm nắm gửi lên tận nơi ấm bụng lắm.", "Cho mình đăng ký làm tình nguyện viên thái rau ngày mai nhé." ]
+    },
+    {
+      "id": "yagi-025",
+      "platform": "facebook",
+      "author": "Ảnh Báo Chí",
+      "content": "Bức ảnh nhói lòng: Chiến sĩ công an kiệt sức ngủ gục ngay trên bệ đá đầy bùn lầy ở Làng Nủ sau 24h liên tục bới tìm các nạn nhân bị sạt lở. Cảm ơn sự hi sinh thầm lặng của các anh.",
+      "timestamp": "2024-09-12T16:00:00",
+      "shareCount": 56000,
+      "reactions": { "sad": 120000, "love": 89000 },
+      "comments": [ "Nhìn mà thương rơi nước mắt.", "Các anh giữ gìn sức khỏe nhé." ]
+    },
+    {
+      "id": "yagi-026",
+      "platform": "tiktok",
+      "author": "viet_animal_rescue",
+      "content": "TIN VUI ĐÂY!!! Đội cứu hộ V.A.R vừa giải cứu thành công trạm bảo trợ chó mèo ở ven đê sông Hồng. 150 bé chó mèo lấm lem bùn đất nhưng an toàn và đang được ăn hạt rồi. Cảm ơn mọi người đã quyên góp xuồng cho nhóm. 🐕🐈🥰",
+      "timestamp": "2024-09-13T09:30:00",
+      "shareCount": 4500,
+      "reactions": { "love": 67000, "like": 12000 },
+      "comments": [ "Trời ơi hóng tin các bé mấy ngày nay.", "Cảm ơn nhóm nhiều lắm, một sinh mạng cũng quý giá." ]
+    },
+    {
+      "id": "yagi-027",
+      "platform": "facebook",
+      "author": "Cư Dân Ecopark",
+      "content": "Nước bắt đầu rút, cả khu hò nhau lôi chổi, vòi xịt ra đẩy bùn đất. Trẻ con thì coi bùn trơn như sân trượt băng, ngã oạch cười khanh khách. Sau cơn mưa trời lại sáng, dọn dẹp tí là khu đô thị lại đẹp đẽ ngay! 🌞🧹",
+      "timestamp": "2024-09-13T14:00:00",
+      "shareCount": 850,
+      "reactions": { "haha": 4500, "love": 2100 },
+      "comments": [ "Nhìn trẻ con chơi vui quá quên cả mệt.", "Tinh thần lạc quan số 1." ]
+    },
+    {
+      "id": "yagi-028",
+      "platform": "facebook",
+      "author": "Thanh Tuấn (Vlogs)",
+      "content": "THỀ LÀ KHÔNG ĐIÊU LUÔN! Đang hì hục tát nước trong bếp thì thấy cái gì quẫy tung tóe. Chộp được ngay con cá chép lai nặng đúng 3kg! Thiên nhiên tàn phá xong giờ lại đền bù cho bữa tối à? Tối nay xóm mình có mồi nhậu xịn rồi kkk! 🐟🍺",
+      "timestamp": "2024-09-13T17:45:00",
+      "shareCount": 5400,
+      "reactions": { "haha": 32000, "like": 8000 },
+      "comments": [ "Lộc trời cho anh ơi, xin miếng riêu cá.", "Cá sông Hồng lạc vào tận nhà luôn, hên quá." ]
+    },
+    {
+      "id": "yagi-029",
+      "platform": "twitter",
+      "author": "hanoi_vibes",
+      "content": "The sun is finally out in Hanoi after 5 days of gray and gloom! The streets are getting busy again. The resilience of this city is truly beautiful. ☀️🛵 #Hanoi #PostYagi",
+      "timestamp": "2024-09-14T08:00:00",
+      "shareCount": 210,
+      "reactions": { "love": 1500, "like": 800 },
+      "comments": [ "So glad to see the sunshine.", "Time to rebuild." ]
+    },
+    {
+      "id": "yagi-030",
+      "platform": "facebook",
+      "author": "Phạm Ngọc Ánh",
+      "content": "Điện đã có, quạt đã quay, wifi full vạch, điều hòa mát rượi! Nằm phơi rốn lướt top top mà cảm giác như mình vừa được sinh ra lần thứ hai vậy các bác ạ. Yêu EVN, yêu mạng Viettel! 😍📶💡",
+      "timestamp": "2024-09-14T10:15:00",
+      "shareCount": 1200,
+      "reactions": { "haha": 8500, "love": 3400 },
+      "comments": [ "Thề, qua mấy ngày lụt mới thấy quý điện nước.", "Nhà em vẫn chưa có wifi, đang xài 4G ghen tị quá." ]
+    },
+    {
+      "id": "yagi-031",
+      "platform": "tiktok",
+      "author": "tin_tuc_lao_cai",
+      "content": "Trường Mầm non số 1 Bảo Yên hôm nay đón một \"lực lượng\" đặc biệt. Hàng chục chú bộ đội đến xịt rửa bùn đất, khử trùng đồ chơi và kê lại bàn ghế để thứ 2 tới các cháu có thể đi học bình thường. Hình ảnh quá đẹp! 💚",
+      "timestamp": "2024-09-14T11:30:00",
+      "shareCount": 3400,
+      "reactions": { "love": 28000, "care": 4500 },
+      "comments": [ "Cảm ơn các chú bộ đội nhiều lắm.", "Nhìn các chú rửa từng con búp bê đồ chơi mà ấm lòng." ]
+    },
+    {
+      "id": "yagi-032",
+      "platform": "facebook",
+      "author": "Công Đoàn EVN Quảng Ninh",
+      "content": "10 ngày bám trụ hiện trường, ăn mì tôm, ngủ gật trên cột điện. Hôm nay toàn bộ mạng lưới điện hạ thế tại Bãi Cháy đã được đóng điện thành công. Nụ cười rạng rỡ trên khuôn mặt lấm lem dầu mỡ của các thợ điện áo cam. Xin cảm ơn sự kiên nhẫn của người dân!",
+      "timestamp": "2024-09-14T16:00:00",
+      "shareCount": 7800,
+      "reactions": { "love": 35000, "like": 12000 },
+      "comments": [ "Công lớn nhất đợt bão này thuộc về các anh thợ điện.", "Xứng đáng được thưởng nóng." ]
+    },
+    {
+      "id": "yagi-033",
+      "platform": "facebook",
+      "author": "Tôi Thích Hà Nội",
+      "content": "Nắng lên! Đặc sản Hà Nội hôm nay là nghệ thuật sắp đặt \"quần áo phơi vội\". Nhìn các chung cư từ Time City đến HH Linh Đàm giăng mắc đủ loại màu sắc chăn chiếu rực rỡ như cờ hội. Mùi nước xả vải thơm phức bay cả xóm 🤣👚👖",
+      "timestamp": "2024-09-14T14:20:00",
+      "shareCount": 2100,
+      "reactions": { "haha": 15000, "like": 4500 },
+      "comments": [ "Ủ thiu 5 ngày trời nay mới được phơi.", "Đứng dưới nhìn lên lóa cả mắt." ]
+    },
+    {
+      "id": "yagi-034",
+      "platform": "facebook",
+      "author": "Food Reviewer Ẩm Thực",
+      "content": "Quán phở bò xép đầu ngõ mở lại rồi bà con ơi! Sáng ra húp bát nước dùng nóng hổi, cắn miếng quẩy giòn tan mà ta nói nó rớt nước mắt vì hạnh phúc. Hương vị của sự bình yên là đây chứ đâu! 🍜🥢",
+      "timestamp": "2024-09-15T07:30:00",
+      "shareCount": 980,
+      "reactions": { "love": 5600, "haha": 1200 },
+      "comments": [ "Chuẩn, thèm phở kinh khủng sau chuỗi ngày nhai mì tôm.", "Phở ngon nhất là phở sau bão." ]
+    },
+    {
+      "id": "yagi-035",
+      "platform": "facebook",
+      "author": "Đại Học Kinh Tế Quốc Dân",
+      "content": "THÔNG BÁO: Trường đã dọn dẹp xong cây đổ và vệ sinh khuôn viên an toàn. Bắt đầu từ thứ Hai (16/09), sinh viên quay trở lại học tập bình thường. Hẹn gặp lại các NEU-ers! 🎓",
+      "timestamp": "2024-09-15T09:00:00",
+      "shareCount": 3400,
+      "reactions": { "like": 8900, "sad": 2100 },
+      "comments": [ "Lại phải đi học rồi sao (icon khóc).", "Trường dọn nhanh quá xuất sắc." ]
+    },
+    {
+      "id": "yagi-036",
+      "platform": "tiktok",
+      "author": "hai_huoc_vung_que",
+      "content": "Đang dọn bùn sau vườn thì đào trúng... chiếc dép tổ ong màu xanh huyền thoại bị lũ cuốn đi từ trận lụt năm ngoái! Nó đi du lịch 1 năm trời xong năm nay lũ lại thổi nó về lại nhà mình. Chuyện tâm linh không đùa được đâu các bác ạ 🤣🩴 #ChuyenHaiHuoc",
+      "timestamp": "2024-09-15T10:45:00",
+      "shareCount": 12000,
+      "reactions": { "haha": 89000, "like": 15000 },
+      "comments": [ "Đôi dép có tính định vị GPS về nhà rồi.", "Rửa sạch cất vào tủ làm kỷ vật truyền gia đi anh." ]
+    },
+    {
+      "id": "yagi-037",
+      "platform": "facebook",
+      "author": "Góc Xóm Trọ",
+      "content": "Trang bị chuẩn của xóm trọ ngày hôm nay: Quần đùi, dép tổ ong, cầm chổi tre và máy bơm. Đứa xịt, đứa cào, thỉnh thoảng xịt nhầm nước bùn vào mặt nhau lại cười hô hố. Tự nhiên bão lụt làm hàng xóm tắt lửa tối đèn sát lại gần nhau hơn hẳn! 💦🧹",
+      "timestamp": "2024-09-15T15:20:00",
+      "shareCount": 850,
+      "reactions": { "love": 6700, "haha": 3400 },
+      "comments": [ "Mệt mà vui.", "Sau đợt này rủ xóm làm bữa tất niên bùn lầy luôn." ]
+    },
+    {
+      "id": "yagi-038",
+      "platform": "facebook",
+      "author": "Giao Thông VTV",
+      "content": "Tuyến cao tốc Hà Nội - Hải Phòng, Hà Nội - Lào Cai đã thông xe trở lại toàn tuyến. Các điểm sạt lở đã được khắc phục tạm thời. Giao thương, vận tải hàng hóa miền Bắc bắt đầu nhộn nhịp trở lại.",
+      "timestamp": "2024-09-15T16:00:00",
+      "shareCount": 2100,
+      "reactions": { "like": 8900, "care": 1200 },
+      "comments": [ "Tin vui nhất trong ngày.", "Tuyệt vời sự nỗ lực của ngành giao thông." ]
+    },
+    {
+      "id": "yagi-039",
+      "platform": "tiktok",
+      "author": "tinh_nguyen_vien",
+      "content": "Lên bản phát quà cứu trợ. Vừa đưa túi quà có mấy cái bánh choco-pie và xúc xích, mấy đứa trẻ con xóm nghèo nhảy cẫng lên reo hò râm ran cả một góc đồi. Nhìn nụ cười trong trẻo lấm lem bùn đất của tụi nhỏ mà quên hết mọi mệt nhọc đường xa. Hạnh phúc giản đơn lắm! 🍫🥰",
+      "timestamp": "2024-09-15T18:30:00",
+      "shareCount": 5400,
+      "reactions": { "love": 45000, "care": 8000 },
+      "comments": [ "Thương các con quá.", "Trẻ con miền núi ngoan và dễ thương lắm." ]
+    },
+    {
+      "id": "yagi-040",
+      "platform": "facebook",
+      "author": "Thông Tin Chính Phủ",
+      "content": "Tạm biệt Bão số 3 (Yagi). Một cơn bão lịch sử đã lấy đi nhiều tài sản và nước mắt, nhưng cũng để lại một bài học sáng ngời về tinh thần kiên cường, tình đồng bào thiêng liêng \"lá lành đùm lá rách\" của dân tộc Việt Nam. Cùng nhau xốc lại tinh thần, tái thiết cuộc sống. Việt Nam tiến lên! 🇻🇳❤️💪",
+      "timestamp": "2024-09-15T20:00:00",
+      "shareCount": 150000,
+      "reactions": { "love": 350000, "care": 45000, "like": 20000 },
+      "comments": [ "Tự hào tinh thần Việt Nam.", "Trải qua hoạn nạn mới thấy yêu đồng bào mình đến nhường nào.", "Sẵn sàng đón chờ những ngày tươi sáng phía trước." ]
+    }
+  ]

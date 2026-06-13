@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>OpenStreetMap Route View</title>
+    <title>Bản đồ điều phối cứu trợ</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -45,8 +45,8 @@
             clearMap();
 
             // Add markers
-            var startMarker = L.marker([startLat, startLng]).addTo(map).bindPopup("<b>Start:</b> " + startLabel).openPopup();
-            var destMarker = L.marker([destLat, destLng]).addTo(map).bindPopup("<b>Destination:</b> " + destLabel);
+            var startMarker = L.marker([startLat, startLng]).addTo(map).bindPopup("<b>Điểm cung ứng:</b> " + startLabel).openPopup();
+            var destMarker = L.marker([destLat, destLng]).addTo(map).bindPopup("<b>Điểm cứu trợ:</b> " + destLabel);
             markers.push(startMarker, destMarker);
 
             // Fetch route from OSRM API (coordinates are in [lng, lat] format for OSRM query)

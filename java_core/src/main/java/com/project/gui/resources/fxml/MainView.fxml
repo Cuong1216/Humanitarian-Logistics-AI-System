@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.web.WebView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -151,47 +152,47 @@
                  TAB 3: LOGISTICS
             ══════════════════════════════════════════ -->
             <Tab text="🚛  Logistics">
-                <VBox spacing="16">
-                    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                <SplitPane orientation="HORIZONTAL" dividerPositions="0.38">
+                    <!-- Left Control Panel -->
+                    <VBox styleClass="panel" spacing="14">
+                        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
 
-                    <!-- Route Finder -->
-                    <TitledPane text="A* Route Finder" expanded="true"
-                                styleClass="titled-pane-styled">
-                        <VBox spacing="10">
-                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label text="Start:" minWidth="60" styleClass="field-label"/>
-                                <TextField fx:id="startLocField"
-                                           promptText="e.g. Support Center A"
-                                           HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label text="Destination:" minWidth="60" styleClass="field-label"/>
-                                <TextField fx:id="destLocField"
-                                           promptText="e.g. Disaster Zone B"
-                                           HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                            <Button text="📍  Find Route" onAction="#onFindRoute"
-                                    styleClass="btn-secondary"/>
-                            <TextArea fx:id="routeOutput" editable="false"
-                                      prefRowCount="5" styleClass="route-output"
-                                      promptText="Route will appear here…"/>
-                        </VBox>
-                    </TitledPane>
+                        <Label text="Route Navigation" styleClass="section-title"/>
+                        <Separator/>
 
-                    <!-- Vehicle Fleet -->
-                    <TitledPane text="Vehicle Fleet" expanded="true"
-                                styleClass="titled-pane-styled" VBox.vgrow="ALWAYS">
-                        <TableView fx:id="vehicleTable">
+                        <Label text="Start Address" styleClass="field-label"/>
+                        <TextField fx:id="startLocField"
+                                   promptText="e.g. Hanoi, Vietnam"
+                                   styleClass="text-field-styled"/>
+
+                        <Label text="Destination Address" styleClass="field-label"/>
+                        <TextField fx:id="destLocField"
+                                   promptText="e.g. Da Nang, Vietnam"
+                                   styleClass="text-field-styled"/>
+
+                        <Button text="📍  Find Route" onAction="#onFindRoute"
+                                styleClass="btn-primary" maxWidth="Infinity"/>
+
+                        <Label text="Route Summary" styleClass="field-label"/>
+                        <TextArea fx:id="routeOutput" editable="false"
+                                  prefRowCount="4" styleClass="route-output"
+                                  promptText="Route waypoints will appear here…"/>
+
+                        <Label text="Vehicle Fleet" styleClass="field-label"/>
+                        <TableView fx:id="vehicleTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colVehicleId" text="Vehicle ID"    prefWidth="150"/>
-                                <TableColumn fx:id="colCapacity"  text="Capacity (kg)" prefWidth="150"/>
-                                <TableColumn fx:id="colStatus"    text="Status"        prefWidth="150"/>
+                                <TableColumn fx:id="colVehicleId" text="Vehicle ID"    prefWidth="90"/>
+                                <TableColumn fx:id="colCapacity"  text="Capacity (kg)" prefWidth="95"/>
+                                <TableColumn fx:id="colStatus"    text="Status"        prefWidth="90"/>
                             </columns>
                         </TableView>
-                    </TitledPane>
+                    </VBox>
 
-                </VBox>
+                    <!-- Right Map Panel -->
+                    <VBox styleClass="panel">
+                        <WebView fx:id="mapWebView" VBox.vgrow="ALWAYS"/>
+                    </VBox>
+                </SplitPane>
             </Tab>
 
         </TabPane>

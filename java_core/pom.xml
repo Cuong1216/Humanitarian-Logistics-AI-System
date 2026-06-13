@@ -11,7 +11,7 @@
 <properties>
   <maven.compiler.source>17</maven.compiler.source>
   <maven.compiler.target>17</maven.compiler.target>
-  <javafx.version>17.0.6</javafx.version>
+  <javafx.version>26.0.1</javafx.version>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <main.class>com.project.Main</main.class>
   <javafx.maven.plugin.version>0.08</javafx.maven.plugin.version>
@@ -41,6 +41,18 @@
     <version>${javafx.version}</version>
   </dependency>
 
+  <dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-web</artifactId>
+    <version>${javafx.version}</version>
+  </dependency>
+
+  <dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>jdk-jsobject</artifactId>
+    <version>${javafx.version}</version>
+  </dependency>
+
   <!-- google gson (for json) -->
   <dependency>
     <groupId>com.google.code.gson</groupId>
@@ -58,6 +70,7 @@
       <includes>
         <include>**/*.fxml</include>
         <include>**/*.css</include>
+        <include>**/*.html</include>
       </includes>
     </resource>
   </resources>
@@ -79,6 +92,15 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-maven-plugin</artifactId>
       <version>0.0.8</version>
+      <configuration>
+        <mainClass>${main.class}</mainClass>
+      </configuration>
+    </plugin>
+
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>3.1.0</version>
       <configuration>
         <mainClass>${main.class}</mainClass>
       </configuration>

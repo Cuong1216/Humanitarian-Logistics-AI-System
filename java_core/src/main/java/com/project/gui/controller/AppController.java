@@ -15,6 +15,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import com.google.gson.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.net.URL;
 import java.util.*;
 
@@ -52,6 +60,7 @@ public class AppController implements Initializable {
     @FXML private TableColumn<Vehicle, Integer> colCapacity;
     @FXML private TableColumn<Vehicle, String> colStatus;
     @FXML private TextArea routeOutput;
+    @FXML private WebView mapWebView;
 
     private List<SocialMediaPost> collectedPosts = new ArrayList<>();
     private IAiClient aiClient; 
@@ -78,6 +87,15 @@ public class AppController implements Initializable {
             pagesListView.setItems(FXCollections.observableArrayList(
                 "https://www.facebook.com/phongchongthientaivn"
             ));
+        }
+        if (mapWebView != null) {
+            WebEngine webEngine = mapWebView.getEngine();
+            URL url = getClass().getResource("/com/project/gui/resources/html/map.html");
+            if (url != null) {
+                webEngine.load(url.toExternalForm());
+            } else {
+                System.err.println("[!] Could not find map.html resource!");
+            }
         }
     }
 
@@ -475,25 +493,108 @@ public class AppController implements Initializable {
 
     @FXML
     private void onFindRoute() {
-        String startAddr = startLocField.getText().trim();
-        String destAddr  = destLocField.getText().trim();
+        String startStr = startLocField.getText().trim();
+        String destStr = destLocField.getText().trim();
 
-        if (startAddr.isEmpty() || destAddr.isEmpty()) {
+        if (startStr.isEmpty() || destStr.isEmpty()) {
             showAlert("Validation", "Please enter start and destination.");
             return;
         }
 
-        Location start = new Location(10.762622, 106.660172, startAddr);
-        Location dest  = new Location(10.800000, 106.700000, destAddr);
+        routeOutput.setText("Resolving locations and drawing route...");
 
-        RouteFinder finder = new RouteFinder();
-        List<Location> route = finder.AStarRouteFinder(start, dest);
+        // Perform geocoding (Nominatim API query is a network call, we run it on background thread to prevent GUI lockup)
+        Thread routeThread = new Thread(() -> {
+            Location start = geocodeAddressWithFallback(startStr);
+            Location dest = geocodeAddressWithFallback(destStr);
 
-        StringBuilder sb = new StringBuilder("Route found (" + route.size() + " waypoints):\n\n");
-        for (int i = 0; i < route.size(); i++) {
-            sb.append(String.format("  %d. %s%n", i + 1, route.get(i).toString()));
+            javafx.application.Platform.runLater(() -> {
+                RouteFinder finder = new RouteFinder();
+                List<Location> route = finder.AStarRouteFinder(start, dest);
+
+                StringBuilder sb = new StringBuilder("Route Coordinates:\n");
+                sb.append(String.format("  Start: %s (%.6f, %.6f)%n", start.getAddress(), start.getLatitude(), start.getLongitude()));
+                sb.append(String.format("  Dest:  %s (%.6f, %.6f)%n%n", dest.getAddress(), dest.getLatitude(), dest.getLongitude()));
+                sb.append("Visual routing lines have been plotted on the OpenStreetMap view.");
+                routeOutput.setText(sb.toString());
+
+                // Execute JavaScript call to Leaflet map
+                if (mapWebView != null) {
+                    try {
+                        String script = String.format(Locale.US, "setRoute(%f, %f, %f, %f, '%s', '%s');",
+                            start.getLatitude(), start.getLongitude(),
+                            dest.getLatitude(), dest.getLongitude(),
+                            start.getAddress().replace("'", "\\'"),
+                            dest.getAddress().replace("'", "\\'")
+                        );
+                        mapWebView.getEngine().executeScript(script);
+                    } catch (Exception e) {
+                        System.err.println("[!] Failed to call Leaflet JS: " + e.getMessage());
+                    }
+                }
+            });
+        });
+        routeThread.setContextClassLoader(getClass().getClassLoader());
+        routeThread.start();
+    }
+
+    private Location geocodeAddress(String address) {
+        try {
+            HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(5))
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .build();
+                
+            String encodedAddr = java.net.URLEncoder.encode(address, "UTF-8");
+            String queryUrl = "https://nominatim.openstreetmap.org/search?q=" + encodedAddr + "&format=json&limit=1";
+            
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(queryUrl))
+                .header("User-Agent", "DisasterReliefSystem/1.0 (muffin@example.com)") // required by Nominatim
+                .timeout(Duration.ofSeconds(6))
+                .GET()
+                .build();
+                
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                String body = response.body();
+                JsonArray array = JsonParser.parseString(body).getAsJsonArray();
+                if (array.size() > 0) {
+                    JsonObject obj = array.get(0).getAsJsonObject();
+                    double lat = obj.get("lat").getAsDouble();
+                    double lon = obj.get("lon").getAsDouble();
+                    String displayName = obj.get("display_name").getAsString();
+                    return new Location(lat, lon, displayName);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[!] Nominatim Geocoding API failed for address '" + address + "': " + e.getMessage());
         }
-        routeOutput.setText(sb.toString());
+        return null;
+    }
+
+    private Location geocodeAddressWithFallback(String address) {
+        Location loc = geocodeAddress(address);
+        if (loc != null) {
+            return loc;
+        }
+        
+        // Fallback geocoding dictionary for major Vietnam locations
+        String lower = address.toLowerCase();
+        if (lower.contains("hà nội") || lower.contains("hanoi")) {
+            return new Location(21.028511, 105.804817, "Hà Nội, Việt Nam (Local Fallback)");
+        } else if (lower.contains("đà nẵng") || lower.contains("da nang")) {
+            return new Location(16.047079, 108.206230, "Đà Nẵng, Việt Nam (Local Fallback)");
+        } else if (lower.contains("quảng trị") || lower.contains("quang tri")) {
+            return new Location(16.742491, 107.184914, "Quảng Trị, Việt Nam (Local Fallback)");
+        } else if (lower.contains("đắk lắk") || lower.contains("dak lak") || lower.contains("đắc lắc")) {
+            return new Location(12.686121, 108.016359, "Đắk Lắk, Việt Nam (Local Fallback)");
+        } else if (lower.contains("hồ chí minh") || lower.contains("ho chi minh") || lower.contains("hcm") || lower.contains("sài gòn") || lower.contains("sai gon")) {
+            return new Location(10.823099, 106.629664, "TP. Hồ Chí Minh, Việt Nam (Local Fallback)");
+        }
+        
+        // Final central fallback
+        return new Location(14.0583, 108.2772, address + " (Fallback Central Vietnam)");
     }
 
     private void showAlert(String title, String msg) {

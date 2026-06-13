@@ -5,6 +5,7 @@ com/project/analysis/analyzers/DamageCategorizer.class
 com/project/analysis/DamageCategorizer.class
 com/project/analysis/AnalysisResult.class
 com/project/ai_client/dto/SentimentReq.class
+com/project/Main$App.class
 com/project/datacollection/platform/XScraper.class
 com/project/logistics/utils/RouteFinder.class
 com/project/logistics/entities/Vehicle.class
@@ -26,8 +27,8 @@ com/project/ai_client/dto/AnalyzeReq$PostData.class
 com/project/ai_client/dto/AnalyzeRes$HumanitarianSignal.class
 com/project/ai_client/dto/AnalyzeReq.class
 com/project/datacollection/platform/FacebookScraper.class
+com/project/ai_client/IAiClient.class
 com/project/ai_client/dto/DamageReq.class
 com/project/ai_client/dto/SentimentRes.class
-com/project/ai_client/IAiClient.class
 com/project/datacollection/PlatformFactory.class
 com/project/ai_client/FastApiRestClient.class

@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import re
 from collections import Counter
@@ -27,7 +27,6 @@ load_dotenv()
 
 
 TRIGGER_WORDS = {
-    "bao",
     "bão",
     "bao so",
     "bão số",
@@ -41,7 +40,6 @@ TRIGGER_WORDS = {
     "cần giúp",
     "chet",
     "chết",
-    "cuu",
     "cứu",
     "cuu ho",
     "cứu hộ",
@@ -49,17 +47,14 @@ TRIGGER_WORDS = {
     "cứu nạn",
     "cuu voi",
     "cứu với",
-    "doi",
     "đói",
     "duong bi cat",
     "đường bị cắt",
-    "khan",
     "khẩn",
     "khan cap",
     "khẩn cấp",
     "khat",
     "khát",
-    "lu",
     "lũ",
     "lu lut",
     "lũ lụt",
@@ -77,13 +72,11 @@ TRIGGER_WORDS = {
     "nguy hiểm",
     "nuoc cuon",
     "nước cuốn",
-    "sap",
     "sập",
     "sat lo",
     "sạt lở",
     "so tan",
     "sơ tán",
-    "thieu",
     "thiếu",
     "thieu do an",
     "thiếu đồ ăn",
@@ -99,9 +92,10 @@ TRIGGER_WORDS = {
 
 VIETNAMESE_EMOTION_HINTS = {
     EmotionLabel.ANGER: {"bat binh", "bất bình", "phan no", "phẫn nộ", "tuc gian", "tức giận"},
-    EmotionLabel.FEAR: {"hoang loan", "hoảng loạn", "lo lang", "lo lắng", "nguy hiem", "nguy hiểm", "so", "sợ"},
-    EmotionLabel.SADNESS: {"buon", "buồn", "chet", "chết", "mat", "mất", "thuong tam", "thương tâm"},
-    EmotionLabel.DISGUST: {"ban", "bẩn", "o nhiem", "ô nhiễm", "kinh khung", "kinh khủng"},
+    EmotionLabel.FEAR: {"hoang loan", "hoảng loạn", "lo lang", "lo lắng", "nguy hiem", "nguy hiểm", "sợ"},
+    EmotionLabel.SADNESS: {"buon", "buồn", "chet", "chết", "mất", "thuong tam", "thương tâm"},
+    EmotionLabel.DISGUST: {"bẩn", "o nhiem", "ô nhiễm", "kinh khung", "kinh khủng"},
+    EmotionLabel.JOY: {"cảm ơn", "cam on", "vui mừng", "vui mung", "phấn khởi", "phan khoi", "biết ơn", "biet on", "tốt đẹp", "tot dep"},
 }
 
 
@@ -178,7 +172,8 @@ Schema JSON bắt buộc:
 }}
 
 Quy tắc:
-- Nếu nội dung tiêu cực và có từ khóa cứu trợ/thiên tai như "cứu với", "sập", "lũ", "ngập", "chết", "đói", "y tế", "khẩn cấp", hãy đánh dấu khẩn cấp.
+- CHỈ đánh dấu khẩn cấp ("is_emergency": true) khi bài viết ghi nhận vấn đề nghiêm trọng thực tế (người dân bị chia cắt, cô lập, lũ cuốn, mắc kẹt nguy hiểm hoặc thiếu thốn trầm trọng các nhu yếu phẩm sinh tồn cơ bản như lương thực, nước sạch, thuốc men, nơi trú ẩn).
+- Các tin tức chung, dự báo thời tiết, cảnh báo chung mà không có thông tin thiệt hại về người hoặc nhu cầu cứu trợ sinh tồn cụ thể thì phải đặt "is_emergency": false và "urgency" ở mức "low" hoặc "medium".
 - Trích xuất địa điểm tiếng Việt vào "locations", ví dụ: "thôn A", "xã Bình Minh", "huyện Sơn Động".
 - Nếu văn bản có 'location_hint', hãy ưu tiên lấy thông tin đó.
 - Trích xuất nhu cầu cứu trợ vào "categories". Giá trị category vẫn phải dùng enum tiếng Anh trong schema.
@@ -256,6 +251,30 @@ Bình luận đã làm sạch:
             raw=raw or {},
         )
 
+    def _is_really_critical(self, text: str, categories: list[NeedCategory]) -> bool:
+        # Check for separation, isolation, or loss of survival elements
+        isolation_keywords = [
+            "cô lập", "co lap", "chia cắt", "chia cat", 
+            "mất điện", "mat dien", "mất nước", "mat nuoc", "mất nước sạch", "mat nuoc sach",
+            "mất liên lạc", "mat lien lac", "ngập sâu", "ngap sau", "ngập mái", "ngap mai",
+            "mắc kẹt", "mac ket", "bị kẹt", "bi ket",
+            "cuu voi", "cứu với", "cần cứu", "can cuu", "cứu nạn", "cuu nan", "cứu hộ", "cuu ho"
+        ]
+        text_lower = text.lower()
+        has_isolation = any(kw in text_lower for kw in isolation_keywords)
+        
+        # Check for basic survival need categories
+        survival_categories = {
+            NeedCategory.FOOD,
+            NeedCategory.WATER,
+            NeedCategory.MEDICAL,
+            NeedCategory.RESCUE,
+            NeedCategory.SHELTER
+        }
+        has_survival_need = any(cat in survival_categories for cat in categories)
+        
+        return has_isolation or has_survival_need
+
     def _analyze_with_mock(self, post: SocialMediaPost) -> AnalysisResult:
         combined_text = self._combined_text(post)
         trigger_hits = self._count_trigger_hits(combined_text)
@@ -267,12 +286,18 @@ Bình luận đã làm sạch:
             1.0,
             (trigger_hits / 8) + reaction_pressure + (0.15 if need_categories else 0),
         )
-        is_emergency = base_negative >= 0.35 and trigger_hits > 0
+        dominant = self._dominant_emotion(combined_text, base_negative)
+        if dominant == EmotionLabel.JOY:
+            base_negative = max(0.05, base_negative * 0.2)
+
+        is_really_critical = self._is_really_critical(combined_text, need_categories)
+        is_emergency = base_negative >= 0.35 and trigger_hits > 0 and is_really_critical
         rule_urgency = self._urgency_from_score(base_negative, need_categories, combined_text, trigger_hits)
         knn_result = self.knn.predict(post, trigger_hits, need_categories, base_negative)
         knn_urgency = self._enum_or_default(UrgencyLevel, knn_result["predicted_urgency"], UrgencyLevel.LOW)
         urgency = self._max_urgency(rule_urgency, knn_urgency)
-        dominant = self._dominant_emotion(combined_text, base_negative)
+        if not is_emergency and urgency in {UrgencyLevel.CRITICAL, UrgencyLevel.HIGH}:
+            urgency = UrgencyLevel.MEDIUM
         emotion_scores = self._mock_emotion_scores(dominant, base_negative)
 
         return AnalysisResult(
@@ -315,8 +340,11 @@ Bình luận đã làm sạch:
         knn_result = self.knn.predict(post, trigger_hits, categories, result.negative_score)
         knn_urgency = self._enum_or_default(UrgencyLevel, knn_result["predicted_urgency"], UrgencyLevel.LOW)
         final_urgency = self._max_urgency(final_urgency, knn_urgency)
+        
+        is_really_critical = self._is_really_critical(combined_text, categories)
         is_emergency = result.humanitarian_signal.is_emergency
-        if result.negative_score >= 0.5 and trigger_hits > 0:
+        
+        if result.negative_score >= 0.5 and trigger_hits > 0 and is_really_critical:
             is_emergency = True
             final_urgency = self._urgency_from_score(
                 result.negative_score,
@@ -324,6 +352,11 @@ Bình luận đã làm sạch:
                 combined_text,
                 trigger_hits,
             )
+        else:
+            is_emergency = is_emergency and is_really_critical
+            if not is_emergency:
+                if final_urgency in {UrgencyLevel.CRITICAL, UrgencyLevel.HIGH}:
+                    final_urgency = UrgencyLevel.MEDIUM
 
         result.humanitarian_signal.is_emergency = is_emergency
         result.humanitarian_signal.urgency = final_urgency
@@ -346,7 +379,12 @@ Bình luận đã làm sạch:
         return " ".join([post.text, *post.comments]).lower()
 
     def _count_trigger_hits(self, text: str) -> int:
-        return sum(1 for trigger in TRIGGER_WORDS if trigger in text)
+        count = 0
+        for trigger in TRIGGER_WORDS:
+            pattern = rf"(?<!\w){re.escape(trigger)}(?!\w)"
+            if re.search(pattern, text):
+                count += 1
+        return count
 
     def _reaction_pressure(self, reactions: dict[str, int]) -> float:
         sad = reactions.get("sad", 0) + reactions.get("care", 0)
@@ -363,6 +401,11 @@ Bình luận đã làm sạch:
         text: str,
         trigger_hits: int,
     ) -> UrgencyLevel:
+        if not self._is_really_critical(text, categories):
+            if score >= 0.6:
+                return UrgencyLevel.MEDIUM
+            return UrgencyLevel.LOW
+
         if (
             "mac ket" in text
             or "mắc kẹt" in text
@@ -389,8 +432,10 @@ Bình luận đã làm sạch:
         return first if order[first] >= order[second] else second
     def _dominant_emotion(self, text: str, negative_score: float) -> EmotionLabel:
         for emotion, hints in VIETNAMESE_EMOTION_HINTS.items():
-            if any(token in text for token in hints):
-                return emotion
+            for hint in hints:
+                pattern = rf"(?<!\w){re.escape(hint)}(?!\w)"
+                if re.search(pattern, text):
+                    return emotion
         if negative_score >= 0.35:
             return EmotionLabel.FEAR
         return EmotionLabel.NEUTRAL

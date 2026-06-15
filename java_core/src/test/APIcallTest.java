@@ -1,8 +1,8 @@
 package test; 
 
-import main.java.com.project.ai_client.FastApiRestClient;
-import main.java.com.project.ai_client.dto.AnalyzeReq;
-import main.java.com.project.ai_client.dto.AnalyzeRes;
+import com.project.ai_client.FastApiRestClient;
+import com.project.ai_client.dto.AnalyzeReq;
+import com.project.ai_client.dto.AnalyzeRes;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

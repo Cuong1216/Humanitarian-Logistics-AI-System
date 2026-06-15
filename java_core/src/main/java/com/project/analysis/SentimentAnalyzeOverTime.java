@@ -1,9 +1,9 @@
-package main.java.com.project.analysis;
+package com.project.analysis;
 
-import main.java.com.project.ai_client.IAiClient;
-import main.java.com.project.ai_client.dto.AnalyzeReq;
-import main.java.com.project.ai_client.dto.AnalyzeRes;
-import main.java.com.project.datacollection.model.SocialMediaPost;
+import com.project.ai_client.IAiClient;
+import com.project.ai_client.dto.AnalyzeReq;
+import com.project.ai_client.dto.AnalyzeRes;
+import com.project.datacollection.model.SocialMediaPost;
 import java.util.*;
 
 public class SentimentAnalyzeOverTime implements TaskAnalyzer {
@@ -18,10 +18,17 @@ public class SentimentAnalyzeOverTime implements TaskAnalyzer {
         for (SocialMediaPost post : posts) {
             if (aiClient != null) {
                 try {
+                    String preprocessedText = WordPreprocessor.preprocess(post.getContent());
                     AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
-                        post.getId() != null ? post.getId() : UUID.randomUUID().toString(),
-                        "facebook", "unknown", post.getContent(), "", "", 
-                        new HashMap<>(), new ArrayList<>(), 0
+                        post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
+                        post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
+                        post.getAuthor() != null ? post.getAuthor() : "unknown",
+                        preprocessedText,
+                        "",
+                        "",
+                        post.getReactions(),
+                        post.getComments(),
+                        post.getShareCount()
                     );
                     AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
                     

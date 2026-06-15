@@ -1513,6 +1513,8 @@ public class AppController implements Initializable {
                 }
             }
             severityPieChart.setData(pieData);
+            severityPieChart.setLegendVisible(true);
+            severityPieChart.setLegendSide(javafx.geometry.Side.BOTTOM);
         }
 
         // Populate BarChart: Need Categories (Frequencies of Damage Categories)

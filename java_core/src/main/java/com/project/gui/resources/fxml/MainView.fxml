@@ -31,7 +31,7 @@
                  TAB 1: DATA COLLECTION
             ══════════════════════════════════════════ -->
             <Tab text="📡  Thu thập dữ liệu">
-                <SplitPane orientation="HORIZONTAL" dividerPositions="0.35">
+                <SplitPane orientation="HORIZONTAL" dividerPositions="0.28">
 
                     <!-- LEFT: Scrollable Controls Sidebar -->
                     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="results-scroll">
@@ -198,27 +198,18 @@
                                             </StackedBarChart>
                                         </VBox>
                                         
-                                        <!-- Severity and Needed Items Breakdown HBox -->
-                                        <HBox spacing="20" alignment="CENTER">
-                                            <!-- Severity Pie Chart -->
-                                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
-                                                <Label text="📊 Phân bố tỷ lệ các loại thiệt hại" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
-                                                <PieChart fx:id="severityPieChart" prefHeight="280" animated="false"/>
-                                            </VBox>
-                                            
-                                            <!-- Need Categories Bar Chart -->
-                                            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
-                                                <Label text="📊 Tần suất số lượng báo cáo thiệt hại" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
-                                                <BarChart fx:id="damageTypeBarChart" prefHeight="280" animated="false">
-                                                    <xAxis>
-                                                        <CategoryAxis label="Danh mục thiệt hại"/>
-                                                    </xAxis>
-                                                    <yAxis>
-                                                        <NumberAxis label="Số lượng báo cáo"/>
-                                                    </yAxis>
-                                                </BarChart>
-                                            </VBox>
-                                        </HBox>
+                                        <!-- Need Categories Bar Chart -->
+                                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                                            <Label text="📊 Tần suất số lượng báo cáo thiệt hại" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                                            <BarChart fx:id="damageTypeBarChart" prefHeight="380" animated="false">
+                                                <xAxis>
+                                                    <CategoryAxis label="Danh mục thiệt hại"/>
+                                                </xAxis>
+                                                <yAxis>
+                                                    <NumberAxis label="Số lượng báo cáo"/>
+                                                </yAxis>
+                                            </BarChart>
+                                        </VBox>
                                         
                                         <!-- Milestones Summary -->
                                         <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
@@ -263,7 +254,7 @@
                  TAB 3: LOGISTICS
             ══════════════════════════════════════════ -->
             <Tab text="🚛  Điều phối hỗ trợ">
-                <SplitPane orientation="HORIZONTAL" dividerPositions="0.45">
+                <SplitPane orientation="HORIZONTAL" dividerPositions="0.28">
                     <!-- Left Control Panel -->
                     <ScrollPane fitToWidth="true" styleClass="results-scroll">
                         <VBox styleClass="panel" spacing="14">

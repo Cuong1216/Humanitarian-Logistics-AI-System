@@ -619,5 +619,125 @@
       "shareCount": 150000,
       "reactions": { "love": 350000, "care": 45000, "like": 20000 },
       "comments": [ "Tự hào tinh thần Việt Nam.", "Trải qua hoạn nạn mới thấy yêu đồng bào mình đến nhường nào.", "Sẵn sàng đón chờ những ngày tươi sáng phía trước." ]
+    },
+    {
+      "id": "yagi-041",
+      "platform": "facebook",
+      "author": "Cứu hộ Thiên tai",
+      "content": "Cập nhật khẩn cấp tại Yên Bái: Hiện tại mưa lũ vẫn diễn biến phức tạp, lực lượng cứu hộ đang khẩn trương tìm kiếm 3 nạn nhân mất tích do bị lũ cuốn trôi. Nhiều người dân bị thương cũng đã được đưa đi cấp cứu kịp thời.",
+      "timestamp": "2024-09-08T18:00:00",
+      "shareCount": 1200,
+      "reactions": { "sad": 2500, "care": 1200 },
+      "comments": [ "Cầu mong cho các nạn nhân sớm được tìm thấy bình an.", "Thương đồng bào vùng lũ lụt quá." ]
+    },
+    {
+      "id": "yagi-042",
+      "platform": "facebook",
+      "author": "Tin Tức Vùng Cao",
+      "content": "Trận lũ quét kinh hoàng đã đi qua nhưng để lại nỗi đau quá lớn. Đã có thông tin về thương vong, một số người bị thiệt mạng do lở đất đè sập nhà. Các cơ quan chức năng đang nỗ lực tối đa để hỗ trợ gia đình các nạn nhân.",
+      "timestamp": "2024-09-09T09:15:00",
+      "shareCount": 3200,
+      "reactions": { "sad": 8500, "care": 3400 },
+      "comments": [ "Quá tang thương cho bà con miền núi.", "Đau xót khôn nguôi." ]
+    },
+    {
+      "id": "yagi-043",
+      "platform": "facebook",
+      "author": "Thông tin Hải Phòng 24h",
+      "content": "Sau siêu bão Yagi, cả khu vực trung tâm Hải Phòng vẫn đang mất điện và mất nước trên diện rộng. Nhiều cửa hàng ngừng hoạt động sản xuất kinh doanh, đời sống người dân bị đình trệ nghiêm trọng.",
+      "timestamp": "2024-09-08T07:30:00",
+      "shareCount": 850,
+      "reactions": { "sad": 1500, "like": 300 },
+      "comments": [ "Cúp điện nóng nực quá, mong sớm có điện trở lại.", "Mất mạng mất sóng luôn không liên lạc được với ai." ]
+    },
+    {
+      "id": "yagi-044",
+      "platform": "facebook",
+      "author": "Người Tiêu Dùng Hà Nội",
+      "content": "Nhu yếu phẩm sau bão đang cực kỳ đắt đỏ. Nhiều chợ đóng cửa khiến thực phẩm khan hiếm, giá tăng vọt từ rau xanh đến thịt cá. Bà con đang đối mặt với việc thiếu lương thực sạch.",
+      "timestamp": "2024-09-09T16:00:00",
+      "shareCount": 1400,
+      "reactions": { "sad": 2100, "angry": 450 },
+      "comments": [ "Rau muống tăng gấp ba bình thường luôn.", "Khó khăn chồng chất khó khăn." ]
+    },
+    {
+      "id": "yagi-045",
+      "platform": "facebook",
+      "author": "Hạ Long Media",
+      "content": "Bão Yagi càn quét qua vịnh Hạ Long khiến hàng trăm ki-ốt kinh doanh và nhà dân bị sập nhà, tốc mái tôn bay nóc hoàn toàn. Các đống đổ nát ngổn ngang dọc các tuyến đường ven biển.",
+      "timestamp": "2024-09-07T18:45:00",
+      "shareCount": 5400,
+      "reactions": { "sad": 12000, "care": 4200 },
+      "comments": [ "Nhìn xót xa quá, bao công sức trôi theo bão.", "Tôn bay rào rào kinh hoàng thực sự." ]
+    },
+    {
+      "id": "yagi-046",
+      "platform": "facebook",
+      "author": "Tin Nhanh Quảng Ninh",
+      "content": "Gió bão cực mạnh làm đổ tường và sập trần một xưởng sản xuất lớn tại Cẩm Phả. Rất may công nhân đã nghỉ từ trước nên tránh được thiệt hại về người, nhưng nhà sập hoàn toàn.",
+      "timestamp": "2024-09-07T15:30:00",
+      "shareCount": 980,
+      "reactions": { "sad": 2300, "care": 350 },
+      "comments": [ "May mắn là không có ai ở trong xưởng.", "Thiệt hại của cải kinh khủng." ]
+    },
+    {
+      "id": "yagi-047",
+      "platform": "facebook",
+      "author": "Hài Phòng Muôn Màu",
+      "content": "Nước dâng ngập đường tràn vào gara xe khiến nhiều ô tô và xe máy bị ngập xe hỏng hóc nặng. Nhiều hộ gia đình bị trôi đồ, ướt sạch đồ đạc và hỏng ti vi, tủ lạnh, máy giặt trong nhà.",
+      "timestamp": "2024-09-08T11:00:00",
+      "shareCount": 1500,
+      "reactions": { "sad": 4500, "care": 1200 },
+      "comments": [ "Nhà mình ướt sạch đồ dùng gia đình rồi, buồn quá.", "Xe máy ngập nước dắt bộ đỏ cả mắt." ]
+    },
+    {
+      "id": "yagi-048",
+      "platform": "facebook",
+      "author": "Cộng Đồng Chung Cư",
+      "content": "Nước tràn vào tầng hầm chung cư ngập xe hàng loạt. Bà con khóc ròng vì nhiều chiếc ô tô đắt tiền bị ngập nước hỏng xe hoàn toàn. Thiệt hại tài sản cá nhân vô cùng lớn.",
+      "timestamp": "2024-09-08T14:30:00",
+      "shareCount": 2100,
+      "reactions": { "sad": 5400, "care": 800 },
+      "comments": [ "Hầm ngập sâu thế này cứu sao nổi xe.", "Xót xa của cải tích cóp bao năm." ]
+    },
+    {
+      "id": "yagi-049",
+      "platform": "facebook",
+      "author": "Cảnh Báo Giao Thông",
+      "content": "Đoạn đường quốc lộ đi qua Lào Cai bị sạt lở núi nghiêm trọng làm sập đường hoàn toàn, gây chia cắt giao thông và cô lập nhiều hộ dân vùng cao. Xe cộ tuyệt đối không di chuyển qua đây.",
+      "timestamp": "2024-09-08T10:00:00",
+      "shareCount": 4300,
+      "reactions": { "sad": 6200, "care": 1500 },
+      "comments": [ "Sạt lở đất đá ghê quá, mong mọi người tránh xa.", "Cầu mong đường sớm được thông." ]
+    },
+    {
+      "id": "yagi-050",
+      "platform": "facebook",
+      "author": "Tin Tức Địa Phương",
+      "content": "Mưa lũ lớn làm vỡ đê bao, hàng loạt cột điện đổ ngổn ngang chặn ngang đường đi. Giao thông tê liệt hoàn toàn, tắc đường nghiêm trọng tại các tuyến đường chính vào trung tâm huyện.",
+      "timestamp": "2024-09-09T08:00:00",
+      "shareCount": 1900,
+      "reactions": { "sad": 3500, "care": 600 },
+      "comments": [ "Cột điện gãy đổ nguy hiểm lắm, mọi người cẩn thận.", "Nước ngập mênh mông như biển." ]
+    },
+    {
+      "id": "yagi-051",
+      "platform": "facebook",
+      "author": "Khuyến Nông Việt",
+      "content": "Hàng ngàn héc-ta lúa ngập chìm trong nước lũ khiến bà con nông dân mất mùa trắng tay. Nhiều vườn tược, cây ăn quả và rau màu cũng bị phù sa bồi lấp dập nát hoàn toàn sau bão.",
+      "timestamp": "2024-09-10T15:20:00",
+      "shareCount": 2800,
+      "reactions": { "sad": 8900, "care": 4100 },
+      "comments": [ "Nhìn đồng lúa hỏng lúa ngập úng mà xót lòng thương bà con nông nghiệp.", "Năm nay mất mùa đói kém rồi." ]
+    },
+    {
+      "id": "yagi-052",
+      "platform": "facebook",
+      "author": "Hội Chăn Nuôi Bắc Bộ",
+      "content": "Nước lũ dâng ngập trang trại làm chết lợn, chết gà hàng loạt nổi trắng chuồng. Ao cá bị trôi ao mất sạch cá, thiệt hại nông nghiệp cực kỳ nặng nề cho các hộ chăn nuôi gia súc gia cầm.",
+      "timestamp": "2024-09-11T09:00:00",
+      "shareCount": 3500,
+      "reactions": { "sad": 9800, "care": 3500 },
+      "comments": [ "Đàn gà hàng ngàn con chết vịt chết gà trôi nổi thương quá.", "Không biết bao giờ mới vực dậy nổi kinh tế." ]
     }
   ]

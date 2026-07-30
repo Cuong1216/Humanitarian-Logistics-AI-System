@@ -1,4 +1,4 @@
-package main.java.com.project.logistics.utils;
+package com.project.logistics.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import main.java.com.project.logistics.entities.Location;
-import main.java.com.project.logistics.entities.RoadGraph;
+import com.project.logistics.entities.Location;
+import com.project.logistics.entities.RoadGraph;
 
 public class RouteFinder {
 

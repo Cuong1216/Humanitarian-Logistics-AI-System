@@ -1,4 +1,4 @@
-package main.java.com.project.ai_client.dto; 
+package com.project.ai_client.dto;
 
 import java.util.List;
 

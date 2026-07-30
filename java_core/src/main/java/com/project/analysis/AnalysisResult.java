@@ -1,4 +1,4 @@
-package com.disaster.analysis;
+package com.project.analysis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +16,8 @@ public class AnalysisResult {
     public void put(String key, Object value) { data.put(key, value); }
     public Object get(String key) { return data.get(key); }
     public Map<String, Object> getData() { return data; }
+    public Map<String, Object> getMetrics() { return data; }
+    public void addMetric(String key, Object value) { data.put(key, value); }
 
     public String getAnalyzerName() { return analyzerName; }
     public void setAnalyzerName(String analyzerName) { this.analyzerName = analyzerName; }

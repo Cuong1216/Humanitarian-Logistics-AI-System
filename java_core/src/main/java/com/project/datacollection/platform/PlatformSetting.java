@@ -1,4 +1,4 @@
-package main.java.com.project.datacollection.platform;
+package com.project.datacollection.platform;
 
 public class PlatformSetting {
     public Platform getPlatform(String platformType) {

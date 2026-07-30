@@ -1,4 +1,4 @@
-package main.java.com.project.ai_client;  
+package com.project.ai_client;
 
 /**
  * Interface cốt lõi. Bất kỳ Client nào (FastAPI, Google Gemini, OpenAI...) 

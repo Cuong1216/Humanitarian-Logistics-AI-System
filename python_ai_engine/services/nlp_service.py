@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import re
 from collections import Counter
@@ -410,7 +410,7 @@ Bình luận đã làm sạch:
         locations: list[str],
     ) -> str:
         target = locations[0] if locations else "khu vực được nhắc đến"
-        needs = ", ".join(self._category_vi(category) for category in categories) if categories else "xác minh thực địa"
+        needs = ", ".join(category.to_vietnamese() for category in categories) if categories else "xác minh thực địa"
         if urgency in {UrgencyLevel.CRITICAL, UrgencyLevel.HIGH}:
             return f"Điều phối đội cứu trợ và hàng hóa gồm {needs} đến {target} ngay lập tức."
         if urgency == UrgencyLevel.MEDIUM:
@@ -425,7 +425,7 @@ Bình luận đã làm sạch:
         locations: list[str],
     ) -> str:
         target = locations[0] if locations else post.keyword or "khu vực được nhắc đến"
-        needs = ", ".join(self._category_vi(category) for category in categories) if categories else "nhu cầu chưa rõ"
+        needs = ", ".join(category.to_vietnamese() for category in categories) if categories else "nhu cầu chưa rõ"
         urgency_vi = {
             UrgencyLevel.LOW: "thấp",
             UrgencyLevel.MEDIUM: "trung bình",
@@ -434,18 +434,7 @@ Bình luận đã làm sạch:
         }[urgency]
         return f"{target} có mức độ khẩn cấp {urgency_vi}, ghi nhận nhu cầu: {needs}."
 
-    def _category_vi(self, category: NeedCategory) -> str:
-        labels = {
-            NeedCategory.FOOD: "lương thực",
-            NeedCategory.WATER: "nước sạch",
-            NeedCategory.MEDICAL: "y tế",
-            NeedCategory.SHELTER: "chỗ trú ẩn",
-            NeedCategory.RESCUE: "cứu hộ",
-            NeedCategory.TRANSPORT: "vận chuyển",
-            NeedCategory.SANITATION: "vệ sinh",
-            NeedCategory.UNKNOWN: "chưa xác định",
-        }
-        return labels[category]
+
 
     def _estimate_people(self, text: str) -> int | None:
         numbers = [int(item) for item in re.findall(r"\b\d{1,6}\b", text)]

@@ -1,6 +1,7 @@
 package com.project.datacollection.platform;
 
 import com.project.datacollection.model.SocialMediaPost;
+import main.java.com.project.config.CredentialConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -34,7 +35,7 @@ public class XScraper implements Platform {
         
         try {
             // Đăng nhập X (Twitter) trước
-            loginToX(driver, "your_username", "your_password");
+            loginToX(driver, CredentialConfig.getXUsername(), CredentialConfig.getXPassword());
 
             // Sau khi đăng nhập, mở trang tìm kiếm
             String searchUrl = "https://x.com/search?q=" + keyword.replace(" ", "%20") + "&src=typed_query";

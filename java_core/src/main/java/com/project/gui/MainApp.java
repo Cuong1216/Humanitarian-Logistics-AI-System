@@ -17,7 +17,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(
             getClass().getResource("/com/disaster/gui/css/style.css").toExternalForm()
         );
-        primaryStage.setTitle("Disaster Relief System");
+        primaryStage.setTitle("Humanitarian Logistics AI System");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(700);

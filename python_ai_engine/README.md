@@ -1,6 +1,6 @@
-﻿# KeyEmotion Python AI Engine
+# Humanitarian Logistics Python AI Engine
 
-Đây là bộ não AI của dự án `KeyEmotion_through_SocialMedia`.
+Đây là bộ não AI của dự án `Humanitarian-Logistics-AI-System`.
 Python chạy như một API server local bằng FastAPI để phần Java gửi dữ liệu bài đăng mạng xã hội sang và nhận kết quả JSON.
 
 ## Workflow
@@ -58,7 +58,7 @@ pip --version
 Đi vào folder engine:
 
 ```powershell
-cd C:\path\to\KeyEmotion_through_SocialMedia\python_ai_engine
+cd C:\path\to\Humanitarian-Logistics-AI-System\python_ai_engine
 ```
 
 Tạo môi trường ảo:

@@ -1,4 +1,4 @@
-# KeyEmotion_through_SocialMedia
+# Humanitarian-Logistics-AI-System
 ---
 ## Our Goal 🎯
   In today age, social media had become one of the main and important way people express feeling, opinion and interest. So based on that motive, we made an AI system for fast, accuracy detect crowd emotion through post, react, comments, ... on social media like Facebook, Twitter (commonly know as X), ...
@@ -10,7 +10,7 @@
 
 ### Project tree 🌲
 ```bash
-KeyEmotion_through_SocialMedia/
+Humanitarian-Logistics-AI-System/
 ├── docs/
 │   ├── OOP_Report_UML.pdf
 │   └── AI_Report_Model_Search.pdf

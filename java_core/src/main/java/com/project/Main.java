@@ -23,7 +23,7 @@ public class Main extends Application {
         scene.getStylesheets().add(
             getClass().getResource("main/java/com/project/gui/resources/css/style.css").toExternalForm()
         );
-        primaryStage.setTitle("Disaster Relief System");
+        primaryStage.setTitle("Humanitarian Logistics AI System");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(700);

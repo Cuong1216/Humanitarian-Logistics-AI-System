@@ -1,8 +1,8 @@
-package com.project.datacollection;
+package main.java.com.project.datacollection;
 
-import com.project.datacollection.platform.FacebookScraper;
-import com.project.datacollection.platform.Platform;
-import com.project.datacollection.platform.XScraper;
+import main.java.com.project.datacollection.platform.FacebookScraper;
+import main.java.com.project.datacollection.platform.Platform;
+import main.java.com.project.datacollection.platform.XScraper;
 
 public class PlatformFactory {
     private PlatformFactory() {

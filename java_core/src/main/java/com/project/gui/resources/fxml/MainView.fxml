@@ -15,7 +15,7 @@
             <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
             <Label text="🆘" style="-fx-font-size:24px;"/>
             <VBox spacing="2">
-                <Label text="Disaster Relief System" styleClass="header-title"/>
+                <Label text="Humanitarian Logistics AI System" styleClass="header-title"/>
                 <Label text="Real-time Social Media Analysis &amp; Logistics" styleClass="header-subtitle"/>
             </VBox>
         </HBox>

@@ -1,9 +1,12 @@
-﻿import re
+import asyncio
+import os
+import re
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from pydantic_settings import BaseSettings
 from schemas import (
     AnalyzeRequest,
     AnalysisResult,
@@ -11,9 +14,12 @@ from schemas import (
     AreaPriorityResult,
     BatchAnalysisResult,
     BatchAnalyzeRequest,
+    EmotionLabel,
     HealthResponse,
+    HumanitarianSignal,
     KeywordAnalyzeRequest,
     NeedCategory,
+    SocialMediaPost,
     UrgencyLevel,
 )
 from services.categorization_service import CategorizationService
@@ -21,22 +27,75 @@ from services.nlp_service import NlpService, top_locations
 from services.sentiment_service import SentimentService
 
 app = FastAPI(
-    title="KeyEmotion AI Engine",
+    title="Humanitarian Logistics AI Engine",
     description="Local AI engine for social-media emotion detection and humanitarian logistics signals.",
     version="1.0.0",
 )
 
+class Settings(BaseSettings):
+    APP_ENV: str = "development"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+    
+    class Config:
+        env_file = ".env"
+        extra = "ignore"
+
+settings = Settings()
+
+if settings.APP_ENV == "production" and settings.ALLOWED_ORIGINS == "*":
+    raise RuntimeError("CORS configuration error: ALLOWED_ORIGINS=* is not safe for production.")
+
+origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
 nlp_service = NlpService()
 sentiment_service = SentimentService()
 categorization_service = CategorizationService()
+
+MAX_CONCURRENT_GEMINI_CALLS = int(os.environ.get("MAX_CONCURRENT_GEMINI_CALLS", "5"))
+executor = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_GEMINI_CALLS)
+_semaphore = None
+
+def get_semaphore() -> asyncio.Semaphore:
+    global _semaphore
+    if _semaphore is None:
+        _semaphore = asyncio.Semaphore(MAX_CONCURRENT_GEMINI_CALLS)
+    return _semaphore
+
+async def _analyze_post_async(post: SocialMediaPost) -> AnalysisResult:
+    sem = get_semaphore()
+    async with sem:
+        loop = asyncio.get_running_loop()
+        try:
+            return await asyncio.wait_for(
+                loop.run_in_executor(executor, nlp_service.analyze_post, post),
+                timeout=30.0
+            )
+        except asyncio.TimeoutError:
+            return AnalysisResult(
+                post_id=post.id,
+                keyword=post.keyword,
+                dominant_emotion=EmotionLabel.NEUTRAL,
+                emotion_scores=[],
+                negative_score=0.0,
+                confidence=0.0,
+                humanitarian_signal=HumanitarianSignal(
+                    is_emergency=False,
+                    urgency=UrgencyLevel.LOW,
+                    categories=[NeedCategory.UNKNOWN],
+                    locations=[],
+                    recommended_action="Không thể phân tích do timeout."
+                ),
+                summary="Timeout khi gọi AI service.",
+                source="mock"
+            )
 
 URGENCY_SCORE = {
     UrgencyLevel.LOW: 0.25,
@@ -61,31 +120,36 @@ def health() -> HealthResponse:
 
 
 @app.post("/analyze", response_model=AnalysisResult)
-def analyze(request: AnalyzeRequest) -> AnalysisResult:
-    return nlp_service.analyze_post(request.post)
+async def analyze(request: AnalyzeRequest) -> AnalysisResult:
+    return await _analyze_post_async(request.post)
 
 
 @app.post("/analyze/batch", response_model=BatchAnalysisResult)
-def analyze_batch(request: BatchAnalyzeRequest) -> BatchAnalysisResult:
-    return _build_batch_result([nlp_service.analyze_post(post) for post in request.posts])
+async def analyze_batch(request: BatchAnalyzeRequest) -> BatchAnalysisResult:
+    tasks = [_analyze_post_async(post) for post in request.posts]
+    results = await asyncio.gather(*tasks)
+    return _build_batch_result(list(results))
 
 
 @app.post("/analyze/keyword", response_model=BatchAnalysisResult)
-def analyze_keyword(request: KeywordAnalyzeRequest) -> BatchAnalysisResult:
-    results = [nlp_service.analyze_post(post) for post in _filter_posts_by_keyword(request)]
-    return _build_batch_result(results)
+async def analyze_keyword(request: KeywordAnalyzeRequest) -> BatchAnalysisResult:
+    tasks = [_analyze_post_async(post) for post in _filter_posts_by_keyword(request)]
+    results = await asyncio.gather(*tasks)
+    return _build_batch_result(list(results))
 
 
 @app.post("/analyze/areas", response_model=AreaPriorityResponse)
-def analyze_areas(request: BatchAnalyzeRequest) -> AreaPriorityResponse:
-    results = [nlp_service.analyze_post(post) for post in request.posts]
-    return _build_area_priority_response(results)
+async def analyze_areas(request: BatchAnalyzeRequest) -> AreaPriorityResponse:
+    tasks = [_analyze_post_async(post) for post in request.posts]
+    results = await asyncio.gather(*tasks)
+    return _build_area_priority_response(list(results))
 
 
 @app.post("/analyze/keyword/areas", response_model=AreaPriorityResponse)
-def analyze_keyword_areas(request: KeywordAnalyzeRequest) -> AreaPriorityResponse:
-    results = [nlp_service.analyze_post(post) for post in _filter_posts_by_keyword(request)]
-    return _build_area_priority_response(results)
+async def analyze_keyword_areas(request: KeywordAnalyzeRequest) -> AreaPriorityResponse:
+    tasks = [_analyze_post_async(post) for post in _filter_posts_by_keyword(request)]
+    results = await asyncio.gather(*tasks)
+    return _build_area_priority_response(list(results))
 
 
 def _filter_posts_by_keyword(request: KeywordAnalyzeRequest):
@@ -285,7 +349,7 @@ def _area_recommended_action(
     urgency: UrgencyLevel,
     categories: list[NeedCategory],
 ) -> str:
-    needs = ", ".join(_category_vi(category) for category in categories)
+    needs = ", ".join(category.to_vietnamese() for category in categories)
     if urgency == UrgencyLevel.CRITICAL:
         return f"Ưu tiên cao nhất: điều phối cứu trợ {needs} đến {location} ngay lập tức."
     if urgency == UrgencyLevel.HIGH:
@@ -295,18 +359,7 @@ def _area_recommended_action(
     return f"Tiếp tục thu thập tín hiệu mạng xã hội tại {location}."
 
 
-def _category_vi(category: NeedCategory) -> str:
-    labels = {
-        NeedCategory.FOOD: "lương thực",
-        NeedCategory.WATER: "nước sạch",
-        NeedCategory.MEDICAL: "y tế",
-        NeedCategory.SHELTER: "chỗ trú ẩn",
-        NeedCategory.RESCUE: "cứu hộ",
-        NeedCategory.TRANSPORT: "vận chuyển",
-        NeedCategory.SANITATION: "vệ sinh",
-        NeedCategory.UNKNOWN: "nhu cầu chưa xác định",
-    }
-    return labels[category]
+
 
 
 def _enum_or_default(enum_cls: type, value, default):

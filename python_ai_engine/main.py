@@ -25,6 +25,7 @@ from schemas import (
 from services.categorization_service import CategorizationService
 from services.nlp_service import NlpService, top_locations
 from services.sentiment_service import SentimentService
+from scoring_config import default_weights
 
 app = FastAPI(
     title="Humanitarian Logistics AI Engine",
@@ -208,7 +209,7 @@ def _build_area_priority_response(results: list[AnalysisResult]) -> AreaPriority
             1 for result in area_results if result.humanitarian_signal.is_emergency
         ) / len(area_results)
         context_score = max(boost for _, boost, _ in area_items)
-        severity_score = round(min(1.0, average_score * 0.6 + max_score * 0.3 + emergency_ratio * 0.1), 3)
+        severity_score = round(min(1.0, average_score * default_weights.area_average_weight + max_score * default_weights.area_max_weight + emergency_ratio * default_weights.area_emergency_weight), 3)
         urgency = _urgency_from_area_score(severity_score)
         categories = _top_categories(area_results)
 
@@ -288,10 +289,10 @@ def _location_context_boost(result: AnalysisResult, location: str) -> float:
 
         boost = 0.0
         if any(term in window for term in high_terms):
-            boost += 0.18
+            boost += default_weights.high_term_boost
         if any(term in window for term in medium_terms):
-            boost += 0.08
-        best_boost = max(best_boost, min(boost, 0.25))
+            boost += default_weights.medium_term_boost
+        best_boost = max(best_boost, min(boost, default_weights.max_context_boost))
 
     return best_boost
 
@@ -301,9 +302,9 @@ def _location_post_score(result: AnalysisResult, context_boost: float, location_
     if location_count <= 1:
         return min(1.0, base_score + context_boost)
 
-    if context_boost >= 0.18:
+    if context_boost >= default_weights.high_term_boost:
         return min(1.0, base_score + context_boost)
-    if context_boost >= 0.08:
+    if context_boost >= default_weights.medium_term_boost:
         return min(0.74, base_score * 0.65 + context_boost)
     return min(0.55, base_score * 0.55)
 
@@ -319,19 +320,19 @@ def _post_severity_score(result: AnalysisResult) -> float:
     knn_confidence = float(knn_payload.get("confidence", 0.0) or 0.0)
     return min(
         1.0,
-        rule_score * 0.45
-        + result.negative_score * 0.30
-        + knn_score * 0.15
-        + knn_confidence * 0.10,
+        rule_score * default_weights.rule_weight
+        + result.negative_score * default_weights.negative_weight
+        + knn_score * default_weights.knn_weight
+        + knn_confidence * default_weights.knn_confidence_weight,
     )
 
 
 def _urgency_from_area_score(score: float) -> UrgencyLevel:
-    if score >= 0.8:
+    if score >= default_weights.critical_threshold:
         return UrgencyLevel.CRITICAL
-    if score >= 0.62:
+    if score >= default_weights.high_threshold:
         return UrgencyLevel.HIGH
-    if score >= 0.38:
+    if score >= default_weights.medium_threshold:
         return UrgencyLevel.MEDIUM
     return UrgencyLevel.LOW
 

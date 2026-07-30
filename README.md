@@ -1,4 +1,11 @@
 # Humanitarian-Logistics-AI-System
+
+> **Ghi chú về Nguồn gốc & Phát triển (v2.0)** 🚀
+> 
+> Dự án này khởi đầu là một đồ án môn học được thực hiện cùng nhóm tác giả ban đầu. Bạn có thể tham khảo mã nguồn gốc tại [Tom984-vn/KeyEmotion_through_SocialMedia](https://github.com/Tom984-vn/KeyEmotion_through_SocialMedia).
+> 
+> Ở phiên bản hiện tại (v2.0), dự án đã được tôi phát triển độc lập, tái cấu trúc (refactoring) mạnh mẽ và nâng cấp thành một hệ thống Client-Server hoàn chỉnh. Các tính năng nổi bật được bổ sung bao gồm: giao diện GUI hiện đại (JavaFX), tích hợp mô hình AI NLP & KNN nâng cao, và hệ thống bản đồ điều phối cứu trợ (Logistics Routing) thời gian thực.
+
 ---
 ## Our Goal 🎯
   In today age, social media had become one of the main and important way people express feeling, opinion and interest. So based on that motive, we made an AI system for fast, accuracy detect crowd emotion through post, react, comments, ... on social media like Facebook, Twitter (commonly know as X), ...

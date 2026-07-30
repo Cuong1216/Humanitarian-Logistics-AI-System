@@ -24,6 +24,7 @@ from services.response_parser import ResponseParser
 from services.urgency_scorer import UrgencyScorer
 from services.emotion_detector import EmotionDetector
 from services.action_generator import ActionGenerator
+from services.cache_service import CacheService
 
 load_dotenv()
 
@@ -102,6 +103,7 @@ class NlpService:
         urgency_scorer: UrgencyScorer = None,
         emotion_detector: EmotionDetector = None,
         action_generator: ActionGenerator = None,
+        cache: CacheService = None,
     ) -> None:
         self.api_key = os.getenv("GEMINI_API_KEY", "").strip()
         self.model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash").strip()
@@ -116,6 +118,7 @@ class NlpService:
         self.urgency_scorer = urgency_scorer or UrgencyScorer()
         self.emotion_detector = emotion_detector or EmotionDetector()
         self.action_generator = action_generator or ActionGenerator()
+        self.cache = cache or CacheService()
         
         self._client = None
 
@@ -132,15 +135,26 @@ class NlpService:
 
     def analyze_post(self, post: SocialMediaPost) -> AnalysisResult:
         cleaned_post = self._clean_post(post)
+        cache_key = self.cache.make_key(cleaned_post)
+        
+        cached_result = self.cache.get(cache_key)
+        if cached_result:
+            cached_result.raw["cache_hit"] = True
+            return cached_result
+
+        result = None
         if self.gemini_enabled:
             try:
-                return self._analyze_with_gemini(cleaned_post)
+                result = self._analyze_with_gemini(cleaned_post)
             except Exception as exc:
                 result = self._analyze_with_mock(cleaned_post)
                 result.raw["gemini_error"] = str(exc)
-                return result
-
-        return self._analyze_with_mock(cleaned_post)
+        else:
+            result = self._analyze_with_mock(cleaned_post)
+            
+        result.raw["cache_hit"] = False
+        self.cache.set(cache_key, result, ttl=self.cache.ttl)
+        return result
 
     def _clean_post(self, post: SocialMediaPost) -> SocialMediaPost:
         return post.model_copy(

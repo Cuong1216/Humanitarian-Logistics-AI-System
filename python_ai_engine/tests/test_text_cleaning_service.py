@@ -26,3 +26,12 @@ def test_clean_many():
     texts = ["hello http://abc.com", "", "   ", "@test hi"]
     result = service.clean_many(texts)
     assert result == ["hello", "hi"]
+
+from services.text_utils import estimate_people_count
+
+def test_estimate_people_found():
+    assert estimate_people_count("có 150 người bị ảnh hưởng") == 150
+
+def test_estimate_people_not_found():
+    assert estimate_people_count("không có số nào") is None
+    assert estimate_people_count("không có số nào", default=0) == 0

@@ -1,4 +1,4 @@
-package main.java.com.project.logistics.entities;
+package com.project.logistics.entities;
 
 import java.util.HashMap;
 import java.util.Map;

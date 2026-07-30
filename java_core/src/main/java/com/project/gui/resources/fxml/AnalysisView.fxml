@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+
+<SplitPane orientation="HORIZONTAL" dividerPositions="0.28"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.project.gui.controller.AnalysisController">
+    <!-- LEFT: Analyzer selection -->
+    <VBox styleClass="panel" spacing="14">
+        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+
+        <Label text="Chọn bộ phân tích" styleClass="section-title"/>
+        <Separator/>
+
+        <VBox spacing="10">
+            <CheckBox fx:id="sentimentCheck" text="Cảm xúc theo thời gian"
+                      selected="true"   styleClass="analyzer-check"/>
+            <Label text="Theo dõi và vẽ biểu đồ cảm xúc của dư luận theo thời gian."
+                   styleClass="hint-label" wrapText="true"/>
+
+            <CheckBox fx:id="damageCheck" text="Phân loại danh mục thiệt hại"
+                      selected="true"   styleClass="analyzer-check"/>
+            <Label text="Phân loại các bài đăng theo các loại thiệt hại chính như con người, nhà cửa, hạ tầng, nông nghiệp..."
+                   styleClass="hint-label" wrapText="true"/>
+
+            <CheckBox fx:id="reliefCheck" text="Nhu cầu cứu trợ"
+                      selected="false"  styleClass="analyzer-check"/>
+            <Label text="Xác định các loại nhu yếu phẩm cần hỗ trợ dựa trên bài đăng."
+                   styleClass="hint-label" wrapText="true"/>
+        </VBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <Button fx:id="runAnalysisButton" text="▶  Chạy phân tích" onAction="#onRunAnalysis"
+                styleClass="btn-primary" maxWidth="Infinity"/>
+    </VBox>
+
+    <!-- RIGHT: Tabbed Analysis Output -->
+    <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="sub-tab-pane">
+        <tabs>
+            <!-- Mode A: Live Dispatch Panel -->
+            <Tab text="⚡ Hỗ trợ điều phối thời gian thực">
+                <ScrollPane fitToWidth="true" styleClass="results-scroll">
+                    <VBox fx:id="resultsBox" styleClass="results-box" spacing="12">
+                        <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+                        <Label text="Đề xuất về mức độ khẩn cấp và nhu yếu phẩm theo thời gian thực sẽ hiển thị ở đây."
+                               styleClass="hint-label"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+            <!-- Mode B: Historical Trend Analytics -->
+            <Tab text="📈 Phân tích xu hướng lịch sử">
+                <ScrollPane fitToWidth="true" styleClass="results-scroll">
+                    <VBox spacing="20" style="-fx-padding: 20;">
+                        <!-- Negativity Line Chart -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📈 Xu hướng chỉ số tiêu cực (Theo thời gian)" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <LineChart fx:id="negativityLineChart" prefHeight="280" animated="false">
+                                <xAxis>
+                                    <CategoryAxis label="Thời gian"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Chỉ số tiêu cực" lowerBound="0.0" upperBound="1.0" tickUnit="0.1" autoRanging="false"/>
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+                        
+                        <!-- Emotion Stacked Bar Chart -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📊 Phân tích trạng thái cảm xúc chủ đạo" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <StackedBarChart fx:id="emotionStackedChart" prefHeight="280" animated="false">
+                                <xAxis>
+                                    <CategoryAxis label="Thời gian"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Số lượng bài viết"/>
+                                </yAxis>
+                            </StackedBarChart>
+                        </VBox>
+                        
+                        <!-- Need Categories Bar Chart -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📊 Tần suất số lượng báo cáo thiệt hại" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <BarChart fx:id="damageTypeBarChart" prefHeight="380" animated="false">
+                                <xAxis>
+                                    <CategoryAxis label="Danh mục thiệt hại"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Số lượng báo cáo"/>
+                                </yAxis>
+                            </BarChart>
+                        </VBox>
+                        
+                        <!-- Milestones Summary -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📅 Các cột mốc thời gian quan trọng" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <VBox fx:id="timelineMilestonesBox" spacing="8">
+                                <Label text="Dòng thời gian sự kiện sẽ hiển thị sau khi chạy phân tích." styleClass="hint-label"/>
+                            </VBox>
+                        </VBox>
+                        
+                        <!-- Damage Analysis Detailed Explanations -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📝 Diễn giải mức độ ảnh hưởng theo từng danh mục thiệt hại" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <VBox fx:id="damageExplanationsBox" spacing="8">
+                                <Label text="Báo cáo diễn giải chi tiết sẽ hiển thị sau khi tải dữ liệu chiến dịch hoặc chạy phân tích." styleClass="hint-label"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Post-by-post Severity & Damage Type table -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 16; -fx-border-color: #d8dce4; -fx-border-radius: 6; -fx-background-radius: 6;">
+                            <Label text="📋 Chi tiết phân loại danh mục thiệt hại theo từng bài viết" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text;"/>
+                            <TableView fx:id="historicalPostsTable" prefHeight="260" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="colHistPostId" text="Mã bài viết" prefWidth="90"/>
+                                    <TableColumn fx:id="colHistPlatform" text="Nền tảng" prefWidth="85"/>
+                                    <TableColumn fx:id="colHistContent" text="Nội dung bài đăng" prefWidth="320"/>
+                                    <TableColumn fx:id="colHistSeverity" text="Danh mục thiệt hại chính" prefWidth="180"/>
+                                    <TableColumn fx:id="colHistDamageType" text="Từ khóa bằng chứng (Evidence)" prefWidth="180"/>
+                                </columns>
+                                <placeholder><Label text="Vui lòng tải dữ liệu chiến dịch hoặc chạy phân tích."/></placeholder>
+                            </TableView>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+        </tabs>
+    </TabPane>
+</SplitPane>

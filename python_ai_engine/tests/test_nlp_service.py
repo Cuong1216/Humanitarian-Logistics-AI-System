@@ -28,3 +28,15 @@ def test_count_trigger_hits(mock_nlp_service):
     count = mock_nlp_service._count_trigger_hits(text)
     # The text contains triggers like "lũ lụt", "mắc kẹt", "cứu hộ", "khẩn cấp"
     assert count >= 4
+
+def test_count_trigger_hits_performance(mock_nlp_service):
+    """Đảm bảo pre-compiled pattern hoạt động đúng."""
+    text = "lũ lụt dâng cao, cần cứu hộ khẩn cấp, người dân mắc kẹt"
+    hits = mock_nlp_service._count_trigger_hits(text)
+    assert hits >= 3  # "lũ lụt", "cứu hộ", "mắc kẹt"
+
+def test_count_trigger_hits_no_false_positive(mock_nlp_service):
+    """Không trigger trên text bình thường."""
+    text = "hôm nay trời nắng đẹp, bầu trời trong xanh"
+    hits = mock_nlp_service._count_trigger_hits(text)
+    assert hits == 0

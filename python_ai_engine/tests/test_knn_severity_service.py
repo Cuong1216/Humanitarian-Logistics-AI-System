@@ -8,9 +8,15 @@ def test_predict_low(sample_post):
 
 def test_predict_critical(sample_post):
     service = KnnSeverityService(k=3)
+    critical_post = sample_post.model_copy(update={
+        "reactions": {"sad": 100, "angry": 100},
+        "shares": 100,
+        "comments": ["help"] * 10,
+        "text": "500 người đang gặp nguy hiểm"
+    })
     result = service.predict(
-        sample_post,
-        trigger_hits=5,
+        critical_post,
+        trigger_hits=10,
         categories=[NeedCategory.RESCUE, NeedCategory.MEDICAL, NeedCategory.FOOD, NeedCategory.WATER, NeedCategory.TRANSPORT],
         negative_score=1.0
     )

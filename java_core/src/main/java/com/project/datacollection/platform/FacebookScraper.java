@@ -1,6 +1,7 @@
 package com.project.datacollection.platform;
 
 import com.project.datacollection.model.SocialMediaPost;
+import com.project.config.CredentialConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

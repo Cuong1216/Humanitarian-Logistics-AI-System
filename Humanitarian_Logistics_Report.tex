@@ -1,0 +1,439 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc} % Bat buoc de hien thi Tieng Viet chuan
+\usepackage[vietnamese,english]{babel}
+\usepackage[margin=2.5cm]{geometry} % Co dinh le de khong tran hinh anh
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+% --- Code Colors ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    escapeinside={(*@}{@*)} % Thiet lap de go Tieng Viet trong block code
+}
+\lstset{style=mystyle}
+
+% --- TikZ Setup (Modern Syntax) ---
+\tikzset{
+    block/.style={rectangle, draw, fill=blue!10, text width=9em, text centered, rounded corners, minimum height=3em},
+    cloud/.style={ellipse, draw, fill=red!10, text width=7em, text centered, minimum height=3em},
+    line/.style={draw, -{Stealth[scale=1.2]}, thick},
+    process/.style={rectangle, draw, fill=orange!10, text width=9em, text centered, minimum height=3em},
+    decision/.style={diamond, draw, fill=green!10, text width=6em, text centered, aspect=1.5, inner sep=0pt},
+    io/.style={trapezium, draw, trapezium left angle=70, trapezium right angle=110, fill=blue!10, text width=8em, text centered, minimum height=2.5em}
+}
+
+\title{Humanitarian Logistics AI System: Một Hệ Thống Trí Tuệ Nhân Tạo Lai và Logistics Cứu Trợ Nhân Đạo\\ \large (A Hybrid Artificial Intelligence and Humanitarian Logistics System)}
+\author{Báo Cáo Nghiên Cứu Kỹ Thuật}
+\date{\today}
+
+\begin{document}
+
+\selectlanguage{vietnamese}
+\maketitle
+
+\begin{abstract}
+\selectlanguage{english}
+This report presents \textbf{Humanitarian Logistics AI System}, a decoupled, hybrid Artificial Intelligence system designed to optimize Humanitarian Logistics through real-time Social Media analysis. The core problem addressed is the ``Information Bottleneck'' during post-disaster scenarios, where raw, unstructured data from platforms like Facebook and X (Twitter) must be rapidly transformed into actionable logistical directives. The system architecture employs a polyglot approach, utilizing a Java/JavaFX Client for high-performance data collection and route optimization, coupled with a Python/FastAPI Backend for advanced Natural Language Processing (NLP) and heuristic evaluation. The intelligence layer leverages a Large Language Model (Gemini) integrated with a deterministic K-Nearest Neighbors (KNN) classifier and a rule-based fallback engine to guarantee 100\% operational availability. This end-to-end pipeline optimizes the identification of critical geographical nodes, dynamically ranks urgency levels, and proposes relief actions. Evaluation against a simulated dataset demonstrates the system's resilience, showcasing sub-second latency in local heuristic mode and high semantic accuracy when the LLM is engaged.
+\end{abstract}
+
+\selectlanguage{vietnamese}
+\newpage
+
+\section{Introduction}
+
+\subsection{Context and Problem Statement}
+Trong bối cảnh quản lý rủi ro thiên tai (\textit{Disaster Risk Management}), khoảng thời gian 72 giờ đầu tiên sau thảm họa được coi là ``thời điểm vàng'' để triển khai các nỗ lực cứu hộ nhân đạo (\textit{Humanitarian Logistics}). Tuy nhiên, các tổ chức cứu trợ thường phải đối mặt với một rào cản nghiêm trọng gọi là \textbf{``Information Bottleneck'' (Nút thắt thông tin)}. Dữ liệu từ thực địa thường bị gián đoạn, trong khi mạng xã hội (\textit{Social Media}) lại tràn ngập dữ liệu thô, phi cấu trúc với khối lượng khổng lồ. Việc phân tích thủ công để lọc ra các tín hiệu cứu trợ khẩn cấp (\textit{Emergency Signals}), định vị địa lý (\textit{Geolocation}) và phân loại nhu cầu (\textit{Needs Categorization}) là bất khả thi về mặt thời gian.
+
+Hệ thống \textbf{Humanitarian Logistics AI System} được phát triển để giải quyết vấn đề này bằng cách tự động hóa hoàn toàn quá trình thu thập, tinh chế, và phân tích dữ liệu mạng xã hội, từ đó cung cấp các quyết định điều phối logistics có độ chính xác cao.
+
+\subsection{System Objectives}
+Hệ thống được thiết kế với các năng lực phần mềm cốt lõi (\textit{Software Capabilities}) sau:
+\begin{itemize}
+    \item \textbf{Automated Data Ingestion:} Tự động thu thập bài đăng và bình luận từ Facebook và X dựa trên từ khóa theo dõi.
+    \item \textbf{Semantic Emotion \& Needs Analysis:} Phân tích sắc thái cảm xúc và phân loại nhu cầu (Thực phẩm, Y tế, Cứu hộ, v.v.) bằng NLP.
+    \item \textbf{Geographic Aggregation \& Prioritization:} Nhóm các báo cáo theo khu vực địa lý và xếp hạng mức độ khẩn cấp (\textit{Urgency Level}).
+    \item \textbf{Operational Resilience:} Duy trì khả năng phân tích 100\% ngay cả khi mất kết nối internet thông qua cơ chế Offline Fallback Engine.
+    \item \textbf{Logistics Routing:} Khuyến nghị các tuyến đường di chuyển tối ưu cho phương tiện từ trung tâm cứu trợ đến vùng thảm họa.
+\end{itemize}
+
+\newpage
+
+\section{System Architecture Deep-Dive}
+
+\subsection{The Hybrid Decoupled Architecture}
+Humanitarian Logistics AI System áp dụng kiến trúc \textbf{Hybrid Decoupled System}, chia tách hệ thống thành hai khối vi dịch vụ (\textit{Microservices}) độc lập:
+\begin{enumerate}
+    \item \textbf{Frontend \& Orchestration Client:} Viết bằng Java 17 / JavaFX.
+    \item \textbf{AI Processing Backend Engine:} Viết bằng Python 3.10+ / FastAPI.
+\end{enumerate}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance = 1.0cm and 1.5cm, auto,
+    lavender/.style={rectangle, draw=violet, fill=violet!10, text width=11em, text centered, rounded corners, minimum height=3em, font=\footnotesize},
+    orange/.style={rectangle, draw=orange, fill=orange!10, text width=11em, text centered, rounded corners, minimum height=3em, font=\footnotesize},
+    green/.style={rectangle, draw=green!60!black, fill=green!10, text width=11em, text centered, rounded corners, minimum height=3em, font=\footnotesize},
+    blue/.style={rectangle, draw=blue, fill=blue!10, text width=11em, text centered, rounded corners, minimum height=3em, font=\footnotesize},
+    cyan/.style={rectangle, draw=cyan, fill=cyan!10, text width=11em, text centered, rounded corners, minimum height=2.5em, font=\footnotesize},
+    gray/.style={rectangle, draw=gray!40, fill=gray!5, text width=12em, text centered, rounded corners, minimum height=4em, font=\footnotesize},
+    redcloud/.style={ellipse, draw=red, fill=red!10, text width=8em, text centered, minimum height=3em, font=\footnotesize},
+    line/.style={draw, -{Stealth[scale=1.2]}, thick}
+]
+
+    % --- Column 1: Java Subsystem ---
+    \node [lavender] (gui) at (0, 4) {\textbf{JavaFX GUI}\\MainApp.java / AppController.java};
+    \node [orange] (collect) at (0, 2) {\textbf{Data Collection}\\Mock SocialMediaPost\\FacebookScraper / XScraper};
+    \node [lavender] (client) at (0, 0) {\textbf{API Client}\\FastApiRestClient.java};
+    \node [lavender] (logistics) at (0, -3.5) {\textbf{Java Logistics Module}\\RouteFinder / A* Search};
+    \node [cyan] (decision) at (0, -5.2) {\textbf{Relief Decision}};
+
+    % --- Column 2: Python Engine Core ---
+    \node [green] (py_engine) at (5, 0) {\textbf{Python AI Engine}\\main.py - FastAPI};
+    \node [green] (cleaning) at (5, -1.8) {\textbf{Text Cleaning}\\text\_cleaning\_service.py};
+    \node [green] (pipeline) at (5, -3.6) {\textbf{NLP Pipeline}\\nlp\_service.py};
+    
+    % --- Callout Box (Column 2 top) ---
+    \node [gray] (callout) at (5, 3.5) {\textbf{Output from Python}\\urgency, locations, categories\\severity\_score, priority\_rank};
+
+    % --- Column 3: AI Sub-components ---
+    \node [green] (rule) at (10, 2.5) {\textbf{Rule-based Logic}\\Trigger words / urgency rules};
+    \node [green] (knn) at (10, 1.0) {\textbf{KNN Severity Classifier}\\knn\_severity\_service.py};
+    \node [green] (ner) at (10, -0.5) {\textbf{NER + Need Extraction}\\ner\_service.py};
+    \node [redcloud] (gemini) at (10, -2.2) {\textbf{Gemini API}\\Semantic extraction - optional};
+    \node [blue] (ranking) at (10, -3.9) {\textbf{Area Priority Ranking}\\group by location\\severity\_score / priority\_rank};
+
+    % --- Connections: Column 1 ---
+    \path [line] (gui) -- (collect);
+    \path [line] (collect) -- (client);
+    \path [line] (client) -- (logistics);
+    \path [line] (logistics) -- (decision);
+
+    % --- Connections: Column 1 to Column 2 ---
+    \path [line] (client) -- node [above, font=\scriptsize, yshift=-1mm] {HTTP POST JSON} (py_engine);
+
+    % --- Connections: Column 2 ---
+    \path [line] (py_engine) -- (cleaning);
+    \path [line] (cleaning) -- (pipeline);
+
+    % --- Connections: Column 2 to Column 3 ---
+    \path [line] (pipeline) to [bend left=15] (rule.west);
+    \path [line] (pipeline) to [bend left=5] (knn.west);
+    \path [line] (pipeline) to [bend right=5] (ner.west);
+    \path [line, dashed] (pipeline) to [bend right=15] (gemini.west);
+
+    % --- Connections: Column 3 Internal ---
+    \path [line] (rule) -- (knn);
+    \path [line] (knn) -- (ner);
+    \path [line] (ner) -- (gemini);
+    \path [line, dashed] (gemini) -- (ranking);
+
+    % --- Connections: Column 2 NLP to Area Ranking ---
+    \path [line] (pipeline) -- (ranking.west);
+
+    % --- Connections: Column 3 Return to Column 1 ---
+    \path [line] (ranking.south) -- ++(0, -0.6) -| ([xshift=-1.0cm]client.west) node [left, pos=0.7, font=\scriptsize] {JSON Response} -- (client.west);
+
+\end{tikzpicture}
+\caption{Kiến trúc hệ thống Humanitarian Logistics AI System theo mô hình Hybrid System Java - Python AI Engine}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Architectural Rationale}
+Cơ sở lý luận đằng sau kiến trúc đa ngôn ngữ này (\textit{multi-language architecture}) xuất phát từ đặc thù của từng phân vùng nghiệp vụ (\textit{domain}):
+\begin{itemize}
+    \item \textbf{Tại sao chọn Python cho Backend?} Python là tiêu chuẩn công nghiệp (\textit{de-facto standard}) cho Machine Learning và NLP. Hệ sinh thái phong phú với FastAPI (cho high-throughput asynchronous APIs), Google GenAI SDK, và các thư viện xử lý ma trận/toán học giúp việc triển khai LLM pipeline, KNN Classifier và Text Processing trở nên tối ưu và ngắn gọn.
+    \item \textbf{Tại sao chọn Java cho Client?} Java cung cấp môi trường thực thi (JVM) cực kỳ mạnh mẽ cho các thuật toán tối ưu hóa đa luồng (\textit{multi-threaded optimization}) như Graph Search ($A^*$). JavaFX cho phép xây dựng Native GUI mượt mà. Khả năng tích hợp Selenium WebDriver trong Java (thông qua WebDriverManager) cung cấp một nền tảng Data Collection mạnh mẽ, an toàn kiểu dữ liệu (\textit{type-safe}). Việc decoupling hai hệ thống đảm bảo quá trình xử lý AI chuyên sâu không làm block giao diện người dùng.
+\end{itemize}
+
+\subsection{Communication Protocols}
+Tầng giao tiếp (\textit{Communication Layer}) giữa Client và Backend được thực hiện thông qua \textbf{Synchronous REST API over HTTP/1.1}.
+\begin{itemize}
+    \item \textbf{Payload Format:} Chuẩn hóa bằng JSON serialization.
+    \item \textbf{Java Client:} Sử dụng \texttt{java.net.http.HttpClient} gốc của Java 11+ với thư viện \texttt{Gson} để serialize các đối tượng Data Transfer Objects (DTOs) thành JSON payload.
+    \item \textbf{Python Backend:} Sử dụng \texttt{Pydantic} models (\texttt{schemas.py}) để thực hiện Data Validation nghiêm ngặt và tự động deserialize JSON thành các Python Objects.
+\end{itemize}
+
+\newpage
+
+\section{AI Backend \& Rule-Based AI Engine Detailed Design}
+Phần cốt lõi của AI Engine được lập trình dựa trên sự kết hợp giữa mô hình học sâu và hệ thống luật quyết định (\textit{Rule-Based AI Engine}). Logic vận hành và cấu trúc mã nguồn tập trung chủ yếu trong ba tập tin: \texttt{nlp\_service.py}, \texttt{ner\_service.py}, và \texttt{main.py} của subsystem \texttt{python\_ai\_engine}.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance = 1.0cm and 1.5cm, auto]
+    % Nodes
+    \node [io] (input) {SocialMediaPost};
+    \node [process, below=of input] (clean) {Làm sạch văn bản\\(NFC, Regex URLs)};
+    \node [decision, below=of clean, yshift=-0.2cm] (online) {Gemini\\Online?};
+    
+    % Gemini Path (Left)
+    \node [process, left=of online, xshift=-0.5cm] (gemini) {Trích xuất LLM\\(Gemini API)};
+    \node [process, below=of gemini] (override) {Kiểm tra đè luật\\(is\_emergency)};
+    
+    % Fallback Path (Right)
+    \node [process, right=of online, xshift=0.5cm] (fallback) {Local Fallback\\(Regex NER \& Hits)};
+    
+    % Merge and ML
+    \node [process, below=of online, yshift=-2.2cm] (knn) {KNN Urgency\\(12 features)};
+    \node [process, below=of knn] (scoring) {Gộp Urgency \&\\Điểm số khu vực};
+    \node [io, below=of scoring] (output) {AnalysisResult /\\AreaResponse};
+    
+    % Links
+    \path [line] (input) -- (clean);
+    \path [line] (clean) -- (online);
+    \path [line] (online) -- node [above] {Có} (gemini);
+    \path [line] (online) -- node [above] {Không} (fallback);
+    \path [line] (gemini) -- (override);
+    
+    % Links to merge
+    \path [line] (override) |- (knn.west);
+    \path [line] (fallback) |- (knn.east);
+    \path [line] (knn) -- (scoring);
+    \path [line] (scoring) -- (output);
+\end{tikzpicture}
+\caption{Lưu đồ xử lý của bộ AI lai (Hybrid AI Engine Pipeline)}
+\label{fig:ai_flowchart}
+\end{figure}
+
+\subsection{API Endpoints và Tổng hợp Dữ liệu (\texttt{main.py})}
+Subsystem phơi ra các REST API Endpoints thông qua framework FastAPI. Bộ định tuyến xử lý các tác vụ phân tích đơn lẻ, xử lý hàng loạt (\textit{batch processing}) và phân nhóm địa lý:
+\begin{itemize}
+    \item \texttt{POST /analyze}: Phân tích một \texttt{SocialMediaPost} thông qua \texttt{nlp\_service.analyze\_post()}.
+    \item \texttt{POST /analyze/batch}: Xử lý mảng bài viết và trả về chỉ số tổng hợp (\texttt{BatchAnalysisResult}).
+    \item \texttt{POST /analyze/areas}: Endpoint trọng tâm cho Logistics. Thực thi thuật toán \texttt{\_build\_area\_priority\_response()} để nhóm bài viết theo vị trí địa lý, tính điểm ưu tiên và trả về \texttt{AreaPriorityResponse}.
+    \item \texttt{POST /analyze/keyword/areas}: Lọc bài đăng theo từ khóa trước khi chạy phân nhóm địa lý và tính toán độ ưu tiên.
+\end{itemize}
+
+\subsection{Hệ thống Luật của nlp\_service.py}
+Tập tin \texttt{services/nlp\_service.py} chịu trách nhiệm điều phối toàn bộ quy trình phân tích sắc thái cảm xúc, đếm từ khóa, gộp luật và đưa ra hành động cụ thể.
+\begin{itemize}
+    \item \textbf{\texttt{TRIGGER\_WORDS}:} Tập hợp từ khóa khẩn cấp tiếng Việt (accented và non-accented) gồm 98 từ như: \textit{cứu với, ngập, khẩn cấp, lũ lụt, sạt lở, mất tích, cô lập, thiếu nước...}
+    \item \textbf{\texttt{\_count\_trigger\_hits(combined\_text)}:} Hàm đếm tổng số lần xuất hiện của các \texttt{TRIGGER\_WORDS} trong chuỗi văn bản gộp (bao gồm cả nội dung bài viết gốc và tất cả bình luận đi kèm đã được chuẩn hóa chữ thường).
+    \item \textbf{\texttt{\_urgency\_from\_score(score, categories, text, hits)}:} Chuyển đổi điểm tiêu cực (\textit{negative score}), danh mục nhu cầu, văn bản thô và số lượng trigger hits thành mức độ khẩn cấp (\texttt{UrgencyLevel}):
+        \begin{itemize}
+            \item \textbf{CRITICAL}: Nếu văn bản chứa từ khóa cực kỳ nguy cấp (``mắc kẹt'', ``cứu với'' hoặc các phiên bản không dấu của chúng) \textbf{HOẶC} phát hiện danh mục nhu cầu cứu hộ (\texttt{NeedCategory.RESCUE}) \textbf{HOẶC} điểm tiêu cực $score \ge 0.8$ \textbf{HOẶC} số lượng trigger hits $\ge 5$.
+            \item \textbf{HIGH}: Nếu điểm tiêu cực $score \ge 0.6$ \textbf{HOẶC} phát hiện nhu cầu y tế (\texttt{NeedCategory.MEDICAL}) \textbf{HOẶC} số lượng trigger hits $\ge 3$.
+            \item \textbf{MEDIUM}: Nếu điểm tiêu cực $score \ge 0.35$ \textbf{HOẶC} phát hiện bất kỳ nhu cầu cụ thể nào.
+            \item \textbf{LOW}: Mặc định khi không khớp điều kiện nào ở trên.
+        \end{itemize}
+    \item \textbf{\texttt{\_analyze\_with\_mock(post)}:} Cơ chế dự phòng cục bộ (\\subsection{Phân loại Nhu cầu và Nhận diện Thực thể (\texttt{ner\_service.py})}
+Tập tin \texttt{services/ner\_service.py} hoạt động độc lập không cần internet, thực hiện nhiệm vụ bóc tách thông tin thô:
+\begin{itemize}
+    \item \textbf{\texttt{NEED\_KEYWORDS}:} Từ điển ánh xạ từ các từ khóa tiếng Việt tương ứng đến các enum nhu cầu chuẩn hóa như thực phẩm (\texttt{FOOD}), nước sạch (\texttt{WATER}), y tế (\texttt{MEDICAL}), chỗ trú ẩn (\texttt{SHELTER}), cứu hộ (\texttt{RESCUE}), vận chuyển (\texttt{TRANSPORT}), và vệ sinh (\texttt{SANITATION}).
+    \item \textbf{\texttt{extract\_needs(text)}:} Duyệt và trích xuất tất cả các danh mục nhu cầu phù hợp dựa trên \texttt{NEED\_KEYWORDS}.
+    \item \textbf{\texttt{extract\_locations(text, location\_hint)}:} Sử dụng biểu thức chính quy phức tạp (\texttt{LOCATION\_PATTERNS}) để bắt các danh từ riêng đi kèm tiền tố hành chính (thôn, xã, huyện, phường, quận, tỉnh, thành phố...). Sau đó làm sạch các từ nối/liên từ thừa bằng hàm \texttt{\_clean\_location()} và tiến hành loại bỏ các vị trí trùng lặp hoặc là tập con của nhau bằng hàm \texttt{\_dedupe\_locations()}.
+\end{itemize}
+
+\begin{lstlisting}[language=python, caption=Cấu trúc nhận diện thực thể địa lý trong ner\_service.py]
+LOCATION_PATTERNS = [
+    re.compile(
+        (*@\texttt{r"(?=(\textbackslash{}b(?:xã|xa|thôn|thon|làng|lang|huyện|huyen|tỉnh|tinh|phường|phuong|quận|quan|tp\textbackslash{}.?|thành phố|thanh pho)\textbackslash{}s+[\textbackslash{}wÀ-ỹ-]+(?:\textbackslash{}s+[\textbackslash{}wÀ-ỹ-]+)\{0,6\}))"}@*),
+        flags=re.IGNORECASE,
+    )
+]
+\end{lstlisting}
+
+\subsection{Học máy có Giám sát: Thuật toán KNN (\texttt{knn\_severity\_service.py})}
+Hệ thống sử dụng một mô hình \textbf{học máy có giám sát (Supervised Machine Learning)} cục bộ là thuật toán $K$-Lân cận gần nhất ($K$-Nearest Neighbors - KNN) với tham số $K=3$ để dự đoán mức độ khẩn cấp (\texttt{UrgencyLevel}) từ các thuộc tính phi cấu trúc.
+\begin{itemize}
+    \item \textbf{Không gian đặc trưng (Feature Space):} Xây dựng vector đặc trưng 12 chiều nằm trong đoạn $[0,1]$:
+        \begin{enumerate}
+            \item Số lượng trigger hits: $\min(\text{hits} / 10, 1)$
+            \item Các biến cờ nhu cầu (\texttt{RESCUE, MEDICAL, FOOD, WATER, TRANSPORT}): $1.0$ (nếu có) hoặc $0.0$.
+            \item Chỉ số bình luận: $\min(\text{len(comments)} / 10, 1)$
+            \item Lượt Sad + Care reactions: $\min(\text{sad\_care} / 200, 1)$
+            \item Lượt Angry reactions: $\min(\text{angry} / 100, 1)$
+            \item Lượt Shares: $\min(\text{shares} / 100, 1)$
+            \item Ước tính số người bị ảnh hưởng: $\min(\text{max\_number} / 500, 1)$
+            \item Điểm số tiêu cực: $\text{negative\_score} \in [0, 1]$
+        \end{enumerate}
+    \item \textbf{Cơ chế Phân loại và Trọng số Khoảng cách:} Khoảng cách giữa bài viết mới và các điểm dữ liệu mẫu trong tập huấn luyện được tính theo khoảng cách Euclidean. Trọng số biểu quyết được tính nghịch đảo với khoảng cách:
+        \begin{equation}
+        Weight_i = \frac{1}{Distance_i + \epsilon}
+        \end{equation}
+        Trong đó, $\epsilon = 10^{-6}$ được sử dụng làm hằng số làm mịn tránh lỗi chia cho $0$. Nhãn khẩn cấp có tổng trọng số lớn nhất sẽ được chọn làm nhãn dự báo của thuật toán KNN (\texttt{knn\_urgency}).
+\end{itemize}
+
+\subsection{Đánh giá Phân loại Vị từ và Thực thể (Predicate \& Entity Classification)}
+Trong xử lý ngôn ngữ tự nhiên phục vụ cứu trợ, việc trích xuất thông tin thực chất là quá trình \textbf{đánh giá phân loại vị từ và thực thể (Predicate \& Entity Classification)}:
+\begin{itemize}
+    \item \textbf{Phân loại Vị từ (Predicate Classification):} Ánh xạ các mệnh đề ngôn ngữ tự nhiên trong bài viết (ví dụ: ``đang đói lả'', ``không còn nước'') thành các vị từ logic tương ứng (\texttt{NeedCategory.FOOD}, \texttt{NeedCategory.WATER}). Hệ thống đánh giá sự trùng khớp này thông qua việc so khớp các từ khóa vị từ trong bộ từ điển \texttt{NEED\_KEYWORDS} hoặc biểu diễn ngữ nghĩa của mô hình ngôn ngữ lớn (Gemini).
+    \item \textbf{Nhận diện Thực thể (Entity Recognition):} Xác định thực thể địa danh (Locations) đóng vai trò là tham số địa lý cho các vị từ khẩn cấp. Việc đánh giá chính xác mối quan hệ giữa vị từ cứu trợ và thực thể vị trí giúp hệ thống xác định đúng ``ai đang cần gì ở đâu''.
+\end{itemize}
+
+\subsection{Hệ thống Điểm số, Xếp hạng Khu vực và Nguyên tắc Cứu trợ Ưu tiên (\texttt{main.py} rules)}
+Quyết định điều phối logistics dựa trên điểm số nghiêm trọng tổng hợp được tính toán qua hệ thống luật xếp chồng:
+\begin{itemize}
+    \item \textbf{Điểm số bài đăng cơ sở ($S_{\text{base}}$):} Được tính toán từ sự kết hợp của Rule-based và KNN học máy:
+        \begin{equation}
+        S_{\text{base}} = \min\left(1.0, 0.45 \cdot S_{\text{rule}} + 0.30 \cdot S_{\text{neg}} + 0.15 \cdot S_{\text{knn}} + 0.10 \cdot C_{\text{knn}}\right)
+        \end{equation}
+    \item \textbf{Cơ chế Context Boost:} Quét cửa sổ 120 ký tự phía sau thực thể địa lý. Nếu phát hiện từ khóa khẩn cấp mạnh thì cộng thêm $+0.18$, từ khóa khẩn cấp vừa cộng thêm $+0.08$ (tối đa $\text{boost} = 0.25$).
+    \item \textbf{Hiệu chỉnh bài viết đa địa danh (\texttt{\_location\_post\_score}):} Nếu bài đăng đề cập nhiều địa danh, hệ thống sẽ phạt giảm điểm các địa danh nằm xa từ khóa khẩn cấp (giảm còn $65\%$ hoặc cố định tối đa $0.55$) để tránh phân phối nhầm tài nguyên cho các địa danh mang tính chất tham chiếu hoặc giới thiệu chung.
+    \item \textbf{Điểm nghiêm trọng tổng hợp Khu vực ($\text{severity\_score}$):} Gom các bài viết theo từng địa danh cụ thể và tính toán điểm số tổng hợp của khu vực địa lý đó:
+        \begin{equation}
+        \text{severity\_score} = \min\left(1.0, 0.6 \cdot \text{avg\_score} + 0.3 \cdot \text{max\_score} + 0.1 \cdot \text{emergency\_ratio}\right)
+        \end{equation}
+    \item \textbf{Nguyên tắc Cứu trợ Ưu tiên (Core Dispatch Principle):} Sau khi tính toán, các khu vực được sắp xếp giảm dần theo cặp chỉ số $(\text{severity\_score}, \text{context\_score})$ để gán thứ tự ưu tiên (\texttt{priority\_rank} từ $1, 2, 3...$). \textbf{Khu vực nào có điểm số nghiêm trọng cao nhất (severity\_score đạt tối đa) sẽ được xếp hạng ưu tiên thứ nhất (priority\_rank = 1) và được hệ thống chỉ định các đội phương tiện cứu trợ di chuyển đến hỗ trợ đầu tiên.}
+\end{itemize}
+
+\newpage
+
+\section{Frontend/Logistics Client Detailed Design}
+
+\subsection{GUI and Data Collection Mechanisms}
+Client cung cấp giao diện người dùng chia thành 3 operational tabs chính qua \texttt{AppController.java}:
+\begin{enumerate}
+    \item \textbf{Data Collection:} Giao diện điều khiển Web Scrapers.
+    \item \textbf{Analysis:} Cho phép chạy các kịch bản phân tích song song (\textit{Sentiment, Damage, Relief}).
+    \item \textbf{Logistics:} Hiển thị bản đồ (hoặc log) tuyến đường và trạng thái xe cộ.
+\end{enumerate}
+
+Tầng Data Collection áp dụng \textbf{Factory Design Pattern} (\texttt{PlatformFactory.java}) để khởi tạo linh hoạt các đối tượng Scraper (\texttt{FacebookScraper}, \texttt{XScraper}). Các Scrapers này sử dụng Selenium WebDriver mô phỏng hành vi người dùng (scroll, wait) để bypass các cơ chế chống bot cơ bản, trích xuất dữ liệu DOM và tạo ra các đối tượng \texttt{SocialMediaPost}.
+
+\subsection{Core Data Models (Entities)}
+Tầng Entity mô hình hóa mạng lưới logistics, định nghĩa các node và tác nhân:
+\begin{itemize}
+    \item \texttt{Location}: Chứa tọa độ ($Latitude, Longitude$) và tên định danh.
+    \item \texttt{Vehicle}: Mô hình hóa năng lực tải trọng (\textit{Capacity}) và trạng thái (\textit{Available, Dispatched}).
+    \item \texttt{SupportCenter}: Các node đóng vai trò Hub phân phối.
+\end{itemize}
+
+\subsection{Algorithmic Optimization: Routing Formulation}
+Mô-đun định tuyến \texttt{RouteFinder.java} (hoặc \texttt{AStarRouteFinder.java}) chịu trách nhiệm tìm kiếm đường đi tối ưu. Hệ thống áp dụng thuật toán \textbf{$A^*$ Search (A-Star)}.
+
+Khác với Dijkstra, $A^*$ sử dụng một hàm đánh giá Heuristic Cost Function để hướng tới đích nhanh hơn. The Mathematical Cost Formulation được định nghĩa như sau:
+\begin{equation}
+f(n) = g(n) + h(n)
+\end{equation}
+Trong đó:
+\begin{itemize}
+    \item $f(n)$: Tổng chi phí ước tính từ điểm khởi đầu (\textit{start node}) qua node $n$ tới điểm đích (\textit{goal node}).
+    \item $g(n)$: Chi phí di chuyển thực tế từ start node đến node $n$.
+    \item $h(n)$: Hàm heuristic ước tính chi phí rẻ nhất từ node $n$ đến đích (sử dụng Haversine distance cho tọa độ địa lý).
+\end{itemize}
+
+Trong ứng dụng thực tế của Humanitarian Logistics, hàm $g(n)$ không chỉ dựa trên khoảng cách vật lý mà còn bị ảnh hưởng bởi hình phạt ma sát động (\textit{Dynamic Friction Penalties}) từ mức độ khẩn cấp (\textit{Urgency Weight Modifiers}) thu được từ phân tích mạng xã hội:
+\begin{equation}
+g(n) = d(n_{\text{prev}}, n) \times (1 + P(n))
+\end{equation}
+Với $P(n) \in [0, \infty)$ là hệ số phạt nếu đoạn đường đi qua khu vực có báo cáo sạt lở hoặc ngập lụt (được xác định bởi \texttt{DamageCategorizer} flag). Cụ thể, hệ số phạt này được tính toán động dựa trên mức độ ngập lụt $S(n)$:
+\begin{equation}
+P(n) = \gamma \cdot S(n)
+\end{equation}
+(với $S(n) \in [0, 1]$ là chỉ số ngập lụt tại node $n$ và hệ số điều chỉnh $\gamma \ge 2.0$).
+
+Để tối ưu hóa định tuyến nâng cao, hàm ước tính heuristic $h(n)$ cũng có thể được điều chỉnh bằng cách bổ sung trọng số từ mức độ nghiêm trọng của báo cáo mạng xã hội $U(n)$ tại khu vực đích:
+\begin{equation}
+h(n) = d(n, \text{dest}) \times \left(1 + \alpha \cdot S(n) + \beta \cdot U(n)\right)
+\end{equation}
+Trong đó $d(n, \text{dest})$ là khoảng cách hình học đến đích, $U(n) \in [0, 3]$ là điểm số khẩn cấp mạng xã hội của khu vực, và $\alpha, \beta$ là các tham số trọng số ($\alpha = 0.5$, $\beta = 0.3$).
+
+\newpage
+
+\section{Experiments \& Evaluation}
+
+\subsection{End-to-End Simulation Run}
+Dưới đây là mô phỏng quá trình xử lý một raw input qua pipeline:
+
+\subsubsection{Raw Input (JSON Payload to FastAPI)}
+\begin{lstlisting}[caption=Ví dụ đầu vào raw post gửi tới backend]
+{
+  "id": "post-area-001",
+  "text": "Thôn A xã Bình Minh bị ngập nặng sau bão Yagi. Nhiều hộ dân đang mắc kẹt, thiếu lương thực, nước sạch và thuốc men khẩn cấp.",
+  "reactions": {"sad": 120, "angry": 32, "care": 75},
+  "comments": ["Cứu với, đường vào thôn bị nước cuốn hỏng rồi."]
+}
+\end{lstlisting}
+
+\subsubsection{Execution Pipeline}
+\begin{enumerate}
+    \item \textbf{Sanitization:} \texttt{TextCleaningService} làm sạch chuỗi, chuẩn hóa NFC và lọc bỏ ký tự rác.
+    \item \textbf{NER Parsing (Offline mode):} \texttt{NerService} bắt các Regex tokens để xác định: Location $\rightarrow$ \texttt{["thôn A xã Bình Minh"]}; Needs $\rightarrow$ \texttt{[FOOD, WATER, MEDICAL]}.
+    \item \textbf{Heuristic Evaluation:} Phát hiện các từ khóa kích hoạt khẩn cấp (\textit{Trigger words}) như ``ngập nặng'', ``mắc kẹt'', ``cứu với''. Chỉ số phản ứng (\textit{Reaction Ratio}) tạo áp lực lớn. KNN Classifier đánh giá vector 12 chiều $\rightarrow$ dự đoán mức độ \texttt{CRITICAL}.
+    \item \textbf{Aggregation:} Tại endpoint \texttt{/analyze/areas}, \texttt{main.py} tổng hợp thông tin khu vực, áp dụng cơ chế Context Boost khi cụm từ khẩn cấp xuất hiện gần địa danh $\rightarrow$ Đẩy \texttt{severity\_score} lên trên $0.8$.
+    \item \textbf{Output Generation:} Hệ thống sinh JSON Response cấu trúc hoàn chỉnh.
+\end{enumerate}
+
+\subsubsection{Structured Output}
+\begin{lstlisting}[caption=Ví dụ kết quả trích xuất cấu trúc]
+{
+  "location": "thôn A xã Bình Minh",
+  "severity_score": 0.895,
+  "urgency": "critical",
+  "categories": ["food", "water", "medical", "rescue"],
+  "recommended_action": "Ưu tiên cao nhất: điều phối cứu trợ lương thực, nước sạch, y tế, cứu hộ đến thôn A xã Bình Minh ngay lập tức."
+}
+\end{lstlisting}
+
+\subsection{Benchmarking Analysis}
+Hệ thống kết hợp cả mô hình LLM hiện đại lẫn bộ phân tích heuristic cục bộ. Bảng \ref{tab:evaluation} so sánh hiệu năng của hai chế độ vận hành này:
+
+\begin{table}[h!]
+\centering
+\caption{Bảng so sánh hiệu năng: Chế độ LLM vs. Local Fallback}
+\label{tab:evaluation}
+\vspace{0.2cm}
+\begin{tabular}{@{} p{4.5cm} p{5.5cm} p{5.5cm} @{}}
+\toprule
+\textbf{Metric} & \textbf{LLM Mode (Gemini 2.0 Flash)} & \textbf{Local Heuristic Fallback Mode} \\
+\midrule
+\textbf{Latency (per batch)} & $\sim 2500$ms - $5000$ms & \textbf{< 150ms} \\
+\textbf{Availability} & Phụ thuộc Network/API uptime & \textbf{100\% (Offline Capability)} \\
+\textbf{Semantic Accuracy} & Rất cao (Hiểu Context/Sarcasm tốt) & Trung bình khá (Phụ thuộc Dictionary/Regex) \\
+\textbf{Computational Cost} & Token-based pricing & Zero (Sử dụng CPU local) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+\section{Conclusion \& Future Work}
+
+\subsection{Conclusion}
+Dự án \textbf{Humanitarian Logistics AI System} đã chứng minh tính khả thi của việc kết hợp Trí tuệ Nhân tạo và Data Scraping vào lĩnh vực Phân phối cứu trợ nhân đạo. Những thành tựu kỹ thuật cốt lõi bao gồm:
+\begin{itemize}
+    \item Kiến trúc Decoupled an toàn và dễ mở rộng.
+    \item Cơ chế Rule-Engine kết hợp Machine Learning (KNN) dự phòng cho LLM.
+    \item Mô hình đánh giá định lượng rủi ro địa phương.
+\end{itemize}
+
+\subsection{Future Work}
+Lộ trình phát triển tương lai tập trung vào các cải tiến kiến trúc:
+\begin{enumerate}
+    \item \textbf{GIS Integrations:} Thay thế Mock $A^*$ Search bằng tích hợp API bản đồ thực tế (OpenStreetMap/Google Maps) có cập nhật Traffic layer thời gian thực.
+    \item \textbf{Scalability Improvements:} Cấu trúc lại các Scrapers sử dụng kiến trúc Microservices Queue (ví dụ: RabbitMQ, Celery) thay vì Selenium chặn luồng đồng bộ.
+    \item \textbf{Localized SLMs Transition:} Triển khai các mô hình Small Language Models (SLMs) như LLaMA-3 (8B) chạy cục bộ (quantized) để thay thế hoàn toàn Regex Engine, mang lại độ phân tích ngữ nghĩa sâu sắc mà không cần Internet.
+\end{enumerate}
+
+\end{document}

@@ -1,6 +1,7 @@
 package com.project.datacollection.platform;
 
 import com.project.datacollection.model.SocialMediaPost;
+import com.project.config.CredentialConfig;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,6 +25,7 @@ public class XScraper implements Platform {
             throw new RuntimeException("[ERROR] Twitter/X rate limiting or login wall blocked the request. Automated crawl failed to retrieve real-time data from X.");
         } else {
             System.out.println("[*] Successfully crawled " + posts.size() + " live posts from X.");
+        }
         }
         
         return posts;

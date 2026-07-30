@@ -1,4 +1,4 @@
-﻿from enum import Enum
+from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -36,6 +36,19 @@ class NeedCategory(str, Enum):
     TRANSPORT = "transport"
     SANITATION = "sanitation"
     UNKNOWN = "unknown"
+
+    def to_vietnamese(self) -> str:
+        labels = {
+            NeedCategory.FOOD: "lương thực",
+            NeedCategory.WATER: "nước sạch",
+            NeedCategory.MEDICAL: "y tế",
+            NeedCategory.SHELTER: "chỗ trú ẩn",
+            NeedCategory.RESCUE: "cứu hộ",
+            NeedCategory.TRANSPORT: "vận chuyển",
+            NeedCategory.SANITATION: "vệ sinh",
+            NeedCategory.UNKNOWN: "chưa xác định",
+        }
+        return labels[self]
 
 
 class SocialMediaPost(BaseModel):

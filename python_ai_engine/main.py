@@ -25,6 +25,7 @@ from schemas import (
 from services.categorization_service import CategorizationService
 from services.nlp_service import NlpService, top_locations
 from services.sentiment_service import SentimentService
+from services.cache_service import CacheService
 from scoring_config import default_weights
 
 app = FastAPI(
@@ -56,7 +57,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-nlp_service = NlpService()
+cache_service = CacheService()
+nlp_service = NlpService(cache=cache_service)
 sentiment_service = SentimentService()
 categorization_service = CategorizationService()
 
@@ -109,6 +111,11 @@ URGENCY_SCORE = {
 @app.get("/", response_model=HealthResponse)
 def root() -> HealthResponse:
     return health()
+
+
+@app.get("/cache/stats")
+def cache_stats() -> dict:
+    return cache_service.get_stats()
 
 
 @app.get("/health", response_model=HealthResponse)

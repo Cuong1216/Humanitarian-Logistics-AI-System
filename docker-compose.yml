@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  ai-engine:
+    build:
+      context: ./python_ai_engine
+      dockerfile: Dockerfile
+    container_name: python-ai-engine
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./python_ai_engine/.env
+    environment:
+      - USE_MOCK_AI=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  redis:
+    image: redis:alpine
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"

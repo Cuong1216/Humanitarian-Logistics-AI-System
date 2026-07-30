@@ -26,7 +26,6 @@ public class XScraper implements Platform {
         } else {
             System.out.println("[*] Successfully crawled " + posts.size() + " live posts from X.");
         }
-        }
         
         return posts;
     }

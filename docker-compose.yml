@@ -1,5 +1,10 @@
 version: '3.8'
-
+networks:
+  ai-network:
+    driver: bridge
+volumes:
+  redis_data:
+    driver: local
 services:
   ai-engine:
     build:
@@ -18,11 +23,42 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 5s
-
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: redis-cache
     restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ai-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'

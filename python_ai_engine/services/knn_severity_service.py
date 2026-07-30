@@ -1,8 +1,9 @@
-﻿import math
+import math
 import re
 from dataclasses import dataclass
 
 from schemas import NeedCategory, SocialMediaPost, UrgencyLevel
+from services.text_utils import estimate_people_count
 
 
 @dataclass(frozen=True)
@@ -67,7 +68,7 @@ class KnnSeverityService:
     ) -> list[float]:
         reactions = post.reactions or {}
         text = " ".join([post.text, *post.comments]).lower()
-        people_estimate = self._estimate_people(text)
+        people_estimate = estimate_people_count(text, default=0)
         sad_care = reactions.get("sad", 0) + reactions.get("care", 0)
         angry = reactions.get("angry", 0)
 
@@ -100,7 +101,3 @@ class KnnSeverityService:
 
     def _euclidean_distance(self, first: list[float], second: list[float]) -> float:
         return math.sqrt(sum((a - b) ** 2 for a, b in zip(first, second)))
-
-    def _estimate_people(self, text: str) -> int:
-        numbers = [int(item) for item in re.findall(r"\b\d{1,6}\b", text)]
-        return max(numbers) if numbers else 0

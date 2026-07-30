@@ -1,4 +1,4 @@
-package main.java.com.project.config;
+package com.project.config;
 
 public class CredentialConfig {
 

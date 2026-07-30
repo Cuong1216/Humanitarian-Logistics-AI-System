@@ -51,3 +51,9 @@ def test_post_analyze_keyword():
     data = response.json()
     assert data["total_posts"] == 1
     assert data["results"][0]["post_id"] == "p1"
+
+def test_batch_size_limit():
+    posts = [{"id": f"p{i}", "text": "test"} for i in range(51)]
+    response = client.post("/analyze/batch", json={"posts": posts})
+    assert response.status_code == 422
+    assert "vượt giới hạn" in response.json()["detail"]

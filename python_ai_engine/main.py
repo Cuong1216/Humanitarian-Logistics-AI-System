@@ -1,10 +1,14 @@
 import asyncio
 import os
 import re
+import logging
+import uuid
+import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends, Request, Response
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings
 from schemas import (
@@ -37,6 +41,8 @@ app = FastAPI(
 class Settings(BaseSettings):
     APP_ENV: str = "development"
     ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+    MAX_BATCH_SIZE: int = 50
+    MAX_POST_TEXT_LENGTH: int = 5000
     
     class Config:
         env_file = ".env"
@@ -44,10 +50,62 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"time": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s"}',
+    datefmt="%Y-%m-%dT%H:%M:%S"
+)
+logger = logging.getLogger("ai_engine")
+
+MAX_BATCH_SIZE = int(os.environ.get("MAX_BATCH_SIZE", "50"))
+MAX_POST_TEXT_LENGTH = int(os.environ.get("MAX_POST_TEXT_LENGTH", "5000"))
+
+def validate_batch(request: BatchAnalyzeRequest) -> BatchAnalyzeRequest:
+    if len(request.posts) > settings.MAX_BATCH_SIZE:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Batch size {len(request.posts)} vượt giới hạn {settings.MAX_BATCH_SIZE} posts."
+        )
+    for post in request.posts:
+        if len(post.text) > settings.MAX_POST_TEXT_LENGTH:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Post '{post.id}' có text dài {len(post.text)} ký tự, vượt giới hạn {settings.MAX_POST_TEXT_LENGTH}."
+            )
+    return request
+
 if settings.APP_ENV == "production" and settings.ALLOWED_ORIGINS == "*":
     raise RuntimeError("CORS configuration error: ALLOWED_ORIGINS=* is not safe for production.")
 
 origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
+@app.middleware("http")
+async def logging_middleware(request: Request, call_next):
+    correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+    request.state.correlation_id = correlation_id
+    
+    start_time = time.perf_counter()
+    logger.info(
+        f"REQUEST_START | method={request.method} path={request.url.path} "
+        f"correlation_id={correlation_id}"
+    )
+    
+    try:
+        response = await call_next(request)
+        duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        logger.info(
+            f"REQUEST_END | status={response.status_code} "
+            f"duration_ms={duration_ms} correlation_id={correlation_id}"
+        )
+        response.headers["X-Correlation-ID"] = correlation_id
+        return response
+    except Exception as exc:
+        duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        logger.error(
+            f"REQUEST_ERROR | error={type(exc).__name__}: {exc} "
+            f"duration_ms={duration_ms} correlation_id={correlation_id}"
+        )
+        raise
 
 app.add_middleware(
     CORSMiddleware,
@@ -82,6 +140,7 @@ async def _analyze_post_async(post: SocialMediaPost) -> AnalysisResult:
                 timeout=30.0
             )
         except asyncio.TimeoutError:
+            logger.warning(f"ANALYSIS_TIMEOUT | post_id={post.id}")
             return AnalysisResult(
                 post_id=post.id,
                 keyword=post.keyword,
@@ -133,7 +192,7 @@ async def analyze(request: AnalyzeRequest) -> AnalysisResult:
 
 
 @app.post("/analyze/batch", response_model=BatchAnalysisResult)
-async def analyze_batch(request: BatchAnalyzeRequest) -> BatchAnalysisResult:
+async def analyze_batch(request: BatchAnalyzeRequest = Depends(validate_batch)) -> BatchAnalysisResult:
     tasks = [_analyze_post_async(post) for post in request.posts]
     results = await asyncio.gather(*tasks)
     return _build_batch_result(list(results))
@@ -147,7 +206,7 @@ async def analyze_keyword(request: KeywordAnalyzeRequest) -> BatchAnalysisResult
 
 
 @app.post("/analyze/areas", response_model=AreaPriorityResponse)
-async def analyze_areas(request: BatchAnalyzeRequest) -> AreaPriorityResponse:
+async def analyze_areas(request: BatchAnalyzeRequest = Depends(validate_batch)) -> AreaPriorityResponse:
     tasks = [_analyze_post_async(post) for post in request.posts]
     results = await asyncio.gather(*tasks)
     return _build_area_priority_response(list(results))

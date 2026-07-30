@@ -25,6 +25,10 @@ from services.urgency_scorer import UrgencyScorer
 from services.emotion_detector import EmotionDetector
 from services.action_generator import ActionGenerator
 from services.cache_service import CacheService
+from services.text_utils import estimate_people_count
+import logging
+
+logger = logging.getLogger("ai_engine")
 
 load_dotenv()
 
@@ -92,6 +96,12 @@ TRIGGER_WORDS = {
     "y tế",
 }
 
+# Pre-compiled tại module load time — chỉ compile 1 lần
+_TRIGGER_PATTERN = re.compile(
+    r"(?<!\w)(" + "|".join(re.escape(t) for t in sorted(TRIGGER_WORDS, key=len, reverse=True)) + r")(?!\w)",
+    flags=re.IGNORECASE,
+)
+
 class NlpService:
     def __init__(
         self,
@@ -147,6 +157,7 @@ class NlpService:
             try:
                 result = self._analyze_with_gemini(cleaned_post)
             except Exception as exc:
+                logger.warning(f"GEMINI_FALLBACK | post_id={post.id} error={type(exc).__name__}: {exc}")
                 result = self._analyze_with_mock(cleaned_post)
                 result.raw["gemini_error"] = str(exc)
         else:
@@ -217,7 +228,7 @@ class NlpService:
                 urgency=urgency,
                 categories=need_categories or [NeedCategory.UNKNOWN],
                 locations=locations,
-                affected_people_estimate=self._estimate_people(combined_text),
+                affected_people_estimate=estimate_people_count(combined_text),
                 recommended_action=self.action_generator.recommended_action(urgency, need_categories, locations),
             ),
             summary=self.action_generator.summary(post, urgency, need_categories, locations),
@@ -284,12 +295,7 @@ class NlpService:
         return " ".join([post.text, *post.comments]).lower()
 
     def _count_trigger_hits(self, text: str) -> int:
-        count = 0
-        for trigger in TRIGGER_WORDS:
-            pattern = rf"(?<!\w){re.escape(trigger)}(?!\w)"
-            if re.search(pattern, text):
-                count += 1
-        return count
+        return len(_TRIGGER_PATTERN.findall(text))
 
     def _reaction_pressure(self, reactions: dict[str, int]) -> float:
         sad = reactions.get("sad", 0) + reactions.get("care", 0)
@@ -298,10 +304,6 @@ class NlpService:
         if total == 0:
             return 0.0
         return min(0.25, ((sad + angry) / total) * 0.25)
-
-    def _estimate_people(self, text: str) -> int | None:
-        numbers = [int(item) for item in re.findall(r"\b\d{1,6}\b", text)]
-        return max(numbers) if numbers else None
 
 def top_locations(results: list[AnalysisResult]) -> list[str]:
     counter: Counter[str] = Counter()

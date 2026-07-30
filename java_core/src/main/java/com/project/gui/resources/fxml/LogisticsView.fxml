@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.web.WebView?>
+
+<SplitPane orientation="HORIZONTAL" dividerPositions="0.28"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.project.gui.controller.LogisticsController">
+    <!-- Left Control Panel -->
+    <ScrollPane fitToWidth="true" styleClass="results-scroll">
+        <VBox styleClass="panel" spacing="14">
+            <padding><Insets top="20" right="18" bottom="20" left="18"/></padding>
+
+            <Label text="Hệ thống điều phối cứu trợ" styleClass="section-title"/>
+            <Label text="Kết nối vị trí khẩn cấp (phát hiện bởi AI) với trung tâm cứu trợ &amp; phương tiện gần nhất" styleClass="hint-label" wrapText="true"/>
+            <Separator/>
+
+            <!-- Section 1: Distress Locations Table -->
+            <Label text="🚨 Các điểm khẩn cấp cần hỗ trợ" styleClass="field-label"/>
+            <TableView fx:id="distressTable" prefHeight="180" VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colDistressLocation" text="Vị trí"     prefWidth="130"/>
+                    <TableColumn fx:id="colDistressUrgency"  text="Độ khẩn cấp"      prefWidth="90"/>
+                    <TableColumn fx:id="colDistressSupplies" text="Nhu yếu phẩm" prefWidth="150"/>
+                    <TableColumn fx:id="colDistressStatus"   text="Trạng thái"        prefWidth="100"/>
+                </columns>
+                <placeholder><Label text="Chưa có điểm khẩn cấp. Vui lòng chạy phân tích AI trước."/></placeholder>
+            </TableView>
+
+            <!-- Section 2: Support Centers -->
+            <Label text="🏥 Các trung tâm cứu trợ &amp; Nguồn lực hiện có" styleClass="field-label"/>
+            <TableView fx:id="supportCenterTable" prefHeight="140" VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="colCenterName"      text="Tên trung tâm" prefWidth="160"/>
+                    <TableColumn fx:id="colCenterResources" text="Nguồn lực sẵn có" prefWidth="180"/>
+                    <TableColumn fx:id="colCenterVehicles"  text="Phương tiện"    prefWidth="80"/>
+                </columns>
+            </TableView>
+
+            <!-- Section 3: Dispatch Routing -->
+            <Label text="📍 Thiết lập lộ trình điều phối" styleClass="field-label"/>
+            <Separator/>
+
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="125" prefWidth="125" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
+                
+                <Label text="Trung tâm phù hợp:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="matchedCenterLabel" text="Chưa chọn" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-text-fill: -color-secondary; -fx-font-weight: bold;"/>
+
+                <Label text="Phương tiện phù hợp:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="matchedVehicleLabel" text="Chưa chọn" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-text-fill: -color-secondary; -fx-font-weight: bold;"/>
+
+                <Label text="Điểm xuất phát:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+                <TextField fx:id="startLocField" promptText="Vị trí trung tâm cung ứng" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="text-field-styled"/>
+
+                <Label text="Điểm đến:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                <TextField fx:id="destLocField" promptText="Vị trí cần cứu trợ" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="text-field-styled"/>
+            </GridPane>
+
+            <HBox spacing="8">
+                <Button fx:id="dispatchButton" text="🚀 Bắt đầu vận chuyển" onAction="#onDispatchResources" styleClass="btn-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="📍 Vẽ lộ trình" onAction="#onFindRoute" styleClass="btn-secondary" style="-fx-background-color: #2980b9;"/>
+                <Button text="🧹 Xóa bản đồ" onAction="#onResetMap" styleClass="btn-secondary" style="-fx-background-color: #7f8c8d;"/>
+            </HBox>
+
+            <Label text="Thông tin lộ trình &amp; Nhật ký điều phối" styleClass="field-label"/>
+            <TextArea fx:id="routeOutput" editable="false" prefRowCount="6" styleClass="route-output" promptText="Chọn một điểm khẩn cấp hoặc nhập vị trí để xem thông tin lộ trình..."/>
+        </VBox>
+    </ScrollPane>
+
+    <!-- Right Map Panel -->
+    <VBox styleClass="panel">
+        <WebView fx:id="mapWebView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</SplitPane>

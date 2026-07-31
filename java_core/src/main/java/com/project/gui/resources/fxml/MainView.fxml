@@ -25,7 +25,7 @@
 
     <!-- ── MAIN CONTENT: TabPane ── -->
     <center>
-        <TabPane styleClass="main-tab-pane" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="mainTabPane" styleClass="main-tab-pane" tabClosingPolicy="UNAVAILABLE">
 
             <!-- ══════════════════════════════════════════
                  TAB 1: DATA COLLECTION
@@ -44,7 +44,7 @@
             <!-- ══════════════════════════════════════════
                  TAB 3: LOGISTICS
             ══════════════════════════════════════════ -->
-            <Tab text="🚛  Điều phối hỗ trợ">
+            <Tab fx:id="logisticsTab" text="🚛  Điều phối hỗ trợ">
                 <fx:include source="LogisticsView.fxml" fx:id="logistics"/>
             </Tab>
 

@@ -241,11 +241,11 @@ public class DataCollectionController implements Initializable {
             return;
         }
 
-        String filePath = "";
+        String resourcePath = "";
         if ("Bão Yagi (Q3/2024)".equalsIgnoreCase(selected)) {
-            filePath = "src/main/resources/data/yagi_dataset.json"; 
+            resourcePath = "/data/yagi_dataset.json"; 
         } else if ("Lũ lụt Miền Trung (2025)".equalsIgnoreCase(selected)) {
-            filePath = "src/main/resources/data/midvietnam_dataset.json";
+            resourcePath = "/data/midvietnam_dataset.json";
         } else {
             System.out.println("Chưa có dataset cho lựa chọn này.");
             return;
@@ -263,7 +263,22 @@ public class DataCollectionController implements Initializable {
             })
             .create();
 
-        try (Reader reader = Files.newBufferedReader(Paths.get(filePath))) {
+        java.io.InputStream is = getClass().getResourceAsStream(resourcePath);
+        
+        // Cố gắng tìm file trực tiếp từ thư mục nếu getResourceAsStream bị lỗi classpath
+        if (is == null) {
+            try {
+                java.io.File f = new java.io.File("java_core/src/main/resources" + resourcePath);
+                if (!f.exists()) f = new java.io.File("src/main/resources" + resourcePath);
+                if (f.exists()) is = new java.io.FileInputStream(f);
+            } catch (Exception ex) { }
+        }
+
+        if (is == null) {
+            showAlert("Lỗi đọc tệp", "Không tìm thấy dữ liệu tại: " + resourcePath);
+            return;
+        }
+        try (Reader reader = new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
             Type listType = new TypeToken<List<SocialMediaPost>>(){}.getType();
             List<SocialMediaPost> importedPosts = gson.fromJson(reader, listType);
             

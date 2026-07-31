@@ -11,7 +11,7 @@
 <properties>
   <maven.compiler.source>17</maven.compiler.source>
   <maven.compiler.target>17</maven.compiler.target>
-  <javafx.version>26.0.1</javafx.version>
+  <javafx.version>21.0.1</javafx.version>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <main.class>com.project.Main</main.class>
   <javafx.maven.plugin.version>0.08</javafx.maven.plugin.version>

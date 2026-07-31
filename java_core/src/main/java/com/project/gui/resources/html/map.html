@@ -4,13 +4,21 @@
     <meta charset="utf-8" />
     <title>Bản đồ điều phối cứu trợ</title>
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <style>
-        html, body, #map {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
+            overflow: hidden;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
     </style>
 </head>
@@ -18,10 +26,20 @@
     <div id="map"></div>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <script>
         // Centered on Vietnam initially
         var map = L.map('map').setView([14.0583, 108.2772], 6);
+
+        // Auto-fix rendering issues when map tab becomes visible or resizes in JavaFX WebView
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(function() { 
+                if (typeof map !== 'undefined') {
+                    map.invalidateSize(true); 
+                }
+            }).observe(document.getElementById('map'));
+        }
+
 
         // Load OSM tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

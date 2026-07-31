@@ -79,3 +79,4 @@
         <WebView fx:id="mapWebView" VBox.vgrow="ALWAYS"/>
     </VBox>
 </SplitPane>
+

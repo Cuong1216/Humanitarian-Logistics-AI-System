@@ -223,11 +223,12 @@ public class DamageCategorizer implements TaskAnalyzer {
         // Phương án B: Keyword fallback nếu không gọi được AI
         if (!useAi) {
             Map<String, List<String>> keywords = new HashMap<>();
-            keywords.put("Flood", Arrays.asList("lũ", "ngập", "nước dâng", "flood", "inundation"));
-            keywords.put("Building Collapse", Arrays.asList("sập", "đổ", "vỡ", "collapse", "nhà sập"));
-            keywords.put("Road Damage", Arrays.asList("đường hư", "cầu sập", "tắc đường", "road blocked"));
-            keywords.put("Power Outage", Arrays.asList("mất điện", "cúp điện", "power out"));
-            keywords.put("Fire", Arrays.asList("cháy", "hỏa hoạn", "fire"));
+            keywords.put("Người bị ảnh hưởng", Arrays.asList("chết", "bị thương", "mất tích", "nạn nhân"));
+            keywords.put("Gián đoạn các hoạt động kinh tế sản xuất", Arrays.asList("mất điện", "cúp điện", "đóng cửa", "đình trệ"));
+            keywords.put("Nhà cửa hoặc tòa nhà bị hư hỏng", Arrays.asList("sập", "tốc mái", "nhà đổ", "vỡ"));
+            keywords.put("Tài sản cá nhân bị mất", Arrays.asList("trôi xe", "hỏng đồ", "mất tài sản"));
+            keywords.put("Cơ sở hạ tầng bị hư hỏng", Arrays.asList("đường hư", "cầu sập", "tắc đường", "sạt lở"));
+            keywords.put("Nông nghiệp & Vật nuôi bị thiệt hại", Arrays.asList("ngập lúa", "chết gà", "chết lợn", "mất mùa"));
 
             for (SocialMediaPost post : posts) {
                 String content = post.getContent();

@@ -5,6 +5,8 @@ import com.project.ai_client.IAiClient;
 import com.project.datacollection.model.SocialMediaPost;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +19,10 @@ public class AppController implements Initializable {
     @FXML private DataCollectionController dataCollectionController;
     @FXML private AnalysisController analysisController;
     @FXML private LogisticsController logisticsController;
+
+    // Tab references for lazy loading
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab logisticsTab;
 
     // Shared state
     private List<SocialMediaPost> collectedPosts = new ArrayList<>();
@@ -52,5 +58,15 @@ public class AppController implements Initializable {
                 }
             });
         }
+
+        // Lazy-load bản đồ: chỉ tải khi người dùng click sang Tab Điều phối
+        if (mainTabPane != null && logisticsTab != null) {
+            logisticsTab.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected && logisticsController != null) {
+                    logisticsController.loadMapIfNeeded();
+                }
+            });
+        }
     }
 }
+

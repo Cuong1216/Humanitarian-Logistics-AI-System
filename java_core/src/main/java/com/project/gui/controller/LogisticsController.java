@@ -11,6 +11,7 @@ import com.project.logistics.utils.RouteFinder;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -49,6 +50,8 @@ public class LogisticsController implements Initializable {
     @FXML private TextArea routeOutput;
     @FXML private WebView mapWebView;
 
+    private WebEngine webEngine;
+    private boolean mapLoaded = false;
     private ObservableList<SupportCenter> supportCenterList = FXCollections.observableArrayList();
     private ObservableList<DistressPoint> distressList = FXCollections.observableArrayList();
 
@@ -56,16 +59,7 @@ public class LogisticsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setupLogisticsTables();
         loadSupportCenters();
-        
-        if (mapWebView != null) {
-            WebEngine webEngine = mapWebView.getEngine();
-            URL url = getClass().getResource("/com/project/gui/resources/html/map.html");
-            if (url != null) {
-                webEngine.load(url.toExternalForm());
-            } else {
-                System.err.println("[!] Could not find map.html resource!");
-            }
-        }
+        // Bản đồ sẽ được tải lưỜi qua loadMapIfNeeded() khi Tab được chọn
     }
 
     public void updateDistressPoints(List<DistressPoint> points) {
@@ -206,17 +200,18 @@ public class LogisticsController implements Initializable {
             startLocField.setText(bestCenter.getAddress());
             destLocField.setText(dp.getAddress());
             
-            if (mapWebView != null) {
+            if (webEngine != null) {
                 try {
-                    String script = String.format(Locale.US, "setRoute(%f, %f, %f, %f, '%s', '%s');",
+                    String script = String.format(Locale.US,
+                        "setRoute(%f,%f,%f,%f,'%s','%s');",
                         bestCenter.getLatitude(), bestCenter.getLongitude(),
                         dp.getLatitude(), dp.getLongitude(),
-                        bestCenter.getAddress().replace("'", "\\'"),
-                        dp.getAddress().replace("'", "\\'")
+                        bestCenter.getAddress().split(" \\(")[0].replace("'","\\'"),
+                        dp.getAddress().replace("'","\\'")
                     );
-                    mapWebView.getEngine().executeScript(script);
+                    webEngine.executeScript(script);
                 } catch (Exception e) {
-                    System.err.println("[!] Failed to call Leaflet JS: " + e.getMessage());
+                    System.err.println("[Map] setRoute failed: " + e.getMessage());
                 }
             }
             
@@ -311,17 +306,18 @@ public class LogisticsController implements Initializable {
                 sb.append("Đường vẽ lộ trình trực quan đã được hiển thị trên bản đồ OpenStreetMap.");
                 routeOutput.setText(sb.toString());
 
-                if (mapWebView != null) {
+                if (webEngine != null) {
                     try {
-                        String script = String.format(Locale.US, "setRoute(%f, %f, %f, %f, '%s', '%s');",
+                        String script = String.format(Locale.US,
+                            "setRoute(%f,%f,%f,%f,'%s','%s');",
                             start.getLatitude(), start.getLongitude(),
                             dest.getLatitude(), dest.getLongitude(),
-                            start.getAddress().replace("'", "\\'"),
-                            dest.getAddress().replace("'", "\\'")
+                            start.getAddress().replace("'","\\'"),
+                            dest.getAddress().replace("'","\\'")
                         );
-                        mapWebView.getEngine().executeScript(script);
+                        webEngine.executeScript(script);
                     } catch (Exception e) {
-                        System.err.println("[!] Failed to call Leaflet JS: " + e.getMessage());
+                        System.err.println("[Map] onFindRoute JS failed: " + e.getMessage());
                     }
                 }
             });
@@ -395,13 +391,54 @@ public class LogisticsController implements Initializable {
         matchedVehicleLabel.setText("Chưa chọn");
         routeOutput.setText("Đã xóa bản đồ và các thiết lập lựa chọn.");
         
-        if (mapWebView != null) {
-            try {
-                mapWebView.getEngine().executeScript("clearMap(); map.setView([14.0583, 108.2772], 6);");
-            } catch (Exception e) {
-                System.err.println("[!] Failed to reset map via JS: " + e.getMessage());
-            }
+        if (webEngine != null) {
+            try { webEngine.executeScript("clearMap(); map.setView([14.0583,108.2772],6);");
+            } catch (Exception e) {}
         }
+    }
+
+    /**
+     * Lazy-load bản đồ: chỉ tải HTML khi Tab điều phối được nhấp lần đầu.
+     * Lúc này WebView đã có kích thước thật nên Leaflet tậnh đúng size → không bị vỡ tile.
+     */
+    public void loadMapIfNeeded() {
+        if (mapLoaded || mapWebView == null) return;
+        mapLoaded = true;
+
+        webEngine = mapWebView.getEngine();
+        URL url = getClass().getResource("/com/project/gui/resources/html/map.html");
+        if (url == null) {
+            System.err.println("[!] map.html not found in classpath!");
+            return;
+        }
+
+        webEngine.getLoadWorker().stateProperty().addListener((obs, old, state) -> {
+            if (state == Worker.State.SUCCEEDED) {
+                // Lắng nghe sự thay đổi chiều rộng thực tế của WebView
+                mapWebView.widthProperty().addListener((wObs, oldWidth, newWidth) -> {
+                    if (newWidth.doubleValue() > 0) {
+                        Platform.runLater(() -> {
+                            try { webEngine.executeScript("setTimeout(function(){ if (typeof map !== 'undefined') map.invalidateSize(true); }, 300);"); } catch (Exception e) {}
+                        });
+                    }
+                });
+
+                // Lắng nghe sự thay đổi chiều cao thực tế của WebView
+                mapWebView.heightProperty().addListener((hObs, oldHeight, newHeight) -> {
+                    if (newHeight.doubleValue() > 0) {
+                        Platform.runLater(() -> {
+                            try { webEngine.executeScript("setTimeout(function(){ if (typeof map !== 'undefined') map.invalidateSize(true); }, 300);"); } catch (Exception e) {}
+                        });
+                    }
+                });
+                
+                // Gọi thử một lần trong trường hợp WebView đã có kích thước ngay lúc load xong
+                Platform.runLater(() -> {
+                    try { webEngine.executeScript("setTimeout(function(){ if (typeof map !== 'undefined') map.invalidateSize(true); }, 500);"); } catch (Exception e) {}
+                });
+            }
+        });
+        webEngine.load(url.toExternalForm());
     }
 
     private void showAlert(String title, String msg) {

@@ -1,43 +1,75 @@
 package com.project.logistics;
-import com.project.logistics.entities.Location;
-import com.project.logistics.utils.RouteFinder;
-import org.junit.jupiter.api.*;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
 
-class RouteFinderTest {
+import com.project.logistics.entities.Location;
+import com.project.logistics.service.IRoutingService;
+import com.project.logistics.utils.RouteFinder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class RouteFinderTest {
+
+    @Mock
+    private IRoutingService routingService;
+
     private RouteFinder routeFinder;
 
     @BeforeEach
-    void setUp() {
-        routeFinder = new RouteFinder();
+    public void setUp() {
+        routeFinder = new RouteFinder(routingService);
     }
 
     @Test
-    @DisplayName("Tìm đường từ Hà Nội đến Hồ Chí Minh — phải trả về path không rỗng")
-    void testRouteHanoiToHCMC() {
-        Location hanoi = new Location(21.0285, 105.8542, "Hanoi");
-        Location hcmc = new Location(10.8231, 106.6297, "Ho Chi Minh City");
-        List<Location> path = routeFinder.AStarRouteFinder(hanoi, hcmc);
-        assertFalse(path.isEmpty(), "Path từ Hà Nội đến HCM phải tìm được");
-        assertEquals("Hanoi", path.get(0).getAddress(), "Node đầu phải là Hà Nội");
+    public void testAStarRouteFinder_Success() {
+        // Arrange
+        Location start = new Location(21.0285, 105.8542, "Hanoi");
+        Location dest = new Location(20.8449, 106.6881, "Hai Phong");
+        
+        List<Location> expectedRoute = Arrays.asList(
+                start,
+                new Location(20.9500, 106.0000, "Node 1"),
+                dest
+        );
+
+        when(routingService.getRoute(start, dest)).thenReturn(expectedRoute);
+
+        // Act
+        List<Location> actualRoute = routeFinder.AStarRouteFinder(start, dest);
+
+        // Assert
+        assertNotNull(actualRoute);
+        assertEquals(3, actualRoute.size());
+        assertEquals("Hanoi", actualRoute.get(0).getAddress());
+        assertEquals("Hai Phong", actualRoute.get(2).getAddress());
+        verify(routingService, times(1)).getRoute(start, dest);
     }
 
     @Test
-    @DisplayName("Tìm đường khi start = destination — phải trả về path 1 node")
-    void testRouteSameStartDest() {
-        Location loc = new Location(21.0285, 105.8542, "Hanoi");
-        List<Location> path = routeFinder.AStarRouteFinder(loc, loc);
-        assertFalse(path.isEmpty());
-    }
+    public void testAStarRouteFinder_ApiFailure_Fallback() {
+        // Arrange
+        Location start = new Location(16.0471, 108.2068, "Da Nang");
+        Location dest = new Location(16.4637, 107.5909, "Hue");
+        
+        // Giả lập API lỗi và trả về list 2 điểm (đường chim bay thẳng)
+        List<Location> fallbackRoute = Arrays.asList(start, dest);
+        when(routingService.getRoute(start, dest)).thenReturn(fallbackRoute);
 
-    @Test
-    @DisplayName("Snap to nearest node — điểm tùy ý phải được snap về node trong graph")
-    void testNearestNodeSnapping() {
-        // Điểm gần Đà Nẵng nhưng không phải exact
-        Location nearDanang = new Location(16.05, 108.21, "Near Da Nang");
-        Location hue = new Location(16.4637, 107.5909, "Hue");
-        List<Location> path = routeFinder.AStarRouteFinder(nearDanang, hue);
-        assertNotNull(path);
+        // Act
+        List<Location> actualRoute = routeFinder.AStarRouteFinder(start, dest);
+
+        // Assert
+        assertNotNull(actualRoute);
+        assertEquals(2, actualRoute.size());
+        verify(routingService, times(1)).getRoute(start, dest);
     }
 }

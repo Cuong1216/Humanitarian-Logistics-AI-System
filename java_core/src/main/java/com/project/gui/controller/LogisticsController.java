@@ -19,6 +19,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import org.springframework.stereotype.Component;
+
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Component
 public class LogisticsController implements Initializable {
 
     @FXML private TableView<DistressPoint> distressTable;
@@ -54,6 +57,13 @@ public class LogisticsController implements Initializable {
     private boolean mapLoaded = false;
     private ObservableList<SupportCenter> supportCenterList = FXCollections.observableArrayList();
     private ObservableList<DistressPoint> distressList = FXCollections.observableArrayList();
+
+    private final RouteFinder routeFinder;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public LogisticsController(RouteFinder routeFinder) {
+        this.routeFinder = routeFinder;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -297,8 +307,7 @@ public class LogisticsController implements Initializable {
             Location dest = geocodeAddressWithFallback(destStr);
 
             Platform.runLater(() -> {
-                RouteFinder finder = new RouteFinder();
-                List<Location> route = finder.AStarRouteFinder(start, dest);
+                List<Location> route = routeFinder.AStarRouteFinder(start, dest);
 
                 StringBuilder sb = new StringBuilder("Thông tin Lộ trình Cứu trợ:\n");
                 sb.append(String.format("  Xuất phát: %s (%.6f, %.6f)%n", start.getAddress(), start.getLatitude(), start.getLongitude()));

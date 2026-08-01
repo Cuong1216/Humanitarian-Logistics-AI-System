@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,6 +21,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+@Service
 public class FastApiRestClient implements IAiClient {
 
     private static final Logger logger = Logger.getLogger(FastApiRestClient.class.getName());
@@ -43,7 +48,8 @@ public class FastApiRestClient implements IAiClient {
         }
     );
 
-    public FastApiRestClient(String baseUrl) {
+    @Autowired
+    public FastApiRestClient(@Value("${ai.api.base-url:http://127.0.0.1:8000}") String baseUrl) {
         this.baseUrl = baseUrl;
         this.gson = new Gson();
         this.httpClient = HttpClient.newBuilder()

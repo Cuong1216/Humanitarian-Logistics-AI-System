@@ -17,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
+import org.springframework.stereotype.Component;
+
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class DataCollectionController implements Initializable {
 
     @FXML private TextField keywordField;

@@ -1,7 +1,9 @@
+
 import pytest
 from fastapi.testclient import TestClient
-import os
+
 from main import app
+
 
 @pytest.fixture(autouse=True)
 def setup_env(monkeypatch):

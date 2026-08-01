@@ -1,14 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Disaster Data Collector & Preprocessing Analyzer
 Selected Disaster: Typhoon Yagi (Bão số 3) - Q3 2024
 """
 
 import re
-import json
 import unicodedata
-from datetime import datetime
-from collections import Counter
 
 # ==========================================
 # PART 1: REAL SOCIAL MEDIA API TEMPLATES

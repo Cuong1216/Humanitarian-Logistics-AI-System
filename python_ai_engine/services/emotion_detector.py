@@ -1,4 +1,5 @@
 import re
+
 from schemas import EmotionLabel, EmotionScore
 
 VIETNAMESE_EMOTION_HINTS = {

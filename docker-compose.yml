@@ -1,39 +1,59 @@
 version: '3.8'
+
 networks:
   ai-network:
     driver: bridge
+    name: hl-network
+
 volumes:
   redis_data:
     driver: local
+  postgres_data:
+    driver: local
+
 services:
-  ai-engine:
-    build:
-      context: ./python_ai_engine
-      dockerfile: Dockerfile
-    container_name: python-ai-engine
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     env_file:
-      - ./python_ai_engine/.env
+      - .env
     environment:
-      - USE_MOCK_AI=true
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_DB: ${DB_NAME:-hl_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-hl_db}"]
+      interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 10s
-    depends_on:
-      redis:
-        condition: service_healthy
+      retries: 5
     networks:
       - ai-network
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: '1.0'
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-broker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-network
+
   redis:
     image: redis:7-alpine
     container_name: redis-cache
@@ -44,8 +64,6 @@ services:
       --appendfsync everysec
       --maxmemory 256mb
       --maxmemory-policy allkeys-lru
-      --save 900 1
-      --save 300 10
     ports:
       - "6379:6379"
     volumes:
@@ -57,8 +75,64 @@ services:
       retries: 5
     networks:
       - ai-network
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
+
+  java-backend:
+    build:
+      context: ./java_core
+      dockerfile: Dockerfile
+    container_name: spring-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-hl_db}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-secret}
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USER:-admin}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-admin}
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - AI_ENGINE_URL=http://ai-engine:8000
+
+  ai-engine:
+    build:
+      context: ./python_ai_engine
+      dockerfile: Dockerfile
+    container_name: python-ai-engine
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ai-network
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=${RABBITMQ_USER:-admin}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-admin}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

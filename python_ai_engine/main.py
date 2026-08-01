@@ -1,20 +1,20 @@
 import asyncio
-import logging
 import os
 import re
-import time
+import logging
 import uuid
+import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, Response
+from contextlib import asynccontextmanager
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings
-
 from schemas import (
-    AnalysisResult,
     AnalyzeRequest,
+    AnalysisResult,
     AreaPriorityResponse,
     AreaPriorityResult,
     BatchAnalysisResult,
@@ -27,12 +27,13 @@ from schemas import (
     SocialMediaPost,
     UrgencyLevel,
 )
-from scoring_config import default_weights
-from services.cache_service import CacheService
 from services.categorization_service import CategorizationService
 from services.nlp_service import NlpService, top_locations
-from services.rabbitmq_consumer import start_consumer
 from services.sentiment_service import SentimentService
+from services.cache_service import CacheService
+from scoring_config import default_weights
+
+from services.rabbitmq_consumer import start_consumer
 
 app = FastAPI(
     title="Humanitarian Logistics AI Engine",

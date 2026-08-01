@@ -1,8 +1,6 @@
 from unittest.mock import patch
-
-from schemas import AnalysisResult
 from services.nlp_service import NlpService
-
+from schemas import AnalysisResult
 
 def test_mock_path(mock_nlp_service, sample_post):
     assert mock_nlp_service.gemini_enabled is False

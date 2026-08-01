@@ -1,7 +1,6 @@
 import json
 import re
 from typing import Any
-
 from schemas import (
     AnalysisResult,
     EmotionLabel,
@@ -12,7 +11,6 @@ from schemas import (
     UrgencyLevel,
 )
 from services.ner_service import NerService
-
 
 class ResponseParser:
     """

@@ -1,7 +1,6 @@
 import hashlib
 import logging
 import os
-
 import redis
 
 from schemas import AnalysisResult, SocialMediaPost

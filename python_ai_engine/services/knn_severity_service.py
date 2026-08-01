@@ -1,4 +1,5 @@
 import math
+import re
 from dataclasses import dataclass
 
 from schemas import NeedCategory, SocialMediaPost, UrgencyLevel

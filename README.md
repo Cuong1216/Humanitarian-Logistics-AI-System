@@ -15,7 +15,7 @@
 ## 🎯 Our Goal
 In today's age, social media has become one of the most important ways people express their feelings, opinions, and interests. Driven by this motive, we built an AI system for fast and accurate crowd emotion detection through posts, reactions, and comments on social networks like Facebook and Twitter.
 
-Our goal is to leverage emotion detection on specific disaster-related keywords to improve the efficiency of Humanitarian Logistics. For example: *"Village XYZ is being badly damaged by the Yagi storm and the residents desperately need food and water right away."* Based on these signals, our system can immediately coordinate and dispatch trucks loaded with food, water, and medical supplies directly to Village XYZ.
+Our goal is to leverage emotion detection on specific disaster-related keywords to improve the efficiency of Humanitarian Logistics. For example: *"Làng XYZ đang bị tàn phá nặng nề bởi bão Yagi và người dân đang rất cần thức ăn, nước uống ngay lập tức"* *(Village XYZ is being badly damaged by the Yagi storm and the residents desperately need food and water right away)*. Based on these signals, our system can immediately coordinate and dispatch trucks loaded with food, water, and medical supplies directly to Village XYZ.
 
 ---
 

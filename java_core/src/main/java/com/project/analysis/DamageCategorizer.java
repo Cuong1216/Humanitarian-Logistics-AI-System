@@ -188,69 +188,85 @@ public class DamageCategorizer implements TaskAnalyzer {
     }
 
     @Override
-    public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
+    public java.util.concurrent.CompletableFuture<AnalysisResult> analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
         AnalysisResult result = new AnalysisResult("DamageCategorizer");
-        Map<String, Integer> categoryCount = new LinkedHashMap<>();
+        Map<String, Integer> categoryCount = java.util.Collections.synchronizedMap(new LinkedHashMap<>());
         for (String cat : damageCategories) {
             categoryCount.put(cat, 0);
         }
 
-        boolean useAi = false;
-        
-        // Phương án A: Dùng AI nếu có aiClient
         if (aiClient != null) {
+            BatchRequest req = new BatchRequest(posts);
             try {
-                BatchRequest req = new BatchRequest(posts);
-                BatchResult aiResponse = aiClient.executeTask("/analyze/batch", req, BatchResult.class);
-                if (aiResponse != null && aiResponse.results != null) {
-                    for (AnalysisResultItem item : aiResponse.results) {
-                        if (item.humanitarian_signal != null && item.humanitarian_signal.categories != null) {
-                            for (String cat : item.humanitarian_signal.categories) {
-                                String mappedCat = mapAiCategory(cat);
-                                if (mappedCat != null && categoryCount.containsKey(mappedCat)) {
-                                    categoryCount.put(mappedCat, categoryCount.get(mappedCat) + 1);
+                return aiClient.executeTask("/analyze/batch", req, BatchResult.class)
+                    .handle((aiResponse, ex) -> {
+                        boolean useAi = false;
+                        if (ex == null && aiResponse != null && aiResponse.results != null) {
+                            for (AnalysisResultItem item : aiResponse.results) {
+                                if (item.humanitarian_signal != null && item.humanitarian_signal.categories != null) {
+                                    for (String cat : item.humanitarian_signal.categories) {
+                                        String mappedCat = mapAiCategory(cat);
+                                        if (mappedCat != null && categoryCount.containsKey(mappedCat)) {
+                                            categoryCount.put(mappedCat, categoryCount.get(mappedCat) + 1);
+                                        }
+                                    }
                                 }
                             }
+                            useAi = true;
+                        } else if (ex != null) {
+                            System.err.println("AI classification failed, falling back to keywords: " + ex.getMessage());
                         }
-                    }
-                    useAi = true;
-                }
+                        
+                        if (!useAi) {
+                            fallbackToKeywords(posts, categoryCount);
+                        }
+                        
+                        result.put("categoryCount", categoryCount);
+                        result.put("damageCounts", categoryCount);
+                        result.setSummary("Categorized " + posts.size() + " posts into damage types using " + (useAi ? "AI" : "Keyword Fallback") + ".");
+                        return result;
+                    });
             } catch (Exception e) {
                 System.err.println("AI classification failed, falling back to keywords: " + e.getMessage());
+                fallbackToKeywords(posts, categoryCount);
+                result.put("categoryCount", categoryCount);
+                result.put("damageCounts", categoryCount);
+                result.setSummary("Categorized " + posts.size() + " posts into damage types using Keyword Fallback.");
+                return java.util.concurrent.CompletableFuture.completedFuture(result);
             }
+        } else {
+            fallbackToKeywords(posts, categoryCount);
+            result.put("categoryCount", categoryCount);
+            result.put("damageCounts", categoryCount);
+            result.setSummary("Categorized " + posts.size() + " posts into damage types using Keyword Fallback.");
+            return java.util.concurrent.CompletableFuture.completedFuture(result);
         }
+    }
 
-        // Phương án B: Keyword fallback nếu không gọi được AI
-        if (!useAi) {
-            Map<String, List<String>> keywords = new HashMap<>();
-            keywords.put("Người bị ảnh hưởng", Arrays.asList("chết", "bị thương", "mất tích", "nạn nhân"));
-            keywords.put("Gián đoạn các hoạt động kinh tế sản xuất", Arrays.asList("mất điện", "cúp điện", "đóng cửa", "đình trệ"));
-            keywords.put("Nhà cửa hoặc tòa nhà bị hư hỏng", Arrays.asList("sập", "tốc mái", "nhà đổ", "vỡ"));
-            keywords.put("Tài sản cá nhân bị mất", Arrays.asList("trôi xe", "hỏng đồ", "mất tài sản"));
-            keywords.put("Cơ sở hạ tầng bị hư hỏng", Arrays.asList("đường hư", "cầu sập", "tắc đường", "sạt lở"));
-            keywords.put("Nông nghiệp & Vật nuôi bị thiệt hại", Arrays.asList("ngập lúa", "chết gà", "chết lợn", "mất mùa"));
+    private void fallbackToKeywords(List<SocialMediaPost> posts, Map<String, Integer> categoryCount) {
+        Map<String, List<String>> keywords = new HashMap<>();
+        keywords.put("Người bị ảnh hưởng", Arrays.asList("chết", "bị thương", "mất tích", "nạn nhân"));
+        keywords.put("Gián đoạn các hoạt động kinh tế sản xuất", Arrays.asList("mất điện", "cúp điện", "đóng cửa", "đình trệ"));
+        keywords.put("Nhà cửa hoặc tòa nhà bị hư hỏng", Arrays.asList("sập", "tốc mái", "nhà đổ", "vỡ"));
+        keywords.put("Tài sản cá nhân bị mất", Arrays.asList("trôi xe", "hỏng đồ", "mất tài sản"));
+        keywords.put("Cơ sở hạ tầng bị hư hỏng", Arrays.asList("đường hư", "cầu sập", "tắc đường", "sạt lở"));
+        keywords.put("Nông nghiệp & Vật nuôi bị thiệt hại", Arrays.asList("ngập lúa", "chết gà", "chết lợn", "mất mùa"));
 
-            for (SocialMediaPost post : posts) {
-                String content = post.getContent();
-                if (content == null) continue;
-                String lowerContent = content.toLowerCase();
+        for (SocialMediaPost post : posts) {
+            String content = post.getContent();
+            if (content == null) continue;
+            String lowerContent = content.toLowerCase();
 
-                for (Map.Entry<String, List<String>> entry : keywords.entrySet()) {
-                    String category = entry.getKey();
-                    for (String kw : entry.getValue()) {
-                        if (lowerContent.contains(kw.toLowerCase())) {
-                            categoryCount.put(category, categoryCount.get(category) + 1);
-                            break; // Tính 1 lần cho 1 category trên 1 post
-                        }
+            for (Map.Entry<String, List<String>> entry : keywords.entrySet()) {
+                String category = entry.getKey();
+                for (String kw : entry.getValue()) {
+                    if (lowerContent.contains(kw.toLowerCase())) {
+                        categoryCount.put(category, categoryCount.get(category) + 1);
+                        break; // Tính 1 lần cho 1 category trên 1 post
                     }
                 }
             }
         }
-
-        result.put("categoryCount", categoryCount);
-        result.put("damageCounts", categoryCount);
-        result.setSummary("Categorized " + posts.size() + " posts into damage types using " + (useAi ? "AI" : "Keyword Fallback") + ".");
-        return result;
     }
 
     private String mapAiCategory(String aiCat) {

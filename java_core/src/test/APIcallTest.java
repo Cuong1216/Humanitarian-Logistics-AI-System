@@ -52,7 +52,7 @@ public class APIcallTest extends Application {
             System.out.println("[Java] Đang gửi dữ liệu mẫu sang Python qua endpoint /analyze...");
 
             // 3. Thực thi gọi API
-            AnalyzeRes testResponse = aiClient.executeTask("/analyze", testRequest, AnalyzeRes.class);
+            AnalyzeRes testResponse = aiClient.executeTask("/analyze", testRequest, AnalyzeRes.class).join();
 
             // 4. In kết quả nhận được từ Python ra Terminal để kiểm tra
             System.out.println("\n=== KẾT QUẢ TRẢ VỀ TỪ PYTHON AI ENGINE ===");

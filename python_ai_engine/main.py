@@ -8,6 +8,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
 from fastapi import FastAPI, HTTPException, Depends, Request, Response
+from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings
@@ -31,6 +32,8 @@ from services.nlp_service import NlpService, top_locations
 from services.sentiment_service import SentimentService
 from services.cache_service import CacheService
 from scoring_config import default_weights
+
+from services.rabbitmq_consumer import start_consumer
 
 app = FastAPI(
     title="Humanitarian Logistics AI Engine",
@@ -185,6 +188,20 @@ def health() -> HealthResponse:
         model=nlp_service.model,
     )
 
+
+async def _analyze_post_async_from_request(request: AnalyzeRequest) -> None:
+    # Hàm wrapper cho consumer RabbitMQ
+    await _analyze_post_async(request.post)
+
+@asynccontextmanager
+async def _app_lifespan(app_instance: FastAPI):
+    # Khởi động RabbitMQ consumer ở background
+    consumer_task = asyncio.create_task(start_consumer(_analyze_post_async_from_request))
+    yield
+    # Hủy task khi shutdown
+    consumer_task.cancel()
+
+app.router.lifespan_context = _app_lifespan
 
 @app.post("/analyze", response_model=AnalysisResult)
 async def analyze(request: AnalyzeRequest) -> AnalysisResult:

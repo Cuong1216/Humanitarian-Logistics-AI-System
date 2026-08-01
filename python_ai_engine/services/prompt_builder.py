@@ -1,5 +1,7 @@
 import json
+
 from schemas import SocialMediaPost
+
 
 class PromptBuilder:
     """

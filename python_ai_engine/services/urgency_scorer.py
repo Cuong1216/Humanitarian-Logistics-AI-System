@@ -1,5 +1,6 @@
 from schemas import NeedCategory, UrgencyLevel
 
+
 class UrgencyScorer:
     """
     Xử lý các logic chấm điểm khẩn cấp rule-based.

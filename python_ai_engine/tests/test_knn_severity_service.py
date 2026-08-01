@@ -1,5 +1,6 @@
+from schemas import NeedCategory, UrgencyLevel
 from services.knn_severity_service import KnnSeverityService
-from schemas import NeedCategory, SocialMediaPost, UrgencyLevel
+
 
 def test_predict_low(sample_post):
     service = KnnSeverityService(k=3)

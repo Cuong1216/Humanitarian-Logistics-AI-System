@@ -1,13 +1,14 @@
 import os
 import re
 from collections import Counter
-from typing import Any
 
 try:
     from dotenv import load_dotenv
 except ImportError:
     def load_dotenv() -> bool:
         return False
+
+import logging
 
 from schemas import (
     AnalysisResult,
@@ -16,17 +17,16 @@ from schemas import (
     SocialMediaPost,
     UrgencyLevel,
 )
-from services.knn_severity_service import KnnSeverityService
-from services.ner_service import NerService
-from services.text_cleaning_service import TextCleaningService
-from services.prompt_builder import PromptBuilder
-from services.response_parser import ResponseParser
-from services.urgency_scorer import UrgencyScorer
-from services.emotion_detector import EmotionDetector
 from services.action_generator import ActionGenerator
 from services.cache_service import CacheService
+from services.emotion_detector import EmotionDetector
+from services.knn_severity_service import KnnSeverityService
+from services.ner_service import NerService
+from services.prompt_builder import PromptBuilder
+from services.response_parser import ResponseParser
+from services.text_cleaning_service import TextCleaningService
 from services.text_utils import estimate_people_count
-import logging
+from services.urgency_scorer import UrgencyScorer
 
 logger = logging.getLogger("ai_engine")
 

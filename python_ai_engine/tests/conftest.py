@@ -1,6 +1,8 @@
 import pytest
-from schemas import SocialMediaPost, PlatformName
+
+from schemas import PlatformName, SocialMediaPost
 from services.nlp_service import NlpService
+
 
 @pytest.fixture
 def sample_post():

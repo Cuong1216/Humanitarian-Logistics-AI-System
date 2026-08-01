@@ -1,4 +1,5 @@
-from schemas import NeedCategory, UrgencyLevel, SocialMediaPost
+from schemas import NeedCategory, SocialMediaPost, UrgencyLevel
+
 
 class ActionGenerator:
     """

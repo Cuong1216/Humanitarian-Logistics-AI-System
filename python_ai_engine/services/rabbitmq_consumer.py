@@ -1,10 +1,11 @@
 import asyncio
 import json
 import logging
-from typing import Callable, Awaitable
+from collections.abc import Awaitable, Callable
+
 import aio_pika
-from schemas import SocialMediaPost
-from schemas import AnalyzeRequest
+
+from schemas import AnalyzeRequest, SocialMediaPost
 
 logger = logging.getLogger("ai_engine.rabbitmq")
 

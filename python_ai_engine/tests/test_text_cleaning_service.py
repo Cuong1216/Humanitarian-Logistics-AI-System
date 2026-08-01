@@ -1,5 +1,6 @@
 from services.text_cleaning_service import TextCleaningService
 
+
 def test_clean_url():
     service = TextCleaningService()
     result = service.clean("check http://example.com here")
@@ -28,6 +29,7 @@ def test_clean_many():
     assert result == ["hello", "hi"]
 
 from services.text_utils import estimate_people_count
+
 
 def test_estimate_people_found():
     assert estimate_people_count("có 150 người bị ảnh hưởng") == 150

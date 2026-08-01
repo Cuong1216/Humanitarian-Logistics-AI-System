@@ -1,5 +1,6 @@
-from services.ner_service import NerService
 from schemas import NeedCategory
+from services.ner_service import NerService
+
 
 def test_extract_locations():
     service = NerService()

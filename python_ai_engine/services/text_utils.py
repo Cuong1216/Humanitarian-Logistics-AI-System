@@ -1,6 +1,7 @@
 """Shared text utility functions dùng chung cho các services."""
 import re
 
+
 def estimate_people_count(text: str, default: int | None = None) -> int | None:
     """
     Ước tính số người bị ảnh hưởng từ text bằng cách tìm số nguyên lớn nhất.

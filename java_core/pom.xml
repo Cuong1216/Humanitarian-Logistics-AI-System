@@ -18,6 +18,7 @@
 
   <properties>
     <java.version>21</java.version>
+    <start-class>com.project.CoreApiApplication</start-class>
   </properties>
 
   <dependencies>

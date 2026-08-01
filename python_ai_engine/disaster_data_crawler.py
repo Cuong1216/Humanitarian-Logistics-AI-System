@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Disaster Data Crawler
 Limits python_ai_engine to a data-gathering-only role.

@@ -1,6 +1,6 @@
 # Humanitarian Logistics AI System 🌍🚁
 
-[![Java CI](https://github.com/wiz/Humanitarian-Logistics-AI-System/actions/workflows/main.yml/badge.svg)](https://github.com/wiz/Humanitarian-Logistics-AI-System/actions/workflows/main.yml)
+[![Java CI](https://github.com/Cuong1216/Humanitarian-Logistics-AI-System/actions/workflows/main.yml/badge.svg)](https://github.com/Cuong1216/Humanitarian-Logistics-AI-System/actions/workflows/main.yml)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-blue.svg)](https://fastapi.tiangolo.com/)
 
@@ -21,37 +21,34 @@ Our goal is to leverage emotion detection on specific disaster-related keywords 
 
 ## 🏗 System Architecture (C4 Model)
 
-The system utilizes a hybrid Microservices & Modular Monolith architecture.
+The system utilizes a hybrid Microservices & Modular Monolith architecture, comprising four main components communicating seamlessly.
 
-```mermaid
-C4Context
-    title C4 Architecture: Humanitarian Logistics AI System
+### 1. 🖥️ Core Desktop Client (JavaFX + Spring Boot)
+- **Role:** The main interface for relief coordinators.
+- **Tech Stack:** Java 21, Spring Boot 3.2, JavaFX, Resilience4j, Selenium.
+- **Responsibilities:** 
+  - Scrapes raw social media data (crowdsourcing) via Headless Browsers.
+  - Sends text data to the AI Engine for analysis via HTTP REST.
+  - Fetches and renders geographical routes using the OSRM API.
+  - Ensures a non-blocking UI using Spring's Event-Driven model and `CompletableFuture`.
 
-    Person(user, "Relief Coordinator", "Uses the Desktop App to monitor distress signals and dispatch resources.")
+### 2. 🧠 AI Analysis Engine (Python FastAPI)
+- **Role:** The intelligent backend that evaluates distress signals.
+- **Tech Stack:** Python 3.10, FastAPI, Scikit-learn (KNN), Uvicorn.
+- **Responsibilities:**
+  - Receives unstructured social media text.
+  - Uses a Google Gemini LLM API wrapper for deep semantic understanding and emotion detection.
+  - Applies a K-Nearest Neighbors (KNN) model to classify damage severity and calculate urgency scores.
 
-    System_Boundary(c1, "Humanitarian AI Platform") {
-        Container(java_gui, "Core Desktop Client", "Java, Spring Boot, JavaFX", "Main UI for the coordinator. Manages state, map rendering, and REST API calls.")
-        
-        Container(ai_engine, "AI Analysis Engine", "Python, FastAPI", "API Server responsible for NLP text analysis via LLM, KNN, and Sentiment Analysis.")
-        
-        ContainerDb(rabbitmq, "Message Broker", "RabbitMQ", "Handles asynchronous queues for high-volume social media data scraping streams.")
-        
-        ContainerDb(redis, "Cache Server", "Redis", "Caches API call results (CircuitBreaker integration) and system configurations.")
-    }
+### 3. 📬 Message Broker (RabbitMQ)
+- **Role:** Handles high-volume, asynchronous data streams.
+- **Responsibilities:** Buffers the scraped social media posts before they are processed by the AI Engine, preventing system overload during a major disaster (e.g., peak storm hours).
 
-    System_Ext(social, "Social Media Networks", "Facebook, Twitter", "Raw data source (Crowdsourcing).")
-    System_Ext(osrm, "OSRM Routing API", "OpenStreetMap", "Provides map coordinates and optimal route calculations.")
-    System_Ext(llm, "Google Gemini LLM", "REST API", "Invoked by the AI Engine to classify emergency signals.")
+### 4. 🗄️ Cache Server (Redis)
+- **Role:** Caches configurations and API results.
+- **Responsibilities:** Reduces redundant API calls to external services (LLM, OSRM) and serves as a critical layer for the Circuit Breaker fallback mechanism when the AI Engine experiences high latency.
 
-    Rel(user, java_gui, "Views map & dispatches", "GUI")
-    Rel(java_gui, social, "Scrapes data", "Selenium/WebDriver")
-    Rel(java_gui, ai_engine, "Sends text for analysis", "HTTP/REST")
-    Rel(java_gui, osrm, "Fetches GeoJSON routes", "HTTP/REST")
-    
-    Rel(ai_engine, llm, "Semantic analysis", "gRPC/REST")
-    Rel(ai_engine, rabbitmq, "Pushes NLP analysis tasks", "AMQP")
-    Rel(ai_engine, redis, "Caches analysis results", "TCP")
-```
+> **Note on Localization:** 🇻🇳 *The current codebase—including the NLP models, UI elements, and geographical defaults—is specifically tailored for the **Vietnamese language and geographical context**, aiming to assist local relief efforts within Vietnam.*
 
 ---
 

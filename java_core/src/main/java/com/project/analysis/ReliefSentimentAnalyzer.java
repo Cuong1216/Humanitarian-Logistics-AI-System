@@ -17,46 +17,63 @@ public class ReliefSentimentAnalyzer implements TaskAnalyzer {
     public void setSupportItem(List<String> supportItem) { this.supportItem = supportItem; }
 
     @Override
-    public AnalysisResult analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
+    public java.util.concurrent.CompletableFuture<AnalysisResult> analyze(List<SocialMediaPost> posts, IAiClient aiClient) {
         AnalysisResult result = new AnalysisResult("ReliefSentimentAnalyzer");
-        Map<String, Integer> itemDemand = new LinkedHashMap<>();
+        Map<String, Integer> itemDemand = java.util.Collections.synchronizedMap(new LinkedHashMap<>());
         for (String item : supportItem) itemDemand.put(item, 0);
 
+        if (aiClient == null) {
+            result.put("itemDemand", itemDemand);
+            result.setSummary("Relief demand analyzed across " + posts.size() + " posts using AI Engine.");
+            return java.util.concurrent.CompletableFuture.completedFuture(result);
+        }
+
+        List<java.util.concurrent.CompletableFuture<Void>> futures = new ArrayList<>();
         for (SocialMediaPost post : posts) {
-            if (aiClient != null) {
-                try {
-                    String preprocessedText = WordPreprocessor.preprocess(post.getContent());
-                    AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
-                        post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
-                        post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
-                        post.getAuthor() != null ? post.getAuthor() : "unknown",
-                        preprocessedText,
-                        "",
-                        "",
-                        post.getReactions(),
-                        post.getComments(),
-                        post.getShareCount()
-                    );
-                    AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
-                    
-                    if (res != null && res.getHumanitarianSignal() != null) {
-                        List<String> categories = res.getHumanitarianSignal().getCategories();
-                        if (categories != null) {
-                            for (String cat : categories) {
-                                String key = cat.toLowerCase();
-                                if (itemDemand.containsKey(key)) {
-                                    itemDemand.put(key, itemDemand.get(key) + 1);
+            try {
+                String preprocessedText = WordPreprocessor.preprocess(post.getContent());
+                AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
+                    post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
+                    post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
+                    post.getAuthor() != null ? post.getAuthor() : "unknown",
+                    preprocessedText,
+                    "",
+                    "",
+                    post.getReactions(),
+                    post.getComments(),
+                    post.getShareCount()
+                );
+                
+                java.util.concurrent.CompletableFuture<Void> future = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class)
+                    .thenAccept(res -> {
+                        if (res != null && res.getHumanitarianSignal() != null) {
+                            List<String> categories = res.getHumanitarianSignal().getCategories();
+                            if (categories != null) {
+                                synchronized(itemDemand) {
+                                    for (String cat : categories) {
+                                        String key = cat.toLowerCase();
+                                        if (itemDemand.containsKey(key)) {
+                                            itemDemand.put(key, itemDemand.get(key) + 1);
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    }).exceptionally(ex -> {
+                        ex.printStackTrace();
+                        return null;
+                    });
+                futures.add(future);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        result.put("itemDemand", itemDemand);
-        result.setSummary("Relief demand analyzed across " + posts.size() + " posts using AI Engine.");
-        return result;
+        
+        return java.util.concurrent.CompletableFuture.allOf(futures.toArray(new java.util.concurrent.CompletableFuture[0]))
+            .thenApply(v -> {
+                result.put("itemDemand", itemDemand);
+                result.setSummary("Relief demand analyzed across " + posts.size() + " posts using AI Engine.");
+                return result;
+            });
     }
 }

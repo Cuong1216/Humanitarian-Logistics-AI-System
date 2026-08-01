@@ -182,7 +182,7 @@ public class AnalysisController implements Initializable {
                             post.getComments(),
                             post.getShareCount()
                         );
-                        AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class);
+                        AnalyzeRes res = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class).join();
                         if (res != null) {
                             aiResultsCache.put(post.getId(), res);
                             if (res.getHumanitarianSignal() != null) {

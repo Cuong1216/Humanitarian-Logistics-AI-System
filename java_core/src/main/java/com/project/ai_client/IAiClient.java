@@ -12,5 +12,5 @@ public interface IAiClient {
      * @param <T>         Kiểu của Request
      * @param <R>         Kiểu của Response
      */
-    <T, R> R executeTask(String endpoint, T requestData, Class<R> returnType) throws Exception;
+    <T, R> java.util.concurrent.CompletableFuture<R> executeTask(String endpoint, T requestData, Class<R> returnType) throws Exception;
 }

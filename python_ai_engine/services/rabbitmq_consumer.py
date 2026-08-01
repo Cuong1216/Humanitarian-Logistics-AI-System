@@ -71,27 +71,28 @@ async def handle_message(message: aio_pika.IncomingMessage, channel: aio_pika.Ch
 
 async def start_consumer(process_func: Callable[[AnalyzeRequest], Awaitable[None]]):
     """Khởi động RabbitMQ consumer"""
-    try:
-        connection = await aio_pika.connect_robust(RABBITMQ_URL)
-        channel = await connection.channel()
-        
-        # Cấu hình QoS để tránh bị quá tải bộ nhớ
-        await channel.set_qos(prefetch_count=10)
-        
-        # Khai báo queue (giả định Spring Boot đã tạo sẵn cùng tham số DLX, dùng passive=True)
-        # Bỏ passive=True nếu FastAPI được khởi động trước Spring Boot.
-        queue = await channel.declare_queue(QUEUE_NAME, durable=True, arguments={
-            "x-dead-letter-exchange": "ai.dlx",
-            "x-dead-letter-routing-key": "ai.dlq.routing"
-        })
-        
-        logger.info("RabbitMQ Consumer started. Waiting for messages...")
-        
-        async with queue.iterator() as queue_iter:
-            async for message in queue_iter:
-                # Xử lý đồng thời từng message
-                asyncio.create_task(handle_message(message, channel, process_func))
-                
-    except Exception as e:
-        logger.error(f"RabbitMQ Connection Error: {e}")
-        # Chờ 5s rồi retry connection ở level cao hơn hoặc để aio_pika.connect_robust tự xử
+    while True:
+        try:
+            connection = await aio_pika.connect_robust(RABBITMQ_URL)
+            channel = await connection.channel()
+            
+            # Cấu hình QoS để tránh bị quá tải bộ nhớ
+            await channel.set_qos(prefetch_count=10)
+            
+            # Khai báo queue (giả định Spring Boot đã tạo sẵn cùng tham số DLX, dùng passive=True)
+            # Bỏ passive=True nếu FastAPI được khởi động trước Spring Boot.
+            queue = await channel.declare_queue(QUEUE_NAME, durable=True, arguments={
+                "x-dead-letter-exchange": "ai.dlx",
+                "x-dead-letter-routing-key": "ai.dlq.routing"
+            })
+            break
+        except Exception as e:
+            logger.warning(f"RabbitMQ Connection Error: {e}. Retrying in 5 seconds...")
+            await asyncio.sleep(5)
+            
+    logger.info("RabbitMQ Consumer started. Waiting for messages...")
+    
+    async with queue.iterator() as queue_iter:
+        async for message in queue_iter:
+            # Xử lý đồng thời từng message
+            asyncio.create_task(handle_message(message, channel, process_func))

@@ -8,11 +8,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class AppController implements Initializable {
 
     // Sub-controllers injected by JavaFX FXMLLoader because of fx:id in fx:include
@@ -28,10 +32,7 @@ public class AppController implements Initializable {
     private List<SocialMediaPost> collectedPosts = new ArrayList<>();
     private IAiClient aiClient;
 
-    public AppController() {
-        this.aiClient = new FastApiRestClient("http://127.0.0.1:8000");
-    }
-
+    @Autowired
     public AppController(IAiClient injectedClient) {
         this.aiClient = injectedClient;
     }

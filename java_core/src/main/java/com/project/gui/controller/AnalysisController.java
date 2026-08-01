@@ -19,10 +19,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
+import org.springframework.stereotype.Component;
+
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 
+@Component
 public class AnalysisController implements Initializable {
 
     @FXML private CheckBox sentimentCheck;

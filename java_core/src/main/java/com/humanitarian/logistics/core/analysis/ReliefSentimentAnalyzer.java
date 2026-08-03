@@ -33,15 +33,15 @@ public class ReliefSentimentAnalyzer implements TaskAnalyzer {
             try {
                 String preprocessedText = WordPreprocessor.preprocess(post.getContent());
                 AnalyzeReq.PostData postData = new AnalyzeReq.PostData(
-                    post.getId() != null ? post.getId() : java.util.UUID.randomUUID().toString(),
-                    post.getPlatform() != null ? post.getPlatform().toLowerCase() : "facebook",
+                    post.getId() != null ? post.getId().toString() : java.util.UUID.randomUUID().toString(),
+                    post.getSource() != null ? post.getSource().toLowerCase() : "facebook",
                     post.getAuthor() != null ? post.getAuthor() : "unknown",
                     preprocessedText,
                     "",
                     "",
-                    post.getReactions(),
-                    post.getComments(),
-                    post.getShareCount()
+                    new java.util.HashMap<>(),
+                    new java.util.ArrayList<>(),
+                    0
                 );
                 
                 java.util.concurrent.CompletableFuture<Void> future = aiClient.executeTask("/analyze", new AnalyzeReq(postData), AnalyzeRes.class)

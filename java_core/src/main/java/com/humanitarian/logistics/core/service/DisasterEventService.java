@@ -3,6 +3,7 @@ package com.humanitarian.logistics.core.service;
 import com.humanitarian.logistics.core.dto.DisasterEventDTO;
 import com.humanitarian.logistics.core.entity.DisasterEvent;
 import com.humanitarian.logistics.core.exception.ResourceNotFoundException;
+import com.humanitarian.logistics.core.mapper.DisasterEventMapper;
 import com.humanitarian.logistics.core.repository.DisasterEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class DisasterEventService {
 
     private final DisasterEventRepository repository;
+    private final DisasterEventMapper mapper;
 
     /**
      * Retrieves all disaster events.
@@ -33,7 +35,7 @@ public class DisasterEventService {
     public List<DisasterEventDTO> getAllEvents() {
         log.info("Fetching all disaster events");
         return repository.findAll().stream()
-                .map(this::mapToDTO)
+                .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +49,7 @@ public class DisasterEventService {
         log.info("Fetching disaster event with id: {}", id);
         DisasterEvent event = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("DisasterEvent not found with id: " + id));
-        return mapToDTO(event);
+        return mapper.toDTO(event);
     }
 
     /**
@@ -58,38 +60,12 @@ public class DisasterEventService {
     @Transactional
     public DisasterEventDTO createEvent(DisasterEventDTO dto) {
         log.info("Creating new disaster event: {}", dto.getName());
-        DisasterEvent event = mapToEntity(dto);
+        DisasterEvent event = mapper.toEntity(dto);
         // Set reported time if not provided
         if (event.getReportedAt() == null) {
             event.setReportedAt(LocalDateTime.now());
         }
         DisasterEvent savedEvent = repository.save(event);
-        return mapToDTO(savedEvent);
-    }
-
-    // Helper method to map Entity to DTO
-    private DisasterEventDTO mapToDTO(DisasterEvent entity) {
-        return DisasterEventDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .type(entity.getType())
-                .location(entity.getLocation())
-                .severity(entity.getSeverity())
-                .reportedAt(entity.getReportedAt())
-                .description(entity.getDescription())
-                .build();
-    }
-
-    // Helper method to map DTO to Entity
-    private DisasterEvent mapToEntity(DisasterEventDTO dto) {
-        return DisasterEvent.builder()
-                .id(dto.getId()) // Optional, usually null for creation
-                .name(dto.getName())
-                .type(dto.getType())
-                .location(dto.getLocation())
-                .severity(dto.getSeverity())
-                .reportedAt(dto.getReportedAt())
-                .description(dto.getDescription())
-                .build();
+        return mapper.toDTO(savedEvent);
     }
 }

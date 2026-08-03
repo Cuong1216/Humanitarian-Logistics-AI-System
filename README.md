@@ -67,6 +67,12 @@ If the AI Server crashes or experiences high load (Error rate > 50%), the system
 ### 4. Multithreading & Data Scraping (Selenium)
 Utilizes Selenium WebDriverManager with Headless Browsers to continuously listen for and scrape disaster relief posts via keywords on social media in the background.
 
+### 5. Enterprise Code Quality (MapStruct)
+Utilizes **MapStruct** for automatic and type-safe Object Mapping between Entities and DTOs. This reduces boilerplate code in the service layer, resulting in cleaner and more maintainable business logic.
+
+### 6. Automated CI/CD Pipeline (GitHub Actions)
+Fully automated CI/CD pipeline executing Unit Tests for both Java (JUnit) and Python (Pytest). Upon successful validation, Docker images for both `java-backend` and `ai-engine` are automatically built and pushed to **Docker Hub**.
+
 ---
 
 ## 📂 Project Structure
@@ -115,8 +121,9 @@ mvn spring-boot:run
 ---
 
 ## 🧪 Unit Testing & CI/CD
-The project includes a GitHub Actions configuration (`.github/workflows/main.yml`) to automatically run Unit Tests on every `push` or `pull_request`.
+The project includes a comprehensive GitHub Actions configuration (`.github/workflows/ci.yml`) to automatically run validation on every `push` or `pull_request`.
 - **Java Tests:** Executed using `JUnit 5` and `Mockito`.
-- **Local Test Command:** `cd java_core && mvn test`
+- **Python Tests:** Executed using `Pytest`.
+- **Docker Push:** Automatically builds and pushes updated images to Docker Hub upon passing all tests.
 
 > **Note**: The Mockito tests simulating the Circuit Breaker short-circuiting (`FastApiRestClientTest.java`) serve as a strong proof of the software architecture's stability and resilience.
